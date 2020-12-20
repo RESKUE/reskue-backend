@@ -1,0 +1,21 @@
+version: '3'
+services:
+  database:
+    container_name: reskue-database
+    restart: always
+    image: reskue-database:latest
+    build:
+      context: ./database
+      dockerfile: ./reskue.db.dockerfile
+    env_file:
+      - ./database/reskue.db.env
+    volumes:
+      - ./database/data/:/var/lib/postgresql/data
+    expose:
+      - ${POSTGRES_PORT}
+    ports:
+      - ${DATABASE_PORT}:${POSTGRES_PORT}
+    networks:
+      - reskue-network
+networks:
+  reskue-network:
