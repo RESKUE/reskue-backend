@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class BaseEntity<T extends BaseEntity<T>> {
+public abstract class BaseEntity<E extends BaseEntity<E>> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,6 +19,7 @@ public abstract class BaseEntity<T extends BaseEntity<T>> {
 		return this.id;
 	}
 	
-	public abstract void applyPatch(T details);
+	public abstract void applyPatch(E details);
+
 	
 }

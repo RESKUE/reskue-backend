@@ -1,0 +1,11 @@
+{
+	"realm": "reskue",
+	"auth-server-url": "http://localhost:5700/auth",
+	"ssl-required": "external",
+	"resource": "reskue-backend",
+	"credentials": {
+		"secret": "af83ce77-7dbe-452e-aa0d-ccc13af3bd4b"
+	},
+	"use-resource-role-mappings": "true",
+	"bearer-only": "true"
+}

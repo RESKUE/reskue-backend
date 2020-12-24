@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,24 +17,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import reskue.backend.routing.RouteService;
+public abstract class BaseController<E extends BaseEntity<E>, R extends BaseRepository<E>, S extends BaseService<E, R>> {
 
-public abstract class BaseController<E extends BaseEntity<E>, R extends JpaRepository<E, Long>, S extends BaseService<E, R>> {
+	public static final String API_ENDPOINT = "/api";
 	
 	@Autowired
 	protected S service;
 	
-	@Autowired
-	protected RouteService routeService;
-	
-	@GetMapping(RouteService.ALL)
-	public List<E> getAll() {
+	@GetMapping()
+	@RolesAllowed({"administrator", "helper"})
+	public List<E> findAll() {
 		
-		return service.getAll();
+		return service.findAll();
 		
 	}
 	
-	@GetMapping(RouteService.FIND + BaseEntity.ID_MAPPING)
+	@GetMapping(BaseEntity.ID_MAPPING)
+	@RolesAllowed({"administrator", "helper"})
 	public ResponseEntity<E> findById(
 			@PathVariable(value = BaseEntity.ID) long id
 			) throws ResourceNotFoundException {
@@ -44,14 +43,16 @@ public abstract class BaseController<E extends BaseEntity<E>, R extends JpaRepos
 		
 	}
 	
-	@PostMapping(RouteService.CREATE)
+	@PostMapping()
+	@RolesAllowed("administrator")
 	public E create(@Valid @RequestBody E entity) {
 		
 		return service.create(entity);
 		
 	}
 	
-	@PutMapping(RouteService.UPDATE + BaseEntity.ID_MAPPING)
+	@PutMapping(BaseEntity.ID_MAPPING)
+	@RolesAllowed("administrator")
 	public ResponseEntity<E> update(
 			@PathVariable(value = BaseEntity.ID) long id,
 			@Valid @RequestBody E details
@@ -62,7 +63,8 @@ public abstract class BaseController<E extends BaseEntity<E>, R extends JpaRepos
 		
 	}
 	
-	@DeleteMapping(RouteService.DELETE + BaseEntity.ID_MAPPING)
+	@DeleteMapping(BaseEntity.ID_MAPPING)
+	@RolesAllowed("administrator")
 	public Map<String, Boolean> deleteCultureGood(
 			@PathVariable(value = BaseEntity.ID) long id
 			) throws Exception {
@@ -74,5 +76,6 @@ public abstract class BaseController<E extends BaseEntity<E>, R extends JpaRepos
 		return response;
 		
 	}
+
 	
 }

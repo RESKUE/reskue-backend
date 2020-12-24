@@ -2,18 +2,31 @@ package reskue.backend.entities;
 
 import java.util.List;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.stereotype.Service;
 
-public class BaseService<E extends BaseEntity<E>, R extends JpaRepository<E, Long>> {
+import reskue.backend.rabbitmq.EventConfiguration;
+import reskue.backend.rabbitmq.EventSubscriber;
+
+public abstract class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> extends EventSubscriber {
 
 	@Autowired
 	protected R repository;
 	
-	public List<E> getAll() {
+	@Autowired
+	private RabbitTemplate rabbitTemplate;
+	
+	protected void sendEvent(Object object) {
+		rabbitTemplate.convertAndSend(
+				EventConfiguration.TOPIC_EXCHANGE,
+				EventConfiguration.QUEUE, 
+				object);
+	}
+	
+	public List<E> findAll() {
 		
+		sendEvent("findAll has been called");
 		return repository.findAll();
 		
 	}
@@ -46,5 +59,6 @@ public class BaseService<E extends BaseEntity<E>, R extends JpaRepository<E, Lon
 		return entity;
 		
 	}
+
 	
 }
