@@ -1,21 +1,75 @@
 version: '3'
 services:
-  database:
-    container_name: reskue-database
+  reskue-db:
+    container_name: reskue-db
     restart: always
     image: reskue-database:latest
     build:
-      context: ./database
+      context: ./reskue-db
       dockerfile: ./reskue.db.dockerfile
     env_file:
-      - ./database/reskue.db.env
+      - ./reskue-db/reskue.db.env
     volumes:
-      - ./database/data/:/var/lib/postgresql/data
+      - ./reskue-db/data/:/var/lib/postgresql/data
     expose:
       - ${POSTGRES_PORT}
     ports:
-      - ${DATABASE_PORT}:${POSTGRES_PORT}
+      - ${RESKUE_DB_PORT}:${POSTGRES_PORT}
     networks:
       - reskue-network
+  auth-db:
+    container_name: auth-db
+    restart: always
+    image: auth-db:latest
+    build:
+      context: ./auth-db
+      dockerfile: ./auth.db.dockerfile
+    env_file: 
+      - ./auth-db/auth.db.env
+    volumes:
+      - ./auth-db/data/:/var/lib/postgresql/data
+    expose: 
+      - ${POSTGRES_PORT}
+    ports:
+      - ${AUTH_DB_PORT}:${POSTGRES_PORT}
+    networks: 
+      - reskue-network
+  keycloak:
+    container_name: reskue-keycloak
+    restart: always
+    depends_on: 
+      - auth-db
+    image: jboss/keycloak:latest
+    environment: 
+      DB_ADDR: auth-db
+      DB_USER: ${KEYCLOAK_USER}
+      DB_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KEYCLOAK_IMPORT: ./tmp/realm-export.json
+    command: -Dkeycloak.profile.feature.upload_scripts=enabled
+    expose: 
+      - ${KEYCLOAK_INTERNAL_PORT}
+    ports: 
+      - ${KEYCLOAK_PORT}:${KEYCLOAK_INTERNAL_PORT}
+    volumes: 
+      - ./keycloak/realms/realm-export.json:/tmp/realm-export.json
+    networks: 
+      - reskue-network
+  rabbitmq:
+    container_name: reskue-rabbitmq
+    restart: always
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./rabbitmq/etc/:/etc/rabbitmq/
+      - ./rabbitmq/data/:/var/lib/rabbitmq/
+      - ./rabbitmq/logs/:/var/log/rabbitmq/
+    networks: 
+      - reskue-network
+
+
 networks:
   reskue-network:

@@ -197,3 +197,5 @@ pyenv
 Vagrantfile
 
 /demo/database/data
+/demo/rabbitmq/data/mnesia/
+/demo/rabbitmq/data/.erlang.cookie
