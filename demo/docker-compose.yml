@@ -7,8 +7,12 @@ services:
     build:
       context: ./reskue-db
       dockerfile: ./reskue.db.dockerfile
-    env_file:
-      - ./reskue-db/reskue.db.env
+    environment: 
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: ${POSTGRES_INITDB_ARGS}
+      POSTGRES_HOST_AUTH_METHOD: ${POSTGRES_HOST_AUTH_METHOD}
+      POSTGRES_DB: ${RESKUE_DB}
     volumes:
       - ./reskue-db/data/:/var/lib/postgresql/data
     expose:
@@ -24,8 +28,12 @@ services:
     build:
       context: ./auth-db
       dockerfile: ./auth.db.dockerfile
-    env_file: 
-      - ./auth-db/auth.db.env
+    environment: 
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: ${POSTGRES_INITDB_ARGS}
+      POSTGRES_HOST_AUTH_METHOD: ${POSTGRES_HOST_AUTH_METHOD}
+      POSTGRES_DB: ${AUTH_DB}
     volumes:
       - ./auth-db/data/:/var/lib/postgresql/data
     expose: 
@@ -41,9 +49,13 @@ services:
       - auth-db
     image: jboss/keycloak:latest
     environment: 
+      DB_VENDOR: ${DB_VENDOR}
       DB_ADDR: auth-db
-      DB_USER: ${KEYCLOAK_USER}
-      DB_PASSWORD: ${KEYCLOAK_PASSWORD}
+      DB_PORT: ${POSTGRES_PORT}
+      DB_DATABASE: ${AUTH_DB}
+      DB_SCHEMA: ${DB_SCHEMA}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
       KEYCLOAK_USER: ${KEYCLOAK_USER}
       KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
       KEYCLOAK_IMPORT: ./tmp/realm-export.json
@@ -60,16 +72,17 @@ services:
     container_name: reskue-rabbitmq
     restart: always
     image: rabbitmq:3-management-alpine
+    expose: 
+      - ${RABBITMQ_PORT}
+      - ${RABBITMQ_MANAGEMENT_PORT}
     ports:
-      - 5672:5672
-      - 15672:15672
+      - ${RABBITMQ_PORT}:${RABBITMQ_PORT}
+      - ${RABBITMQ_MANAGEMENT_PORT}:${RABBITMQ_MANAGEMENT_PORT}
     volumes:
       - ./rabbitmq/etc/:/etc/rabbitmq/
       - ./rabbitmq/data/:/var/lib/rabbitmq/
       - ./rabbitmq/logs/:/var/log/rabbitmq/
     networks: 
       - reskue-network
-
-
 networks:
   reskue-network:
