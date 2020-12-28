@@ -1,0 +1,14 @@
+@startuml BaseService
+
+abstract class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> {
+  # @Autowired repository: R
+  - @Autowired rabbitTemplate: RabbitTemplate
+}
+BaseService : # sendEvent(object: Object): void
+BaseService : + findAll(): List<E>
+BaseService : + findById(id: long): E
+BaseService : + create(entity: E): E
+BaseService : + update(id: long, details: E): E
+BaseService : + delete(id: long): E
+
+@enduml

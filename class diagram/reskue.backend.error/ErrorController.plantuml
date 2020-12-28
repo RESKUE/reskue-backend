@@ -1,0 +1,13 @@
+@startuml ErrorController
+
+class ErrorController {
+  @RestController
+  @RequestMapping(ErrorController.ERROR_ENDPOINT)
+  --
+  + {static} ERROR_ENDPOINT: String
+  + {static} AUTH_ERROR: String
+  --
+}
+ErrorController : + @RequestMapping(ErrorController.AUTH_ERROR) authError(): String
+
+@enduml

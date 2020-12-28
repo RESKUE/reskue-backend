@@ -1,0 +1,17 @@
+@startuml reskue.backend.rabbitmq
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 50
+
+package "reskue.backend.rabbitmq" as rabbitmq {
+  
+  !include EventSubscriber.plantuml!0
+  !include EventConsumer.plantuml!0
+  !include EventConfiguration.plantuml!0
+
+  EventSubscriber -right- EventConsumer
+  EventConfiguration -left- EventConsumer
+
+}
+
+@enduml

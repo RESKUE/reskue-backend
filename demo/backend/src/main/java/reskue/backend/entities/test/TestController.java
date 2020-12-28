@@ -7,7 +7,7 @@ import reskue.backend.entities.BaseController;
 
 @RestController
 @RequestMapping(BaseController.API_ENDPOINT + TestController.ROUTE)
-public class TestController {
+public class TestController extends BaseController<TestEntity, TestRepository, TestService>{
 
 	public static final String IDENTIFIER = "TestController";
 	public static final String ROUTE = "/test";

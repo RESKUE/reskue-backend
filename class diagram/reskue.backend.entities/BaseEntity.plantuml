@@ -1,0 +1,14 @@
+@startuml BaseEntity
+
+abstract class BaseEntity<E extends BaseEntity<E>> {
+  @MappedSuperclass
+  --
+  + {static} ID: String
+  + {static} ID_MAPPING: String
+  - @Id @GeneratedValue(strategy = GenerationType.AUTO) id: long
+  --
+}
+BaseEntity : + {abstract} getId(): long
+BaseEntity : + {abstract} applyPatch(E details): void
+
+@enduml

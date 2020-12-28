@@ -1,0 +1,10 @@
+@startuml TestService
+
+class TestService {
+  @Service
+  --
+}
+TestService : + @Override @PostConstruct init(): void
+TestService : + @RabbitListener(queues = TestController.IDENTIFIER) receiveMessage(message: String): void
+
+@enduml

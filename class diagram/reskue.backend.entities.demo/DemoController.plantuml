@@ -1,0 +1,12 @@
+@startuml DemoController
+
+class DemoController {
+  @RestController
+  @RequestMapping(BaseController.API_ENDPOINT + DemoController.ROUTE)
+  --
+  + {static} IDENTIFIER: String
+  + {static} ROUTE: String
+  + {static} ROUTING_KEY: String
+}
+
+@enduml

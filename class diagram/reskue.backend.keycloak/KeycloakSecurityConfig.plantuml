@@ -1,0 +1,13 @@
+@startuml KeycloakSecurityConfig
+
+class KeycloakSecurityConfig {
+  @Configuration
+  @EnableWebSecurity
+  @EnableGlobalMethodSecurity(jsr250Enabled = true)
+  --
+}
+KeycloakSecurityConfig : + @Autowired configureGlobal(auth: AuthenticationManagerBuilder): void
+KeycloakSecurityConfig : # @Override configure(http: HttpSecurity): void
+KeycloakSecurityConfig : # @Bean @Override sessionAuthenticationStrategy(): SessionAuthenticationStrategy
+
+@enduml

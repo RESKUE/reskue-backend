@@ -1,0 +1,20 @@
+@startuml reskue.backend.entities.test
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 50
+top to bottom direction
+
+package "reskue.backend.entities.test" as test {
+
+  !include TestController.plantuml!0
+  !include TestService.plantuml!0
+  !include TestRepository.plantuml!0
+  !include TestEntity.plantuml!0
+
+  TestController -[hidden]-> TestService
+  TestService -[hidden]-> TestRepository
+  TestRepository -[hidden]-> TestEntity
+
+}
+
+@enduml

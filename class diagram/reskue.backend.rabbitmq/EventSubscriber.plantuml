@@ -1,0 +1,17 @@
+@startuml EventSubscriber
+
+abstract class EventSubscriber {
+  - @Autowired amqpAdmin: Amqpadmin
+  - @Autowired eventConsumer: EventConsumer
+  - queue: Queue
+  - binding: Binding
+  # identifier: String
+  # routingKey: String
+}
+EventSubscriber : # startReceivingEvents(): void
+EventSubscriber : # stopReceivingEvents(): void
+EventSubscriber : + {abstract} init(): void
+EventSubscriber : + getIdentifier(): String
+EventSubscriber : + getRoutingKey(): String
+
+@enduml

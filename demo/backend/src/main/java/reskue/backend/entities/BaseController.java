@@ -65,7 +65,7 @@ public abstract class BaseController<E extends BaseEntity<E>, R extends BaseRepo
 	
 	@DeleteMapping(BaseEntity.ID_MAPPING)
 	@RolesAllowed("administrator")
-	public Map<String, Boolean> deleteCultureGood(
+	public Map<String, Boolean> delete(
 			@PathVariable(value = BaseEntity.ID) long id
 			) throws Exception {
 		

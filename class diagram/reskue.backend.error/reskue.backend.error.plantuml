@@ -1,0 +1,12 @@
+@startuml reskue.backend.error
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 50
+
+package "reskue.backend.error" as error {
+
+  !include ErrorController.plantuml!0
+
+}
+
+@enduml

@@ -2,6 +2,7 @@ package reskue.backend.entities.test;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,8 @@ public class TestService extends BaseService<TestEntity, TestRepository> {
 	}
 	
 	@RabbitListener(queues = TestController.IDENTIFIER)
-	public void receiveMessage(String message) {
-		System.out.println(this.identifier + " received: " + message);
+	public void receiveMessage(Message message) {
+		System.out.println(this.identifier + " received: " + message.toString());
 	}
 	
 }

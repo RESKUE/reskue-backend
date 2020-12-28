@@ -21,7 +21,12 @@ public abstract class BaseService<E extends BaseEntity<E>, R extends BaseReposit
 		rabbitTemplate.convertAndSend(
 				EventConfiguration.TOPIC_EXCHANGE,
 				EventConfiguration.QUEUE, 
-				object);
+				object,
+				m -> {
+				    m.getMessageProperties().getHeaders().put("senderIdentifier", this.identifier);
+				    m.getMessageProperties().getHeaders().put("senderRoutingKey", this.routingKey);
+				    return m;
+				});
 	}
 	
 	public List<E> findAll() {

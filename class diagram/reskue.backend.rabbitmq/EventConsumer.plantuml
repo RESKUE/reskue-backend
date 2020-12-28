@@ -1,0 +1,14 @@
+@startuml EventConsumer
+
+class EventConsumer {
+  @Component
+  --
+  - @Autowired rabbitTemplate: RabbitTemplate
+  - subscribers: Map<String, String>
+  --
+}
+EventConsumer : + receiveMessage(message: String): void
+EventConsumer : + subscribe(identifier: String, routingKey: String): void
+EventConsumer : + unsubscriber(identifier: String): void
+
+@enduml
