@@ -1,0 +1,53 @@
+BaseEntity (Framework):
+	- id
+ReskueEntity extends BaseEntity:
+	- name
+	- description
+	- Comments
+	- Tags
+	- media
+CulturalAsset extends ReskueEntity:
+	- location
+	- level: first is 0, take parent.level + 1
+	- CulturalAssetGroup
+	- Tasks
+	- warning label
+CulturalAssetGroup extends ReskueEntity:
+	- location
+	- level: first is 0, take parent.level + 1
+	- CulturalAssetGroup (parent)
+	- CulturalAssets/CulturalAssetGroups (children)
+Task extends ReskueEntity:
+	- Subtasks
+	- state
+	- CulturalAsset
+	- Users (helper)
+	- User (contact)
+	- recommended number of workers
+Subtask extends BaseEntity:
+	- Task
+	- state
+	- text
+	- isRequired
+Comment extends BaseEntity:
+	- ReskueEntity
+	- message
+	- media
+	- User (author)
+	- Date (created_at)
+	- Date (updated_at)
+User extends BaseEntity:
+	- name
+	- keycloak id
+UserGroup extends BaseEntity:
+	- name
+	- Users
+Event extends BaseEntity:
+	- message
+	- type
+	- sender (User/System Component)
+	- receivers (User/System Component)
+	- ReskueEntity
+	- Date (send_at)
+Tag extends BaseEntity:
+	- type
