@@ -16,11 +16,11 @@ import kueres.entities.BaseController;
 import kueres.entities.BaseEntity;
 
 @RestController
-@RequestMapping(BaseController.API_ENDPOINT + EventController.ROUTE)
+@RequestMapping(EventController.ROUTE)
 public class EventController {
 
 	public static final String IDENTIFIER = "EventController";
-	public static final String ROUTE = "/event";
+	public static final String ROUTE = BaseController.API_ENDPOINT + "/event";
 	public static final String ROUTING_KEY = "event";
 	
 	@Autowired

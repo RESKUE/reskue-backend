@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>0</x>
+      <y>80</y>
+      <w>411</w>
+      <h>171</h>
+    </coordinates>
+    <panel_attributes>authentication
+database
+layer=1</panel_attributes>
+    <additional_attributes/>
+    <custom_code>allowResize(false);
+
+int y = textHeight() + 10;
+
+int cylinderWidth = 50;
+int cylinderHeight = cylinderWidth * 2;
+int cylinderCenterX = width / 2;
+int cylinderCenterY = y + cylinderHeight / 2;
+
+drawEllipse(cylinderCenterX, y, cylinderWidth, cylinderWidth / 2);
+drawArcOpen(cylinderCenterX - cylinderWidth, y + cylinderHeight - cylinderWidth/2, cylinderWidth * 2, cylinderWidth, 0, -180);
+//drawEllipse(cylinderCenterX, y + cylinderHeight, cylinderWidth, cylinderWidth / 2);
+drawLine(cylinderCenterX - cylinderWidth, y, cylinderCenterX - cylinderWidth, y + cylinderHeight);
+drawLine(cylinderCenterX + cylinderWidth, y, cylinderCenterX + cylinderWidth, y + cylinderHeight);
+
+int textY = cylinderCenterY;
+for(String textline : textlines) {
+	textY += printCenter(textline, textY);
+}</custom_code>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>310</x>
+      <y>80</y>
+      <w>411</w>
+      <h>171</h>
+    </coordinates>
+    <panel_attributes>content
+database
+layer=1</panel_attributes>
+    <additional_attributes/>
+    <custom_code>allowResize(false);
+
+int y = textHeight() + 10;
+
+int cylinderWidth = 50;
+int cylinderHeight = cylinderWidth * 2;
+int cylinderCenterX = width / 2;
+int cylinderCenterY = y + cylinderHeight / 2;
+
+drawEllipse(cylinderCenterX, y, cylinderWidth, cylinderWidth / 2);
+drawArcOpen(cylinderCenterX - cylinderWidth, y + cylinderHeight - cylinderWidth/2, cylinderWidth * 2, cylinderWidth, 0, -180);
+//drawEllipse(cylinderCenterX, y + cylinderHeight, cylinderWidth, cylinderWidth / 2);
+drawLine(cylinderCenterX - cylinderWidth, y, cylinderCenterX - cylinderWidth, y + cylinderHeight);
+drawLine(cylinderCenterX + cylinderWidth, y, cylinderCenterX + cylinderWidth, y + cylinderHeight);
+
+int textY = cylinderCenterY;
+for(String textline : textlines) {
+	textY += printCenter(textline, textY);
+}</custom_code>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>130</x>
+      <y>350</y>
+      <w>150</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Keycloak
+service
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>410</x>
+      <y>320</y>
+      <w>230</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>Spring Boot Application
+using KUERES
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>780</x>
+      <y>350</y>
+      <w>150</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>RabbitMQ
+service
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>270</x>
+      <y>380</y>
+      <w>160</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;140.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>630</x>
+      <y>380</y>
+      <w>170</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;</panel_attributes>
+    <additional_attributes>150.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>510</x>
+      <y>220</y>
+      <w>30</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>200</x>
+      <y>220</y>
+      <w>30</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>110</x>
+      <y>60</y>
+      <w>840</w>
+      <h>470</h>
+    </coordinates>
+    <panel_attributes>layer=0</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>450</x>
+      <y>520</y>
+      <w>150</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>API
+valign=center
+layer=1
+transparency=0</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>510</x>
+      <y>450</y>
+      <w>30</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+</diagram>
