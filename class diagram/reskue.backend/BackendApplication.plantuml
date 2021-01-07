@@ -1,8 +1,0 @@
-@startuml BackendApplication
-
-class BackendApplication {
-  @SpringBootApplication
-}
-BackendApplication : {static} + main(String[] args): void
-
-@enduml

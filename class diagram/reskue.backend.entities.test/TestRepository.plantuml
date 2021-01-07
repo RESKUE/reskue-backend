@@ -1,5 +1,0 @@
-@startuml TestRepository
-
-interface TestRepository
-
-@enduml

@@ -1,5 +1,0 @@
-@startuml DemoRepository
-
-interface DemoRepository
-
-@enduml

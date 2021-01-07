@@ -1,5 +1,0 @@
-@startuml BaseRepository
-
-interface BaseRepository<E extends BaseEntity<E>>
-
-@enduml
