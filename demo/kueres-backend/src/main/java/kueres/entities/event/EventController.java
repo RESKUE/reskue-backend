@@ -1,21 +1,28 @@
 package kueres.entities.event;
 
-import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.qos.logback.classic.Logger;
 import kueres.entities.BaseController;
 import kueres.entities.BaseEntity;
+import kueres.query.EntitySpecification;
+import kueres.query.SearchCriteria;
+import kueres.query.SortBuilder;
+import kueres.utility.Utility;
 
 @RestController
 @RequestMapping(EventController.ROUTE)
@@ -28,17 +35,40 @@ public class EventController {
 	@Autowired
 	protected EventService service;
 	
-	private static final Logger logger = (Logger) LoggerFactory.getLogger("logger");
-	
-	@GetMapping()
+	@GetMapping
 	@RolesAllowed({"administrator", "helper"})
-	public List<EventEntity> findAll() {
-		logger.info("Example log from {}", EventController.class.getSimpleName());
-		return service.findAll();
+	public Page<EventEntity> findAll(
+			@RequestParam Optional<String> filter,
+			@RequestParam Optional<String[]> sort,
+			@RequestParam Optional<Integer> page,
+			@RequestParam Optional<Integer> size
+			) {
+		
+		EntitySpecification<EventEntity> specification = null;
+		if (filter.isPresent()) {
+			String[] filters = filter.get().split(",");
+			specification = new EntitySpecification<EventEntity>();
+			for (String searchFilter : filters) {
+				specification.add(new SearchCriteria(searchFilter));
+			}
+		}
+		
+		Sort sorting = Sort.unsorted();
+		if (sort.isPresent()) {
+			sorting = SortBuilder.buildSort(sort.get());
+			Utility.LOG.info("sorting: {}", sorting);
+		}
+		
+		Pageable pagination = Pageable.unpaged();
+		if (page.isPresent() && size.isPresent()) {
+			pagination = PageRequest.of(page.get(), size.get(), sorting);
+		}
+		
+		return service.findAllImproved(specification, pagination);
 		
 	}
 	
-	@GetMapping(BaseEntity.ID_MAPPING)
+	@GetMapping("/findById/{id}")
 	@RolesAllowed({"administrator", "helper"})
 	public ResponseEntity<EventEntity> findById(
 			@PathVariable(value = BaseEntity.ID) long id
@@ -46,6 +76,16 @@ public class EventController {
 		
 		EventEntity entity = service.findById(id);
 		return ResponseEntity.ok().body(entity);
+		
+	}
+	
+	@GetMapping("/findByType/{type}")
+	@RolesAllowed({"administrator", "helper"})
+	public int findByType(
+			@PathVariable(value = "type") int type
+			) throws ResourceNotFoundException {
+		
+		return type;
 		
 	}
 	
