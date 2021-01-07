@@ -1,13 +1,14 @@
 package kueres.entities;
 
-import java.util.List;
-
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 import kueres.eventbus.EventSubscriber;
 import kueres.eventbus.RabbitMQConfiguration;
+import kueres.query.EntitySpecification;
 
 public abstract class BaseService<E extends BaseEntity<E>, R extends BaseRepository<E>> extends EventSubscriber {
 
@@ -29,10 +30,10 @@ public abstract class BaseService<E extends BaseEntity<E>, R extends BaseReposit
 				});
 	}
 	
-	public List<E> findAll() {
+	public Page<E> findAll(EntitySpecification<E> specification, Pageable pageable) {
 		
 		sendEvent("findAll has been called");
-		return repository.findAll();
+		return repository.findAll(specification, pageable);
 		
 	}
 	

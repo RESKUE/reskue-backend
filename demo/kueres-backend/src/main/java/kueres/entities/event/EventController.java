@@ -64,11 +64,11 @@ public class EventController {
 			pagination = PageRequest.of(page.get(), size.get(), sorting);
 		}
 		
-		return service.findAllImproved(specification, pagination);
+		return service.findAll(specification, pagination);
 		
 	}
 	
-	@GetMapping("/findById/{id}")
+	@GetMapping(BaseEntity.ID_MAPPING)
 	@RolesAllowed({"administrator", "helper"})
 	public ResponseEntity<EventEntity> findById(
 			@PathVariable(value = BaseEntity.ID) long id
@@ -76,16 +76,6 @@ public class EventController {
 		
 		EventEntity entity = service.findById(id);
 		return ResponseEntity.ok().body(entity);
-		
-	}
-	
-	@GetMapping("/findByType/{type}")
-	@RolesAllowed({"administrator", "helper"})
-	public int findByType(
-			@PathVariable(value = "type") int type
-			) throws ResourceNotFoundException {
-		
-		return type;
 		
 	}
 	
