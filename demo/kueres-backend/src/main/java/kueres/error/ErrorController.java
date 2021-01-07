@@ -1,7 +1,5 @@
 package kueres.error;
 
-import java.util.ArrayList;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,7 +32,7 @@ public class ErrorController {
 				+ "RequestUri: {}\n"
 				+ "ServletName: {}\n"
 				+ "StatusCode: {}\n", exception, exceptionType, message, requestUri, servletName, statusCode);
-        return new ResponseEntity<>("An error occurred", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("An error occurred. Error Code: " + statusCode, HttpStatus.BAD_REQUEST);
     }
 	
 }
