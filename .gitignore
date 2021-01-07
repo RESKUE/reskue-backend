@@ -8,6 +8,9 @@
 # - rabbitmq data
 # - keycloak data
 
+# Spring logfiles
+LogFile*
+
 # data
 /demo/auth-db/data/
 /demo/reskue-db/data/
