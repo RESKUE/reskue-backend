@@ -9,7 +9,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import kueres.entities.event.EventEntity;
 import kueres.query.EntitySpecification;
 import kueres.query.SearchCriteria;
 import kueres.query.SortBuilder;
@@ -38,7 +36,7 @@ public abstract class BaseController<E extends BaseEntity<E>, R extends BaseRepo
 	
 	@GetMapping()
 	@RolesAllowed({"administrator", "helper"})
-	public Page<E> findAll(
+	public List<E> findAll(
 			@RequestParam Optional<String> filter,
 			@RequestParam Optional<String[]> sort,
 			@RequestParam Optional<Integer> page,
@@ -56,16 +54,17 @@ public abstract class BaseController<E extends BaseEntity<E>, R extends BaseRepo
 		
 		Sort sorting = Sort.unsorted();
 		if (sort.isPresent()) {
+			Utility.LOG.info("sort is present");
 			sorting = SortBuilder.buildSort(sort.get());
 			Utility.LOG.info("sorting: {}", sorting);
 		}
 		
 		Pageable pagination = Pageable.unpaged();
 		if (page.isPresent() && size.isPresent()) {
-			pagination = PageRequest.of(page.get(), size.get(), sorting);
+			pagination = PageRequest.of(page.get(), size.get());
 		}
 		
-		return service.findAll(specification, pagination);
+		return service.findAll(specification, sorting, pagination);
 		
 	}
 	

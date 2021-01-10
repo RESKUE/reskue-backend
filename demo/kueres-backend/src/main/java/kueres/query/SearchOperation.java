@@ -9,18 +9,14 @@ public enum SearchOperation {
     LESS_THAN,
     NOT_EQUAL,
     EQUAL,
-    MATCH,
-    IN,
-    NOT_IN;
+    MATCH;
     
     public static final String[] OPERATION_SET = {
     		">",
     		"<",
     		"!",
     		"=",
-    		"~",
-    		"_",
-    		"-"};
+    		"~"};
     
     public static String getOperationSetRegex() {
     	return Arrays.stream(OPERATION_SET).collect(Collectors.joining("|"));
@@ -33,8 +29,6 @@ public enum SearchOperation {
 			case '!': return NOT_EQUAL;
 			case '=': return EQUAL;
 			case '~': return MATCH;
-			case '_': return IN;
-			case '-': return NOT_IN;
 			default: return null;
 		}
 	}

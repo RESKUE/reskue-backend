@@ -5,12 +5,14 @@ import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import kueres.entities.BaseEntity;
+import kueres.entities.event.EventEntity;
 
 @SuppressWarnings("serial")
 public class EntitySpecification<E extends BaseEntity<E>> implements Specification<E> {
@@ -46,16 +48,10 @@ public class EntitySpecification<E extends BaseEntity<E>> implements Specificati
 			case MATCH:
 				predicates.add(criteriaBuilder.like(root.get(criteria.getKey()), "%" + criteria.getValue().toString() + "%"));
 				break;
-			case IN:
-				predicates.add(criteriaBuilder.in(root.get(criteria.getKey())).value(criteria.getValue()));
-				break;
-			case NOT_IN:
-				predicates.add(criteriaBuilder.not(root.get(criteria.getKey())).in(criteria.getValue()));
-				break;
 			}
 		}
 		
-		return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+		return criteriaBuilder.and((Predicate[]) predicates.toArray());
 		
 	}
 	
