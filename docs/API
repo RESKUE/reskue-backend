@@ -5,19 +5,17 @@ BaseController:
 	- update
 	- delete
 ReskueController:
-	- findByName
 	- getAllComments
 	- getAllTags
 	- addTag
 	- removeTag
-	- abstract: findByTag
+	(- abstract: findByTag)
+/api/culturalAsset/1/comments
 /api/culturalAsset:
 	- addToCulturalAssetGroup
 	- removeFromCulturalAssetGroup
 	- getAllTasks
 	- getAsListItem (minified response for list views)
-	- getByLevel
-	- findByTag
 /api/culturalAssetGroup:
 	- addChild/Children
 	- getAllChildren
@@ -25,41 +23,29 @@ ReskueController:
 	- addToCulturalAssetGroup
 	- removeFromCulturalAssetGroup
 	- getAsListItem (minified response for list views)
-	- getByLevel
-	- findByTag
 /api/task:
-	- resetTask
-	- findByHelper
-	- findByContact
 	- assignHelperToTask
 	- removeHelperFromTask
 	- changeState
 	- getAllSubtasks
 	- getAllHelpers
 	- getAsListItem (minified response for list views)
-	- findByTag
 /api/subtask:
-	- resetSubtask
-	- findByTask
+	(- findByTask)
 	- changeState
+/api/comment/?filter=entity.id=1
 /api/comment:
-	- findByEntity
-	- findByUser
-	- findInDateRange
+	(- findByEntity)
+	(- findByUser)
 /api/user:
 /api/userGroup:
 	- addUser
 	- removeUser
 	- getAllUsers
-	- findByName
-	- findByUser
+	(- findByUser)
 /api/event:
 	- sendEvent
-	- findByType
-	- findBySender
-	- findByReceiver
-	- findByEntityId
-	- findByEntityName
-	- findInDateRange
+	(- findByEntityId)
+	(- findByEntityName)
 /api/tag:
 /auth: KEYCLOAK
