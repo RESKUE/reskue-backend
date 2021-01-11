@@ -9,8 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import kueres.entities.BaseEntity;
@@ -45,7 +45,7 @@ public class EventEntity extends BaseEntity<EventEntity> {
 	public void setType(int type) {
 		this.type = type;
 	}
-
+	
 	@Column(name = "sender", nullable = false)
 	private String sender;
 	public static final String SENDER = "sender";

@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,8 @@ import kueres.utility.Utility;
 @Repository
 public class FileSystemRepository {
 
-	private static String MEDIA_DIR = "/home/tim/Desktop/media/";
+	@Value("${media.dir}")
+	private String MEDIA_DIR;
 	
 	public String save(long id, byte[] content) throws IOException {
 		
