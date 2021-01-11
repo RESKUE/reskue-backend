@@ -1,0 +1,1789 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <help_text>// Uncomment the following line to change the fontsize and font:
+fontsize=10
+// fontfamily=SansSerif //possible: SansSerif,Serif,Monospaced
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Welcome to UMLet!
+//
+// Double-click on elements to add them to the diagram, or to copy them
+// Edit elements by modifying the text in this panel
+// Hold Ctrl to select multiple elements
+// Use Ctrl+mouse to select via lasso
+//
+// Use +/- or Ctrl+mouse wheel to zoom
+// Drag a whole relation at its central square icon
+//
+// Press Ctrl+C to copy the whole diagram to the system clipboard (then just paste it to, eg, Word)
+// Edit the files in the "palettes" directory to create your own element palettes
+//
+// Select "Custom Elements &gt; New..." to create new element types
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// This text will be stored with each diagram;  use it for notes.</help_text>
+  <zoom_level>11</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3410</x>
+      <y>913</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+ReskueRepository
+--
+--
+/+ findByTag(tag: String): List&lt;ReskueEntity&gt;/
+
+//Style
+bg=#d3d3d3
+layer=2
+group=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2871</x>
+      <y>1430</y>
+      <w>352</w>
+      <h>286</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+CulturalAssetEntity
+--
+- location: LocationEntity
+- node: NodeEntity
+- tasks: List&lt;TaskEntity&gt;
+- label: String
+_+ LOCATION: String_
+_+ NODE: String_
+_+ TASKS: String_
+_+ LABEL: String_
+--
++ getLocation(): LocationEntity
++ setLocation(location: LocationEntity)
++ getNode(): NodeEntity
++ setNode(node: NodeEntity)
++ getTasks(): List&lt;TaskEntity&gt;
++ setTasks(tasks: List&lt;TaskEntity&gt;)
++ getLabel(): String
++ setLabel(label: String)
++ applyPatch(patch: CulturalAssetEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=3
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4356</x>
+      <y>913</y>
+      <w>352</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>/ReskueController/
+--
+--
++ getAllComments(): List&lt;CommentEntity&gt;
++ addTag(tag: String)
++ removeTag(tag: String)
+/+ findByTag(tag: String): List&lt;ReskueEntity&gt;/
+
+//Style
+bg=#d3d3d3
+layer=2
+group=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3883</x>
+      <y>913</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>/ReskueService/
+--
+--
++ addTag(tag: String)
++ removeTag(tag: String)
+/+ findByTag(tag: String): List&lt;ReskueEntity&gt;/
+
+//Style
+bg=#d3d3d3
+layer=2
+group=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2871</x>
+      <y>913</y>
+      <w>352</w>
+      <h>330</h>
+    </coordinates>
+    <panel_attributes>/ReskueEntity/
+--
+- name: String
+- description: String
+- tags: String[]
+- comments: List&lt;CommentEntity&gt;
+- media: List&lt;MediaEntity&gt;
+_+ NAME: String_
+_+ DESCRIPTION: String_
+_+ TAGS: String_
+_+ COMMENTS: String_
+_+ MEDIA: String_
+--
++ getName(): String
++ setName(name: String)
++ getDescription(): String
++ setDescription(description: String)
++ getTags(): String[]
++ setTags(tags: String[])
++ getComments(): List&lt;CommentEntity&gt;
++ setComments(comments: List&lt;CommenEntity&gt;)
++ getMedia(): List&lt;MediaEntity&gt;
++ setMedia(media: List&lt;MediaEntity&gt;)
++ applyPatch(patch: ReskueEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1584</x>
+      <y>913</y>
+      <w>352</w>
+      <h>286</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+NodeEntity
+--
+- culturalAsset: CulturalAssetEntity
+- level: int
+- culturalAssetParent: NodeEntity
+- culturalAssetChildren: List&lt;NodeEntity&gt;
+_+ CULTURALASSET: String_
+_+ LEVEL: String_
+_+ CULTURALASSETPARENT: String_
+_+ CULTURALASSETCHILDREN: String_
+--
++ getCulturalAsset(): CulturalAssetEntity
++ setCulturalAsset(culturalAsset: CulturalAssetEntity)
++ getLevel(): int
++ setLevel(level: int)
++ getCulturalAssetParent(): NodeEntity
++ setCulturalAssetParent(culturalAssetParent: NodeEntity)
++ getCulturalAssetChildren(): List&lt;NodeEntity&gt;
++ setCulturalAssetChildren(culturalAssetChildren: List&lt;NodeEntity&gt;)
++ applyPatch(patch: CulturalAssetGroupEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=4</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2871</x>
+      <y>1903</y>
+      <w>352</w>
+      <h>396</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+TaskEntity
+--
+- state: int
+- culturalAsset: CulturalAssetEntity
+- subtasks: List&lt;SubtaskEntity&gt;
+- contactUser: UserEntity
+- helperUsers: List&lt;UserEntity&gt;
+- recommendedHelpers: int
+_+ STATE: String_
+_+ CULTURALASSET: String_
+_+ SUBTASK: String_
+_+ CONTACTUSER: String_
+_+ HELPERUSERS: String_
+_+ RECOMMENDEDHELPERS: String_
+--
++ getState(): int
++ setState(state: int)
++ getCulturalAsset(): CulturalAssetEntity
++ setCulturalAsset(culturalAsset: CulturalAssetEntity)
++ getSubtasks(): List&lt;SubtaskEntity&gt;
++ setSubtasks(subtasks: List&lt;SubtaskEntity&gt;)
++ getContactUser(): UserEntity
++ setContactUser(contactUser: UserEntity)
++ getHelperUsers(): List&lt;UserEntity&gt;
++ setHelperUsers(helperUsers: List&lt;UserEntity&gt;)
++ getRecommendedHelpers(): int
++ setRecommendedHelpers(recommendedHelpers: int)
++ applyPatch(patch: TaskEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=5</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1584</x>
+      <y>1386</y>
+      <w>352</w>
+      <h>286</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+SubtaskEntity
+--
+- task: TaskEntity
+- state: int
+- text: String
+- isRequired: Boolean
+_+ TASK: String_
+_+ STATE: String_
+_+ TEXT: String_
+_+ ISREQUIRED: String_
+--
++ getTask(): TaskEntity
++ setTask(task: TaskEntity)
++ getState(): int
++ setState(state: int)
++ getText(): String
++ setText(text: String)
++ getIsRequired(): boolean
++ setIsRequired(isRequired: boolean)
++ applyPatch(patch: SubtaskEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=6</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1584</x>
+      <y>1859</y>
+      <w>352</w>
+      <h>396</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+CommentEntity
+--
+- reskueEntity: ReskueEntity
+- text: String
+- media: List&lt;MediaEntity&gt;
+- author: UserEntity
+- createdAt: Date
+- updatedAt: Date
+_+ RESKUEENTITY: String_
+_+ TEXT: String_
+_+ MEDIA: String_
+_+ AUTHOR: String_
+_+ CREATEDAT: String_
+_+ UPDATEDAT: String_
+--
++ getReskueEntity(): ReskueEntity
++ setReskueEntity(reskueEntity: ReskueEntity)
++ getText(): String
++ setText(text: String)
++ getMedia(): List&lt;MediaEntity&gt;
++ setMedia(media: List&lt;MediaEntity&gt;)
++ getAuthor(): UserEntity
++ setAuthor(author: UserEntity)
++ getCreatedAt(): Date
++ setCreatedAt(createdAt: Date)
++ getUpdatedAt(): Date
++ setUpdatedAt(updatedAt: Date)
++ applyPatch(patch: CommentEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=7</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1584</x>
+      <y>2442</y>
+      <w>352</w>
+      <h>396</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+UserEntity
+--
+- name: String
+- keycloakId: String
+- contactTasks: List&lt;TaskEntity&gt;
+- helperTasks: List&lt;TaskEntity&gt;
+- commentAuthor: List&lt;CommentEntity&gt;
+- userGroups: List&lt;UserGroupEntity&gt;
+_+ NAME: String_
+_+ KEYCLOAKID: String_
+_+ CONTACTTASKS: String_
+_+ HELPERTASKS: String_
+_+ COMMENTAUTHOR: String_
+_+ USERGROUPS: String_
+--
++ getName(): String
++ setName(name: String)
++ getKEYCLOAKID(): String
++ setKEYCLOAKID(keycloakId: String)
++ getContactTasks(): List&lt;TaskEntity&gt;
++ setContactTasks(contactTasks: List&lt;TaskEntity&gt;)
++ getHelperTasks(): List&lt;TaskEntity&gt;
++ setHelperTasks(helperTasks: List&lt;TaskEntity&gt;)
++ getCommentAuthor(): List&lt;CommentEntity&gt;
++ setCommentAuthor(comments: List&lt;CommentEntity&gt;)
++ getUserGroups(): List&lt;UserGroupEntity&gt;
++ setUserGroups(userGroups: List&lt;UserGroupEntity&gt;)
++ applyPatch(patch: UserEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1584</x>
+      <y>3025</y>
+      <w>352</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+UserGroupEntity
+--
+- name: String
+- users: List&lt;UserEntity&gt;
+_+ NAME: String_
+_+ USERS: String_
+--
++ getName(): String
++ setName(name: String)
++ getUsers(): List&lt;UserEntity&gt;
++ setUsers(users: List&lt;UserEntity&gt;)
++ applyPatch(patch: UserGroupEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=9</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4356</x>
+      <y>1430</y>
+      <w>352</w>
+      <h>209</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Controller&gt;&gt;
+CulturalAssetController
+--
+_+ ROUTE: String_
+--
+//Node Stuff
++ addCulturalAssetChild(child: CulturalAssetEntity)
++ removeCulturalAssetChild(child: CulturalAssetEntity)
++ addCulturalAssetParent(parent: CulturalAssetEntity)
++ removeCulturalAssetParent()
++ getAllChildren(): List&lt;CulturalAssetEntity&gt;
++ findByLevel(level: int) List&lt;CulturalAssetEntity&gt;
+//Distance Stuff
++ getDistance(location: LocationEntity): String/int?
++ findByDistance(location: LocationEntity, distance: String/int): List&lt;CulturalAssetEntity&gt;
+//Cultural Asset Stuff
++ getAllTasks(): List&lt;TaskEntity&gt;
++ findByTag(tag: String): List&lt;CulturalAssetEntity&gt;
+
+//Style
+bg=#d3d3d3
+layer=2
+group=3</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4356</x>
+      <y>1903</y>
+      <w>352</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Controller&gt;&gt;
+TaskController
+--
+_+ ROUTE: String_
+--
++ addHelper(helper: UserEntity)
++ removeHelper(helper: UserEntity)
++ changeState(state: int)
++ getAllSubTasks(): List&lt;SubTaskEntity&gt;
++ getAllHelpers(): List&lt;UserEntity&gt;
++ findByTag(tag: String): List&lt;TaskEntity&gt;
+
+//Style
+bg=#d3d3d3
+layer=2
+group=5</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>99</x>
+      <y>1386</y>
+      <w>352</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Controller&gt;&gt;
+SubtaskController
+--
+_+ ROUTE: String_
+--
++ changeState(state: int)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=6</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>99</x>
+      <y>1859</y>
+      <w>352</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Controller&gt;&gt;
+CommentController
+--
+_+ ROUTE: String_
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=7</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>99</x>
+      <y>2442</y>
+      <w>352</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Controller&gt;&gt;
+UserController
+--
+_+ ROUTE: String_
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>99</x>
+      <y>3025</y>
+      <w>352</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Controller&gt;&gt;
+UserGroupController
+--
+_+ ROUTE: String_
+--
++ addUser(user: UserEntity)
++ removeUser(user: UserEntity)
++ getAllUsers(): List&lt;UserEntity&gt;
+
+//Style
+bg=#d3d3d3
+layer=2
+group=9</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>2849</x>
+      <y>869</y>
+      <w>1881</w>
+      <h>396</h>
+    </coordinates>
+    <panel_attributes>entities.reskue
+--
+
+//Style
+bg=white
+layer=1
+group=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>2849</x>
+      <y>1386</y>
+      <w>1881</w>
+      <h>352</h>
+    </coordinates>
+    <panel_attributes>entities.culturalasset
+--
+
+//Style
+bg=white
+layer=1
+group=3</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3883</x>
+      <y>1430</y>
+      <w>286</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Service&gt;&gt;
+CulturalAssetService
+--
+--
++ addCulturalAssetChild(child: CulturalAssetEntity)
++ removeCulturalAssetChild(child: CulturalAssetEntity)
++ addCulturalAssetParent(parent: CulturalAssetEntity)
++ removeCulturalAssetParent()
++ findByLevel(level: int) List&lt;CulturalAssetEntity&gt;
++ getDistance(location: LocationEntity): String/int?
++ findByTag(tag: String): List&lt;CulturalAssetEntity&gt;
+
+//Style
+bg=#d3d3d3
+layer=2
+group=3
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1111</x>
+      <y>913</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+NodeRepository
+--
+--
++++
+
+//Style
+bg=#d3d3d3
+layer=2
+group=4</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>616</x>
+      <y>869</y>
+      <w>1342</w>
+      <h>352</h>
+    </coordinates>
+    <panel_attributes>entities.node
+--
+
+//Style
+bg=white
+layer=1
+group=4</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>638</x>
+      <y>913</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Service&gt;&gt;
+NodeService
+--
+--
++++
+
+//Style
+bg=#d3d3d3
+layer=2
+group=4</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3410</x>
+      <y>1430</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+CulturalAssetRepository
+--
+--
++ findByTag(tag: String): List&lt;CulturalAssetEntity&gt;
+
+//Style
+bg=#d3d3d3
+layer=2
+group=3</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>2849</x>
+      <y>1859</y>
+      <w>1881</w>
+      <h>462</h>
+    </coordinates>
+    <panel_attributes>entities.task
+--
+
+//Style
+bg=white
+layer=1
+group=5</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3883</x>
+      <y>1903</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Service&gt;&gt;
+TaskService
+--
+--
++ addHelper(helper: UserEntity)
++ removeHelper(helper: UserEntity)
++ changeState(state: int)
++ findByTag(tag: String): List&lt;TaskEntity&gt;
+
+//Style
+bg=#d3d3d3
+layer=2
+group=5</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3410</x>
+      <y>1903</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+TaskRepository
+--
+--
++ findByTag(tag: String): List&lt;TaskEntity&gt;
+
+//Style
+bg=#d3d3d3
+layer=2
+group=5</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>77</x>
+      <y>1342</y>
+      <w>1881</w>
+      <h>352</h>
+    </coordinates>
+    <panel_attributes>entities.subtask
+--
+
+
+//Style
+bg=white
+layer=1
+group=6</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>638</x>
+      <y>1386</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Service&gt;&gt;
+SubtaskService
+--
+--
++ changeState(state: int)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=6</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1111</x>
+      <y>1386</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+SubtaskRepository
+--
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=6</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>77</x>
+      <y>1815</y>
+      <w>1881</w>
+      <h>462</h>
+    </coordinates>
+    <panel_attributes>entities.comment
+--
+
+//Style
+bg=white
+layer=1
+group=7</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>638</x>
+      <y>1859</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Service&gt;&gt;
+CommentService
+--
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=7</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1111</x>
+      <y>1859</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+CommentRepository
+--
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=7</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>77</x>
+      <y>2398</y>
+      <w>1881</w>
+      <h>462</h>
+    </coordinates>
+    <panel_attributes>entities.user
+--
+
+//Style
+bg=white
+layer=1
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>638</x>
+      <y>2442</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Service&gt;&gt;
+UserService
+--
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1111</x>
+      <y>2442</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+UserRepository
+--
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>77</x>
+      <y>2981</y>
+      <w>1881</w>
+      <h>242</h>
+    </coordinates>
+    <panel_attributes>entities.usergroup
+--
+
+//Style
+bg=white
+layer=1
+group=9</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>638</x>
+      <y>3025</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Service&gt;&gt;
+UserGroupService
+--
+--
++ addUser(user: UserEntity)
++ removeUser(user: UserEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=9</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1111</x>
+      <y>3025</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+UserGroupRepository
+--
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=9</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1485</x>
+      <y>308</y>
+      <w>1584</w>
+      <h>627</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; ReskueEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;280.0;1420.0;280.0;1420.0;550.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1980</x>
+      <y>308</y>
+      <w>1595</w>
+      <h>627</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; ReskueEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;220.0;1430.0;220.0;1430.0;550.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2596</x>
+      <y>308</y>
+      <w>1452</w>
+      <h>627</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; ReskueEntity,
+R -&gt; ReskueRepository&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;160.0;1300.0;160.0;1300.0;550.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3245</x>
+      <y>308</y>
+      <w>1309</w>
+      <h>627</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; ReskueEntity,
+R -&gt; ReskueRepository,
+S -&gt; ReskueService&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0;1170.0;100.0;1170.0;550.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3036</x>
+      <y>1232</y>
+      <w>165</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; CulturalAssetEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;180.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3542</x>
+      <y>1001</y>
+      <w>165</w>
+      <h>462</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; CulturalAssetEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;400.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>4015</x>
+      <y>1001</y>
+      <w>176</w>
+      <h>451</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; CulturalAssetEntity,
+R -&gt; CulturalAssetRepository&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;390.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>4521</x>
+      <y>1001</y>
+      <w>176</w>
+      <h>451</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; CulturalAssetEntity,
+R -&gt; CulturalAssetRepository,
+S -&gt; CulturalAssetService&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;390.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3036</x>
+      <y>957</y>
+      <w>385</w>
+      <h>968</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; TaskEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>170.0;10.0;250.0;10.0;250.0;770.0;10.0;770.0;10.0;860.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>4521</x>
+      <y>957</y>
+      <w>385</w>
+      <h>968</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; TaskEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>170.0;10.0;250.0;10.0;250.0;770.0;10.0;770.0;10.0;860.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>4015</x>
+      <y>957</y>
+      <w>363</w>
+      <h>968</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; TastEntity,
+R -&gt; TastRepository&gt;
+layer=4</panel_attributes>
+    <additional_attributes>140.0;10.0;220.0;10.0;220.0;770.0;10.0;770.0;10.0;860.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3542</x>
+      <y>957</y>
+      <w>363</w>
+      <h>968</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; TastEntity,
+R -&gt; TastRepository,
+S -&gt; TastService&gt;
+layer=4</panel_attributes>
+    <additional_attributes>140.0;10.0;220.0;10.0;220.0;770.0;10.0;770.0;10.0;860.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1485</x>
+      <y>308</y>
+      <w>297</w>
+      <h>627</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; NodeEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;460.0;250.0;460.0;250.0;550.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1012</x>
+      <y>308</y>
+      <w>1001</w>
+      <h>627</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; NodeEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>890.0;10.0;890.0;220.0;10.0;220.0;10.0;460.0;220.0;460.0;220.0;550.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>539</x>
+      <y>308</y>
+      <w>2090</w>
+      <h>627</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; NodeEntity,
+R -&gt; NodeRepository&gt;
+layer=4</panel_attributes>
+    <additional_attributes>1880.0;10.0;1880.0;160.0;10.0;160.0;10.0;460.0;220.0;460.0;220.0;550.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1485</x>
+      <y>308</y>
+      <w>297</w>
+      <h>1100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; SubTaskEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;890.0;250.0;890.0;250.0;980.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1012</x>
+      <y>308</y>
+      <w>1001</w>
+      <h>1100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; SubTaskEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>890.0;10.0;890.0;220.0;10.0;220.0;10.0;890.0;220.0;890.0;220.0;980.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>539</x>
+      <y>308</y>
+      <w>2090</w>
+      <h>1100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; SubTaskEntity,
+R -&gt; SubTaskRepository&gt;
+layer=4</panel_attributes>
+    <additional_attributes>1880.0;10.0;1880.0;160.0;10.0;160.0;10.0;890.0;220.0;890.0;220.0;980.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>0</x>
+      <y>308</y>
+      <w>3278</w>
+      <h>1100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; SubTaskEntity,
+R -&gt; SubTaskRepository,
+S -&gt; SubTaskService&gt;
+layer=4</panel_attributes>
+    <additional_attributes>2960.0;10.0;2960.0;100.0;10.0;100.0;10.0;890.0;250.0;890.0;250.0;980.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1485</x>
+      <y>308</y>
+      <w>297</w>
+      <h>1573</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; CommentEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;1320.0;250.0;1320.0;250.0;1410.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1012</x>
+      <y>308</y>
+      <w>1001</w>
+      <h>1573</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; CommentEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>890.0;10.0;890.0;220.0;10.0;220.0;10.0;1320.0;220.0;1320.0;220.0;1410.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>539</x>
+      <y>308</y>
+      <w>2090</w>
+      <h>1573</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; CommentEntity,
+R -&gt; CommentRepository&gt;
+layer=4</panel_attributes>
+    <additional_attributes>1880.0;10.0;1880.0;160.0;10.0;160.0;10.0;1320.0;220.0;1320.0;220.0;1410.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>0</x>
+      <y>308</y>
+      <w>3278</w>
+      <h>1573</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; CommentEntity,
+R -&gt; CommentRepository,
+S -&gt; CommentService&gt;
+layer=4</panel_attributes>
+    <additional_attributes>2960.0;10.0;2960.0;100.0;10.0;100.0;10.0;1320.0;250.0;1320.0;250.0;1410.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1485</x>
+      <y>308</y>
+      <w>297</w>
+      <h>2156</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; UserEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;1850.0;250.0;1850.0;250.0;1940.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1012</x>
+      <y>308</y>
+      <w>1001</w>
+      <h>2156</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; UserEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>890.0;10.0;890.0;220.0;10.0;220.0;10.0;1850.0;220.0;1850.0;220.0;1940.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>539</x>
+      <y>308</y>
+      <w>2090</w>
+      <h>2156</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; UserEntity,
+R -&gt; UserRepository&gt;
+layer=4</panel_attributes>
+    <additional_attributes>1880.0;10.0;1880.0;160.0;10.0;160.0;10.0;1850.0;220.0;1850.0;220.0;1940.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>0</x>
+      <y>308</y>
+      <w>3278</w>
+      <h>2156</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; UserEntity,
+R -&gt; UserRepository,
+S -&gt; UserService&gt;
+layer=4</panel_attributes>
+    <additional_attributes>2960.0;10.0;2960.0;100.0;10.0;100.0;10.0;1850.0;250.0;1850.0;250.0;1940.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1485</x>
+      <y>308</y>
+      <w>297</w>
+      <h>2739</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; UserGroupEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;2380.0;250.0;2380.0;250.0;2470.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1012</x>
+      <y>308</y>
+      <w>1001</w>
+      <h>2739</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; UserGroupEntity&gt;
+layer=4</panel_attributes>
+    <additional_attributes>890.0;10.0;890.0;220.0;10.0;220.0;10.0;2380.0;220.0;2380.0;220.0;2470.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>539</x>
+      <y>308</y>
+      <w>2090</w>
+      <h>2739</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; UserGroupEntity,
+R -&gt; UserGroupRepository&gt;
+layer=4</panel_attributes>
+    <additional_attributes>1880.0;10.0;1880.0;160.0;10.0;160.0;10.0;2380.0;220.0;2380.0;220.0;2470.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>0</x>
+      <y>308</y>
+      <w>3278</w>
+      <h>2739</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+&lt;&lt;bind&gt;&gt;
+&lt;E -&gt; UserGroupEntity,
+R -&gt; UserGroupRepository,
+S -&gt; UserGroupService&gt;
+layer=4</panel_attributes>
+    <additional_attributes>2960.0;10.0;2960.0;100.0;10.0;100.0;10.0;2380.0;250.0;2380.0;250.0;2470.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1925</x>
+      <y>1067</y>
+      <w>968</w>
+      <h>968</h>
+    </coordinates>
+    <panel_attributes>lt=-
+belongs to
+CommentEntity to ReskueEntity
+ManyToOne
+layer=4</panel_attributes>
+    <additional_attributes>860.0;10.0;670.0;10.0;200.0;860.0;10.0;860.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1925</x>
+      <y>1045</y>
+      <w>968</w>
+      <h>550</h>
+    </coordinates>
+    <panel_attributes>lt=-
+node
+CulturalAssetEntity to NodeEntity
+OneToOne
+layer=4</panel_attributes>
+    <additional_attributes>860.0;480.0;670.0;480.0;200.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2926</x>
+      <y>1705</y>
+      <w>33</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>lt=-
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;180.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1925</x>
+      <y>1518</y>
+      <w>968</w>
+      <h>517</h>
+    </coordinates>
+    <panel_attributes>lt=-
+subtasks
+TaskEntity to SubtaskEntity
+OneToMany
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;200.0;10.0;670.0;450.0;860.0;450.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1925</x>
+      <y>2090</y>
+      <w>968</w>
+      <h>528</h>
+    </coordinates>
+    <panel_attributes>lt=-
+contact
+TaskEntity to UserEntity
+ManyToOne
+layer=4</panel_attributes>
+    <additional_attributes>10.0;460.0;200.0;460.0;670.0;10.0;860.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1925</x>
+      <y>2178</y>
+      <w>968</w>
+      <h>528</h>
+    </coordinates>
+    <panel_attributes>lt=-
+helper
+TaskEntity to UserEntity
+ManyToMany
+layer=4</panel_attributes>
+    <additional_attributes>10.0;460.0;200.0;460.0;670.0;10.0;860.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1925</x>
+      <y>2090</y>
+      <w>385</w>
+      <h>440</h>
+    </coordinates>
+    <panel_attributes>lt=-
+author
+CommentEntity to UserEntity
+ManyToOne
+layer=4</panel_attributes>
+    <additional_attributes>10.0;380.0;200.0;380.0;200.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1925</x>
+      <y>2761</y>
+      <w>385</w>
+      <h>330</h>
+    </coordinates>
+    <panel_attributes>lt=-
+user
+UserGroupEntity to UserEntity
+ManyToMany
+layer=4</panel_attributes>
+    <additional_attributes>10.0;280.0;200.0;280.0;200.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2838</x>
+      <y>2816</y>
+      <w>297</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;something static&gt;&gt;
+Tag
+--
+- Types
+--
+
+//Style
+bg=#d3d3d3
+layer=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2838</x>
+      <y>2948</y>
+      <w>297</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>Location
+--
+- ???Koordinates
+--
+
+//Style
+bg=#d3d3d3
+layer=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1364</x>
+      <y>88</y>
+      <w>242</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>/BaseEntity/
+--
+- id: long
+_+ ID: String_
+_+ ID_MAPPING: String_
+--
++ getId(): long
+/+ applyPatch(details: E)/
+
+//Style
+bg=#d3d3d3
+layer=2
+
+group=10</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1815</x>
+      <y>88</y>
+      <w>308</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+BaseRepository
+
+//Style
+bg=#d3d3d3
+layer=2
+
+group=10</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2288</x>
+      <y>88</y>
+      <w>803</w>
+      <h>198</h>
+    </coordinates>
+    <panel_attributes>/BaseService/
+--
+- rabbitTemplate: RabbitTemplate
+# repository: R
+--
+# sendEvent(object: Object)
+# sendEvent(message: String, type: int, sender: String, receivers: String[], entity: BaseEntity)
++ findAll(specification: EntitySpecification&lt;E&gt;, pageable: Pageable): Page&lt;E&gt;
++ findById(id: long): E
++ create(entity: E): E
++ update(id: long, details: E): E
++ delete(id: long): E
+
+//Style
+bg=#d3d3d3
+layer=2
+group=10</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3135</x>
+      <y>88</y>
+      <w>957</w>
+      <h>165</h>
+    </coordinates>
+    <panel_attributes>/BaseController/
+--
+_+ API_ENDPOINT: String_
+# service: S
+--
++ findAll(filter: Optional&lt;String&gt;, sort: Optional&lt;String[]&gt;, page: Optional&lt;Integer&gt;, size: Optional&lt;Integer&gt;): Page&lt;E&gt;
++ findById(id: long): ResponseEntity&lt;E&gt;
++ create(entity: E): ResponseEntity&lt;E&gt;
++ update(id: long, details: E): ResponseEntity&lt;E&gt;
++ delete(id: long): Map&lt;String, Boolean&gt;
+
+//Style
+bg=#d3d3d3
+layer=2
+group=10</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1551</x>
+      <y>77</y>
+      <w>110</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>E: BaseEntity
+
+//Style
+lt=.
+bg=#d3d3d3
+transparency=0
+layer=3
+group=10</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2068</x>
+      <y>77</y>
+      <w>110</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>E: BaseEntity
+
+//Style
+lt=.
+bg=#d3d3d3
+transparency=0
+layer=3
+
+group=10</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2970</x>
+      <y>66</y>
+      <w>154</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>E: BaseEntity
+R: BaseRepository
+
+//Style
+lt=.
+bg=#d3d3d3
+transparency=0
+layer=3
+group=10</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3982</x>
+      <y>44</y>
+      <w>154</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>E: BaseEntity
+R: BaseRepository
+S: BaseService
+
+//Style
+lt=.
+bg=#d3d3d3
+transparency=0
+layer=3
+group=10</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3080</x>
+      <y>121</y>
+      <w>77</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+layer=4
+group=10</panel_attributes>
+    <additional_attributes>10.0;20.0;50.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2112</x>
+      <y>110</y>
+      <w>198</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+layer=4
+group=10</panel_attributes>
+    <additional_attributes>10.0;20.0;160.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1298</x>
+      <y>0</y>
+      <w>2860</w>
+      <h>308</h>
+    </coordinates>
+    <panel_attributes>entities
+--
+
+//Style
+bg=white
+layer=1
+group=10</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
