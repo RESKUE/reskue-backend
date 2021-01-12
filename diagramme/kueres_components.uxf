@@ -1,0 +1,743 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+  <zoom_level>13</zoom_level>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>546</x>
+      <y>377</y>
+      <w>312</w>
+      <h>117</h>
+    </coordinates>
+    <panel_attributes>auth
+--
+//Style
+bg=white
+layer=1
+group=3</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1248</x>
+      <y>377</y>
+      <w>234</w>
+      <h>312</h>
+    </coordinates>
+    <panel_attributes>entities
+--
+//Style
+bg=white
+layer=1
+group=13</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>884</x>
+      <y>377</y>
+      <w>338</w>
+      <h>247</h>
+    </coordinates>
+    <panel_attributes>eventbus
+--
+//Style
+bg=white
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>520</x>
+      <y>260</y>
+      <w>1313</w>
+      <h>884</h>
+    </coordinates>
+    <panel_attributes>kueres
+--
+//Style
+bg=white
+layer=0</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>546</x>
+      <y>520</y>
+      <w>247</w>
+      <h>117</h>
+    </coordinates>
+    <panel_attributes>error
+--
+//Style
+bg=white
+layer=1
+group=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>910</x>
+      <y>728</y>
+      <w>728</w>
+      <h>377</h>
+    </coordinates>
+    <panel_attributes>media
+--
+//Style
+bg=white
+layer=1
+group=15</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>546</x>
+      <y>806</y>
+      <w>273</w>
+      <h>312</h>
+    </coordinates>
+    <panel_attributes>query
+--
+//Style
+bg=white
+layer=1
+group=10</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>546</x>
+      <y>663</y>
+      <w>182</w>
+      <h>117</h>
+    </coordinates>
+    <panel_attributes>utility
+--
+//Style
+bg=white
+layer=1
+group=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>572</x>
+      <y>429</y>
+      <w>260</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>KeycloakConfiguration
+
+//Style
+bg=#d3d3d3
+layer=2
+group=3</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1274</x>
+      <y>429</y>
+      <w>182</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>BaseController
+
+//Style
+bg=#d3d3d3
+layer=2
+group=13</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1274</x>
+      <y>624</y>
+      <w>182</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>BaseEntity
+
+//Style
+bg=#d3d3d3
+layer=2
+group=13</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1274</x>
+      <y>559</y>
+      <w>182</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>BaseRepository
+
+//Style
+bg=#d3d3d3
+layer=2
+group=13</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1274</x>
+      <y>494</y>
+      <w>182</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>BaseService
+
+//Style
+bg=#d3d3d3
+layer=2
+group=13</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1599</x>
+      <y>494</y>
+      <w>182</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>EventService
+
+//Style
+bg=#d3d3d3
+layer=2
+group=14</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1599</x>
+      <y>429</y>
+      <w>182</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>EventController
+
+//Style
+bg=#d3d3d3
+layer=2
+group=14</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1599</x>
+      <y>624</y>
+      <w>182</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>EventEntity
+
+//Style
+bg=#d3d3d3
+layer=2
+group=14</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1599</x>
+      <y>559</y>
+      <w>182</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>EventRepository
+
+//Style
+bg=#d3d3d3
+layer=2
+group=14</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1118</x>
+      <y>975</y>
+      <w>325</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>MediaEntity
+
+//Style
+bg=#d3d3d3
+layer=2
+group=15</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>936</x>
+      <y>910</y>
+      <w>325</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>MediaRepository
+
+//Style
+bg=#d3d3d3
+layer=2
+group=15</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1118</x>
+      <y>780</y>
+      <w>325</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>MediaController
+
+//Style
+bg=#d3d3d3
+layer=2
+group=15</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1118</x>
+      <y>845</y>
+      <w>325</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>MediaService
+
+//Style
+bg=#d3d3d3
+layer=2
+group=15</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1287</x>
+      <y>910</y>
+      <w>325</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>FileSystemRepository
+
+//Style
+bg=#d3d3d3
+layer=2
+group=15</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1118</x>
+      <y>1040</y>
+      <w>325</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>MediaConfigurationProperties
+
+//Style
+bg=#d3d3d3
+layer=2
+group=15</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>910</x>
+      <y>494</y>
+      <w>286</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>EventConsumer
+
+//Style
+bg=#d3d3d3
+layer=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>910</x>
+      <y>559</y>
+      <w>286</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>EventSubscriber
+
+//Style
+bg=#d3d3d3
+layer=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>910</x>
+      <y>429</y>
+      <w>286</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>RabbitMQConfiguration
+
+//Style
+bg=#d3d3d3
+layer=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>572</x>
+      <y>715</y>
+      <w>130</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>Utility
+
+//Style
+bg=#d3d3d3
+layer=2
+group=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>572</x>
+      <y>572</y>
+      <w>195</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>ErrorController
+
+//Style
+bg=#d3d3d3
+layer=2
+group=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>572</x>
+      <y>858</y>
+      <w>221</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>EntitySpecification
+
+//Style
+bg=#d3d3d3
+layer=2
+group=10</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>572</x>
+      <y>923</y>
+      <w>221</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>SearchCriteria
+
+//Style
+bg=#d3d3d3
+layer=2
+group=10</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>572</x>
+      <y>988</y>
+      <w>221</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>SearchOperation
+
+//Style
+bg=#d3d3d3
+layer=2
+group=10</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>572</x>
+      <y>1053</y>
+      <w>221</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>SortBuilder
+
+//Style
+bg=#d3d3d3
+layer=2
+group=10</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1573</x>
+      <y>377</y>
+      <w>234</w>
+      <h>312</h>
+    </coordinates>
+    <panel_attributes>event
+--
+//Style
+bg=white
+layer=1
+group=14</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1027</x>
+      <y>520</y>
+      <w>39</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+layer=4</panel_attributes>
+    <additional_attributes>10.0;30.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1027</x>
+      <y>455</y>
+      <w>39</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+layer=4</panel_attributes>
+    <additional_attributes>10.0;30.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>663</x>
+      <y>884</y>
+      <w>39</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+layer=4
+group=10</panel_attributes>
+    <additional_attributes>10.0;30.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>663</x>
+      <y>949</y>
+      <w>39</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+layer=4
+group=10</panel_attributes>
+    <additional_attributes>10.0;30.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1352</x>
+      <y>455</y>
+      <w>39</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+layer=4
+group=13</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;30.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1352</x>
+      <y>520</y>
+      <w>39</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+layer=4
+group=13</panel_attributes>
+    <additional_attributes>10.0;30.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1443</x>
+      <y>481</y>
+      <w>182</w>
+      <h>52</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+
+layer=4</panel_attributes>
+    <additional_attributes>10.0;20.0;120.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1443</x>
+      <y>611</y>
+      <w>182</w>
+      <h>52</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+
+layer=4</panel_attributes>
+    <additional_attributes>10.0;20.0;120.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1443</x>
+      <y>546</y>
+      <w>182</w>
+      <h>52</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+
+layer=4</panel_attributes>
+    <additional_attributes>10.0;20.0;120.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1677</x>
+      <y>455</y>
+      <w>39</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+layer=4
+group=14</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;30.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1261</x>
+      <y>806</y>
+      <w>39</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+layer=4</panel_attributes>
+    <additional_attributes>10.0;30.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1079</x>
+      <y>871</y>
+      <w>130</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+layer=4
+group=15</panel_attributes>
+    <additional_attributes>80.0;10.0;80.0;20.0;10.0;20.0;10.0;30.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1365</x>
+      <y>871</y>
+      <w>117</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+layer=4
+group=15</panel_attributes>
+    <additional_attributes>70.0;30.0;70.0;20.0;10.0;20.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>546</x>
+      <y>312</y>
+      <w>195</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>Application
+
+//Style
+bg=#d3d3d3
+layer=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1027</x>
+      <y>585</y>
+      <w>117</w>
+      <h>312</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+layer=4</panel_attributes>
+    <additional_attributes>70.0;220.0;10.0;220.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1183</x>
+      <y>494</y>
+      <w>117</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+
+layer=4</panel_attributes>
+    <additional_attributes>10.0;60.0;40.0;60.0;40.0;10.0;70.0;10.0</additional_attributes>
+  </element>
+</diagram>
