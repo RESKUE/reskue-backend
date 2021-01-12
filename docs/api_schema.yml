@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: "RESKUE API"
   description: "API for the RESKUE project"
-  version: "1.0.0"
+  version: '1.0'
 paths:
   /api/culturalAsset:
     get:
@@ -111,6 +111,12 @@ paths:
     get:
       tags:
           - cultural asset
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       responses:
         '200':
           description: all tasks of a cultural asset
@@ -122,6 +128,12 @@ paths:
     get:
       tags:
           - cultural asset
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       responses:
         '200':
           description: all comments of a cultural asset
@@ -140,7 +152,7 @@ paths:
             type: integer
           required: true
         - in: path
-          name: state
+          name: tag
           schema:
             type: string
           required: true
@@ -162,7 +174,7 @@ paths:
             type: integer
           required: true
         - in: path
-          name: state
+          name: tag
           schema:
             type: string
           required: true
@@ -363,6 +375,12 @@ paths:
     get:
       tags:
           - task
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       responses:
         '200':
           description: all subtasks of a task
@@ -374,6 +392,12 @@ paths:
     get:
       tags:
           - task
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       responses:
         '200':
           description: all helpers of a task
@@ -385,6 +409,12 @@ paths:
     get:
       tags:
           - task
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       responses:
         '200':
           description: all comments of a task
@@ -425,7 +455,7 @@ paths:
             type: integer
           required: true
         - in: path
-          name: state
+          name: tag
           schema:
             type: string
           required: true
@@ -447,7 +477,7 @@ paths:
             type: integer
           required: true
         - in: path
-          name: state
+          name: tag
           schema:
             type: string
           required: true
@@ -940,6 +970,12 @@ paths:
     get:
       tags:
           - user group
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       responses:
         '200':
           description: all users of a user group
@@ -1073,6 +1109,105 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EventEntity'
+  /api/notification:
+    get:
+      tags:
+          - notification
+      parameters:
+        - in: query
+          name: filter
+          schema:
+            type: string
+          description: filter response attributes
+        - in: query
+          name: sort
+          schema:
+            type: string
+          description: sort response by attributes
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: page number for pagination
+        - in: query
+          name: size
+          schema:
+            type: integer
+          description: page size for pagination
+      responses:
+        '200':
+          description: all notifications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationEntity'
+  /api/notification/{id}:
+    get:
+      tags:
+        - notification
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: find a notification by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationEntity'
+    delete:
+      tags:
+        - notification
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: deletes a notification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationEntity'
+  /api/notification/sendNotification:
+    post:
+      tags:
+        - notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationEntity'
+      responses:
+        '200':
+          description: send a notification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationEntity'
+  /api/notification/userNotifications/{userId}:
+    get:
+      tags:
+        - notification
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: get all notifications of a user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationEntity'
   /api/media/:
     post:
       tags:
@@ -1144,31 +1279,27 @@ components:
           properties:
             label:
               type: string
-            location:
-              type: string
+            longitude:
+              type: object
+              description: double
+            latitude:
+              type: object
+              description: double
+            level:
+              type: integer
+            parent:
+              type: object
+              description: CulturalAssetEntity
+            children:
+              type: array
+              items:
+                type: object
+                description: CulturalAssetEntity
             tasks:
               type: array
               items:
                 type: object
                 description: TaskEntity
-    NodeEntity:
-      allOf:
-        - $ref: '#/components/schemas/BaseEntity'
-        - type: object
-          properties:
-            level:
-              type: integer
-            culturalAsset:
-              type: object
-              description: CulturalAssetEntity
-            parentNode:
-              type: object
-              description: NodeEntity
-            childNodes:
-              type: array
-              items:
-               type: object
-               description: NodeEntity
     TaskEntity:
       allOf:
         - $ref: '#/components/schemas/ReskueEntity'
@@ -1202,6 +1333,9 @@ components:
               type: string
             isRequired:
               type: boolean
+            task:
+              type: object
+              description: TaskEntity
     CommentEntity:
       allOf:
         - $ref: '#/components/schemas/BaseEntity'
@@ -1231,6 +1365,26 @@ components:
           properties:
             name:
               type: string
+            commentAuthor:
+              type: array
+              items:
+                type: object
+                description: CommentEntity
+            taskHelper:
+              type: array
+              items:
+                type: object
+                description: TaskEntity
+            taskContact:
+              type: array
+              items:
+                type: object
+                description: TaskEntity
+            userGroups:
+              type: array
+              items:
+                type: object
+                description: UserGroupEntity
     UserGroupEntity:
       allOf:
         - $ref: '#/components/schemas/BaseEntity'
@@ -1256,6 +1410,32 @@ components:
               type: string
             sendAt:
               type: string
+            entityId:
+              type: integer
+            entity:
+              type: object
+              description: ReskueEntity
+    NotificationEntity:
+      allOf:
+        - $ref: '#/components/schemas/BaseEntity'
+        - type: object
+          properties:
+            title:
+              type: string
+            message:
+              type: string
+            type:
+              type: integer
+            sender:
+              type: string
+            receivers:
+              type: array
+              items:
+                type: string
+            sendAt:
+              type: string
+            entityId:
+              type: integer
             entity:
               type: object
               description: ReskueEntity
@@ -1271,4 +1451,5 @@ tags:
   - name: user
   - name: user group
   - name: event
+  - name: notification
   - name: media
