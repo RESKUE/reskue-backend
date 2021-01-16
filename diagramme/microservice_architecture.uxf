@@ -1,17 +1,18 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="14.3.0">
-  <zoom_level>10</zoom_level>
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+  <zoom_level>9</zoom_level>
   <element>
     <type>CustomElementImpl</type>
     <coordinates>
-      <x>0</x>
-      <y>80</y>
-      <w>411</w>
-      <h>171</h>
+      <x>171</x>
+      <y>117</y>
+      <w>370</w>
+      <h>154</h>
     </coordinates>
-    <panel_attributes>authentication
+    <panel_attributes>auth
 database
-layer=1</panel_attributes>
+layer=1
+group=2
+</panel_attributes>
     <additional_attributes/>
     <custom_code>allowResize(false);
 
@@ -36,14 +37,15 @@ for(String textline : textlines) {
   <element>
     <type>CustomElementImpl</type>
     <coordinates>
-      <x>310</x>
-      <y>80</y>
-      <w>411</w>
-      <h>171</h>
+      <x>666</x>
+      <y>774</y>
+      <w>370</w>
+      <h>154</h>
     </coordinates>
-    <panel_attributes>content
+    <panel_attributes>overpass
 database
-layer=1</panel_attributes>
+layer=1
+group=3</panel_attributes>
     <additional_attributes/>
     <custom_code>allowResize(false);
 
@@ -68,120 +70,386 @@ for(String textline : textlines) {
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>130</x>
-      <y>350</y>
-      <w>150</w>
-      <h>90</h>
+      <x>288</x>
+      <y>360</y>
+      <w>135</w>
+      <h>81</h>
     </coordinates>
     <panel_attributes>Keycloak
 service
-layer=1</panel_attributes>
+layer=1
+group=2
+bg=#d3d3d3</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>410</x>
-      <y>320</y>
-      <w>230</w>
-      <h>140</h>
+      <x>540</x>
+      <y>333</y>
+      <w>207</w>
+      <h>126</h>
     </coordinates>
     <panel_attributes>Spring Boot Application
 using KUERES
-layer=1</panel_attributes>
+layer=1
+group=2
+bg=#d3d3d3</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>780</x>
-      <y>350</y>
-      <w>150</w>
-      <h>90</h>
+      <x>873</x>
+      <y>360</y>
+      <w>135</w>
+      <h>81</h>
     </coordinates>
     <panel_attributes>RabbitMQ
 service
-layer=1</panel_attributes>
+layer=1
+group=2
+bg=#d3d3d3</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>270</x>
-      <y>380</y>
-      <w>160</w>
-      <h>30</h>
+      <x>414</x>
+      <y>378</y>
+      <w>144</w>
+      <h>36</h>
     </coordinates>
-    <panel_attributes>lt=&lt;-&gt;</panel_attributes>
-    <additional_attributes>10.0;10.0;140.0;10.0</additional_attributes>
+    <panel_attributes>lt=&lt;-&gt;
+
+layer=4
+group=2</panel_attributes>
+    <additional_attributes>10.0;20.0;140.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>738</x>
+      <y>378</y>
+      <w>153</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;
+
+layer=4
+group=2</panel_attributes>
+    <additional_attributes>150.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>630</x>
-      <y>380</y>
-      <w>170</w>
-      <h>30</h>
+      <y>243</y>
+      <w>27</w>
+      <h>108</h>
     </coordinates>
-    <panel_attributes>lt=&lt;-&gt;</panel_attributes>
-    <additional_attributes>150.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>510</x>
-      <y>220</y>
-      <w>30</w>
-      <h>120</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-&gt;</panel_attributes>
+    <panel_attributes>lt=&lt;-&gt;
+
+layer=4
+group=2</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>200</x>
-      <y>220</y>
-      <w>30</w>
-      <h>150</h>
+      <x>351</x>
+      <y>243</y>
+      <w>27</w>
+      <h>135</h>
     </coordinates>
-    <panel_attributes>lt=&lt;-&gt;</panel_attributes>
+    <panel_attributes>lt=&lt;-&gt;
+
+layer=4
+group=2</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;130.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>110</x>
-      <y>60</y>
-      <w>840</w>
-      <h>470</h>
-    </coordinates>
-    <panel_attributes>layer=0</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>450</x>
-      <y>520</y>
-      <w>150</w>
-      <h>50</h>
+      <x>576</x>
+      <y>513</y>
+      <w>135</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>API
 valign=center
 layer=1
-transparency=0</panel_attributes>
+transparency=0
+bg=#d3d3d3</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>510</x>
+      <x>630</x>
       <y>450</y>
-      <w>30</w>
-      <h>90</h>
+      <w>27</w>
+      <h>81</h>
     </coordinates>
-    <panel_attributes>lt=&lt;-&gt;</panel_attributes>
+    <panel_attributes>lt=&lt;-&gt;
+
+layer=4</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>396</x>
+      <y>414</y>
+      <w>198</w>
+      <h>117</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;200.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>774</x>
+      <y>648</y>
+      <w>135</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>Overpass
+service
+layer=1
+group=3
+bg=#d3d3d3</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>378</x>
+      <y>648</y>
+      <w>135</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>Nominatim
+service
+layer=1
+group=3
+bg=#d3d3d3</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>576</x>
+      <y>648</y>
+      <w>135</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>OpenStreetMap
+service
+layer=1
+group=3
+bg=#d3d3d3</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>459</x>
+      <y>117</y>
+      <w>370</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>content
+database
+layer=1
+group=2</panel_attributes>
+    <additional_attributes/>
+    <custom_code>allowResize(false);
+
+int y = textHeight() + 10;
+
+int cylinderWidth = 50;
+int cylinderHeight = cylinderWidth * 2;
+int cylinderCenterX = width / 2;
+int cylinderCenterY = y + cylinderHeight / 2;
+
+drawEllipse(cylinderCenterX, y, cylinderWidth, cylinderWidth / 2);
+drawArcOpen(cylinderCenterX - cylinderWidth, y + cylinderHeight - cylinderWidth/2, cylinderWidth * 2, cylinderWidth, 0, -180);
+//drawEllipse(cylinderCenterX, y + cylinderHeight, cylinderWidth, cylinderWidth / 2);
+drawLine(cylinderCenterX - cylinderWidth, y, cylinderCenterX - cylinderWidth, y + cylinderHeight);
+drawLine(cylinderCenterX + cylinderWidth, y, cylinderCenterX + cylinderWidth, y + cylinderHeight);
+
+int textY = cylinderCenterY;
+for(String textline : textlines) {
+	textY += printCenter(textline, textY);
+}</custom_code>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>441</x>
+      <y>720</y>
+      <w>27</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;
+
+layer=4
+group=3</panel_attributes>
+    <additional_attributes>10.0;11.0;10.0;62.0</additional_attributes>
+  </element>
+  <element>
+    <type>CustomElementImpl</type>
+    <coordinates>
+      <x>261</x>
+      <y>774</y>
+      <w>370</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>nominatim
+database
+layer=1
+group=3
+</panel_attributes>
+    <additional_attributes/>
+    <custom_code>allowResize(false);
+
+int y = textHeight() + 10;
+
+int cylinderWidth = 50;
+int cylinderHeight = cylinderWidth * 2;
+int cylinderCenterX = width / 2;
+int cylinderCenterY = y + cylinderHeight / 2;
+
+drawEllipse(cylinderCenterX, y, cylinderWidth, cylinderWidth / 2);
+drawArcOpen(cylinderCenterX - cylinderWidth, y + cylinderHeight - cylinderWidth/2, cylinderWidth * 2, cylinderWidth, 0, -180);
+//drawEllipse(cylinderCenterX, y + cylinderHeight, cylinderWidth, cylinderWidth / 2);
+drawLine(cylinderCenterX - cylinderWidth, y, cylinderCenterX - cylinderWidth, y + cylinderHeight);
+drawLine(cylinderCenterX + cylinderWidth, y, cylinderCenterX + cylinderWidth, y + cylinderHeight);
+
+int textY = cylinderCenterY;
+for(String textline : textlines) {
+	textY += printCenter(textline, textY);
+}</custom_code>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>504</x>
+      <y>666</y>
+      <w>90</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;
+
+layer=4
+group=3</panel_attributes>
+    <additional_attributes>10.0;26.0;80.0;26.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>837</x>
+      <y>720</y>
+      <w>27</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;
+
+layer=4
+group=3</panel_attributes>
+    <additional_attributes>10.0;61.0;11.0;12.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>702</x>
+      <y>666</y>
+      <w>90</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;
+
+layer=4
+group=3</panel_attributes>
+    <additional_attributes>10.0;26.0;80.0;26.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1089</x>
+      <y>513</y>
+      <w>135</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>Client
+valign=center
+layer=1
+transparency=0
+bg=#d3d3d3</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>477</x>
+      <y>549</y>
+      <w>144</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;
+layer=4</panel_attributes>
+    <additional_attributes>140.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>630</x>
+      <y>549</y>
+      <w>27</w>
+      <h>117</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>684</x>
+      <y>549</y>
+      <w>135</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;130.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>702</x>
+      <y>531</y>
+      <w>405</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;430.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>270</x>
+      <y>81</y>
+      <w>756</w>
+      <h>846</h>
+    </coordinates>
+    <panel_attributes>RESKUE Backend
+--
+bg=white</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>
