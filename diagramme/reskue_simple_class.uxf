@@ -1,0 +1,1164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>3</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1215</x>
+      <y>1974</y>
+      <w>108</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseEntity&gt;&gt;
+UserGroupEntity
+--
+- name: String
+- users: List&lt;UserEntity&gt;
+_+ NAME: String_
+_+ USERS: String_
+--
++ getName(): String
++ setName(name: String)
++ getUsers(): List&lt;UserEntity&gt;
++ setUsers(users: List&lt;UserEntity&gt;)
++ applyPatch(patch: UserGroupEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=28</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1053</x>
+      <y>1923</y>
+      <w>270</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseController&gt;&gt;
+UserGroupController
+--
+_+ ROUTE: String_
+--
++ addUser(id: long, userId: long): ResponseEntity&lt;UserGroupEntity&gt;
++ removeUser(id: long, userId: long): ResponseEntity&lt;UserGroupEntity&gt;
++ getAllUsers(id: long, filter: Optional&lt;String&gt;, sort: Optional&lt;String[]&gt;, page: Optional&lt;Integer&gt;, size: Optional&lt;Integer&gt;): Page&lt;UserEntity&gt;
+
+//Style
+bg=#d3d3d3
+layer=2
+group=28</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>993</x>
+      <y>1974</y>
+      <w>210</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseService&gt;&gt;
+UserGroupService
+--
++ addUser(id: long, userId: long): UserGroupEntity
++ removeUser(id: long, userId: long): UserGroupEntity
++ getAllUsers(id: long, specification: EntitySpecification&lt;UserEntity&gt;, pageable: Pageable): Page&lt;UserEntity&gt;
+//Style
+bg=#d3d3d3
+layer=2
+group=28</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1125</x>
+      <y>2016</y>
+      <w>78</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseRepository&gt;&gt;
+&lt;&lt;interface&gt;&gt;
+UserGroupRepository
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=28</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>987</x>
+      <y>1911</y>
+      <w>342</w>
+      <h>135</h>
+    </coordinates>
+    <panel_attributes>usergroup
+--
+
+//Style
+bg=white
+layer=1
+group=28</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1188</x>
+      <y>1716</y>
+      <w>135</w>
+      <h>177</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseEntity&gt;&gt;
+UserEntity
+--
+- name: String
+- keycloakId: String
+- taskContact: List&lt;TaskEntity&gt;
+- taskHelper: List&lt;TaskEntity&gt;
+- commentAuthor: List&lt;CommentEntity&gt;
+- userGroups: List&lt;UserGroupEntity&gt;
+- notificationSender: List&lt;NotificationEntity&gt;
+- notificationReceiver: List&lt;NotificationEntity&gt;
+_+ NAME: String_
+_+ KEYCLOAK_ID: String_
+_+ TASK_CONTACT: String_
+_+ TASK_HELPER: String_
+_+ COMMENT_AUTHOR: String_
+_+ USER_GROUPS: String_
+_+ NOTIFICATION_SENDER: String_
+_+ NOTIFICATION_RECEIVER: String_
+--
++ getName(): String
++ setName(name: String)
++ getKeycloakId(): String
++ setKeycloakId(keycloakId: String)
++ getTaskContact(): List&lt;TaskEntity&gt;
++ setTaskContact(taskContact: List&lt;TaskEntity&gt;)
++ getTaskHelper(): List&lt;TaskEntity&gt;
++ setTaskHelper(taskContact: List&lt;TaskEntity&gt;)
++ getCommentAuthor(): List&lt;CommentEntity&gt;
++ setCommentAuthor(comments: List&lt;CommentEntity&gt;)
++ getUserGroups(): List&lt;UserGroupEntity&gt;
++ setUserGroups(userGroups: List&lt;UserGroupEntity&gt;)
++ getNotificationSender(): List&lt;NotificationEntity&gt;
++ setNotificationSender(notificationSender: List&lt;NotificationEntity&gt;)
++ getNotificationReceiver(): List&lt;NotificationEntity&gt;
++ setNotificationReceiver(notificationReceiver: List&lt;NotificationEntity&gt;)
++ applyPatch(patch: UserEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=33</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1032</x>
+      <y>1674</y>
+      <w>291</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseController&gt;&gt;
+UserController
+--
+_+ ROUTE: String_
+--
++ getAllUserGroups(id: long, filter: Optional&lt;String&gt;, sort: Optional&lt;String[]&gt;, page: Optional&lt;Integer&gt;, size: Optional&lt;Integer&gt;): Page&lt;UserGroupEntity&gt;
+//Style
+bg=#d3d3d3
+layer=2
+group=33</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>930</x>
+      <y>1716</y>
+      <w>246</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseService&gt;&gt;
+UserService
+--
++ getAllUserGroups(id: long, specification: EntitySpecification&lt;UserGroupEntity&gt;, pageable: Pageable): Page&lt;UserGroupEntity&gt;
+//Style
+bg=#d3d3d3
+layer=2
+group=33</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1098</x>
+      <y>1752</y>
+      <w>78</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseRepository&gt;&gt;
+&lt;&lt;interface&gt;&gt;
+UserRepository
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=33</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>924</x>
+      <y>1662</y>
+      <w>405</w>
+      <h>237</h>
+    </coordinates>
+    <panel_attributes>user
+--
+
+//Style
+bg=white
+layer=1
+group=33</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1215</x>
+      <y>1506</y>
+      <w>108</w>
+      <h>138</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseEntity&gt;&gt;
+CommentEntity
+--
+- reskueEntity: ReskueEntity
+- text: String
+- media: List&lt;MediaEntity&gt;
+- author: UserEntity
+- createdAt: Date
+- updatedAt: Date
+_+ RESKUE_ENTITY: String_
+_+ TEXT: String_
+_+ MEDIA: String_
+_+ AUTHOR: String_
+_+ CREATED_AT: String_
+_+ UPDATED_AT: String_
+--
++ getReskueEntity(): ReskueEntity
++ setReskueEntity(reskueEntity: ReskueEntity)
++ getText(): String
++ setText(text: String)
++ getMedia(): List&lt;MediaEntity&gt;
++ setMedia(media: List&lt;MediaEntity&gt;)
++ getAuthor(): UserEntity
++ setAuthor(author: UserEntity)
++ getCreatedAt(): Date
++ setCreatedAt(createdAt: Date)
++ getUpdatedAt(): Date
++ setUpdatedAt(updatedAt: Date)
++ applyPatch(patch: CommentEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=32</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1125</x>
+      <y>1473</y>
+      <w>198</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseController&gt;&gt;
+CommentController
+--
+_+ ROUTE: String_
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=32</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1125</x>
+      <y>1506</y>
+      <w>78</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseService&gt;&gt;
+CommentService
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=32</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1125</x>
+      <y>1542</y>
+      <w>78</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseRepository&gt;&gt;
+&lt;&lt;interface&gt;&gt;
+CommentRepository
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=32</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1119</x>
+      <y>1461</y>
+      <w>210</w>
+      <h>189</h>
+    </coordinates>
+    <panel_attributes>comment
+--
+
+//Style
+bg=white
+layer=1
+group=32</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1215</x>
+      <y>1344</y>
+      <w>108</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseEntity&gt;&gt;
+SubtaskEntity
+--
+- task: TaskEntity
+- state: int
+- text: String
+- isRequired: Boolean
+_+ TASK: String_
+_+ STATE: String_
+_+ TEXT: String_
+_+ IS_REQUIRED: String_
+--
++ getTask(): TaskEntity
++ setTask(task: TaskEntity)
++ getState(): int
++ setState(state: int)
++ getText(): String
++ setText(text: String)
++ getIsRequired(): boolean
++ setIsRequired(isRequired: boolean)
++ applyPatch(patch: SubtaskEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=31</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1107</x>
+      <y>1305</y>
+      <w>216</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseController&gt;&gt;
+SubtaskController
+--
+_+ ROUTE: String_
+--
++ changeState(id: long, state: int): ResponseEntity&lt;SubtaskEntity&gt;
+
+//Style
+bg=#d3d3d3
+layer=2
+group=31</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1107</x>
+      <y>1344</y>
+      <w>96</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseService&gt;&gt;
+SubtaskService
+--
++ changeState(id: long, state: int): SubtaskEntity
+
+//Style
+bg=#d3d3d3
+layer=2
+group=31</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1125</x>
+      <y>1380</y>
+      <w>78</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseRepository&gt;&gt;
+&lt;&lt;interface&gt;&gt;
+SubtaskRepository
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=31</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1101</x>
+      <y>1293</y>
+      <w>228</w>
+      <h>156</h>
+    </coordinates>
+    <panel_attributes>subtask
+--
+
+
+//Style
+bg=white
+layer=1
+group=31</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1215</x>
+      <y>1098</y>
+      <w>108</w>
+      <h>177</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseEntity&gt;&gt;
+NotificationEntity
+--
+- title: String
+- message: String
+- type: int
+- sender: UserEntity
+- receivers: List&lt;UserEntity&gt;
+- sendAt: Date
+- entityId: long
+- entity: CulturalAssetEntity
+_+ TITLE: String_
+_+ MESSAGE: String_
+_+ TYPE: String_
+_+ SENDER: String_
+_+ RECEIVERS: String_
+_+ SEND_AT: String_
+_+ ENTITY_ID: String_
+_+ ENTITY: String_
+--
++ getTitle(): String
++ setTitle(title: String)
++ getMessage(): String
++ setMessage(message: String)
++ getType(): int
++ setType(type: int)
++ getSender(): UserEntity
++ setSender(sender: UserEntity)
++ getReceivers(): List&lt;UserEntity&gt;
++ setReceivers(receivers: List&lt;UserEntity&gt;)
++ getSendAt(): Date
++ setSendAt(sendAt: Date)
++ getEntityId(): long
++ setEntityId(entityId: long)
++ getEntity(): CulturalAssetEntity
++ setEntity(entity: CulturalAssetEntity)
++ applyPatch(patch: NotificationEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=30</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1125</x>
+      <y>1134</y>
+      <w>78</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseRepository&gt;&gt;
+&lt;&lt;interface&gt;&gt;
+NotificationRepository
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=30</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1125</x>
+      <y>1098</y>
+      <w>78</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseService&gt;&gt;
+NotificationService
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=30</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1017</x>
+      <y>1050</y>
+      <w>306</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseController&gt;&gt;
+NotificationController
+--
+- userService
+_+ ROUTE: String_
+--
++ getAllUserNotifications(id: long, filter: Optional&lt;String&gt;, sort: Optional&lt;String[]&gt;, page: Optional&lt;Integer&gt;, size: Optional&lt;Integer&gt;): Page&lt;NotificationEntity&gt;
+
+
+//Style
+bg=#d3d3d3
+layer=2
+group=30</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1011</x>
+      <y>1038</y>
+      <w>318</w>
+      <h>243</h>
+    </coordinates>
+    <panel_attributes>notification
+--
+
+//Style
+bg=white
+layer=1
+group=30</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1674</x>
+      <y>1146</y>
+      <w>78</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseRepository&gt;&gt;
+&lt;&lt;interface&gt;&gt;
+ReskueRepository
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=37</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1554</x>
+      <y>1050</y>
+      <w>288</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseController&gt;&gt;
+/ReskueController/
+--
++ getAllComments(id: long, filter: Optional&lt;String&gt;, sort: Optional&lt;String[]&gt;, page: Optional&lt;Integer&gt;, size: Optional&lt;Integer&gt;): Page&lt;CommentEntity&gt;
++ getAllMedia(id: long, filter: Optional&lt;String&gt;, sort: Optional&lt;String[]&gt;, page: Optional&lt;Integer&gt;, size: Optional&lt;Integer&gt;): Page&lt;MediaEntity&gt;
++ addTag(id: long, tag: String): ResponseEntity&lt;ReskueEntity&gt;
++ removeTag(id: long, tag: String): ResponseEntity&lt;ReskueEntity&gt;
+//Style
+bg=#d3d3d3
+layer=2
+group=37</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1674</x>
+      <y>1098</y>
+      <w>240</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseService&gt;&gt;
+/ReskueService/
+--
++ getAllComments(id: long, specification: EntitySpecification&lt;CommentEntity&gt;, pageable: Pageable): Page&lt;CommentEntity&gt;
++ getAllMedia(id: long, specification: EntitySpecification&lt;MediaEntity&gt;, pageable: Pageable): Page&lt;MediaEntity&gt;
++ addTag(id: long, tag: String): ReskueEntity
++ removeTag(id: long, tag: String): ReskueEntity
+
+//Style
+bg=#d3d3d3
+layer=2
+group=37</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1548</x>
+      <y>1038</y>
+      <w>372</w>
+      <h>183</h>
+    </coordinates>
+    <panel_attributes>base
+--
+
+//Style
+bg=white
+layer=1
+group=37</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1554</x>
+      <y>1098</y>
+      <w>108</w>
+      <h>117</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseEntity&gt;&gt;
+/ReskueEntity/
+--
+- name: String
+- description: String
+- tags: String[]
+- comments: List&lt;CommentEntity&gt;
+- media: List&lt;MediaEntity&gt;
+_+ NAME: String_
+_+ DESCRIPTION: String_
+_+ TAGS: String_
+_+ COMMENTS: String_
+_+ MEDIA: String_
+--
++ getName(): String
++ setName(name: String)
++ getDescription(): String
++ setDescription(description: String)
++ getTags(): String[]
++ setTags(tags: String[])
++ getComments(): List&lt;CommentEntity&gt;
++ setComments(comments: List&lt;CommenEntity&gt;)
++ getMedia(): List&lt;MediaEntity&gt;
++ setMedia(media: List&lt;MediaEntity&gt;)
++ applyPatch(patch: ReskueEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=37</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1554</x>
+      <y>1329</y>
+      <w>147</w>
+      <h>195</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;ReskueEntity&gt;&gt;
+CulturalAssetEntity
+--
+- address: String
+- longitude: double
+- latitude: double
+- tasks: List&lt;TaskEntity&gt;
+- label: String
+- level: int
+- culturalAssetParent: CulturalAssetEntity
+- culturalAssetChildren: List&lt;CulturalAssetEntity&gt;
+- notifications: List&lt;NotificationEntity&gt;
+_+ ADDRESS: String_
+_+ LONGITUDE: String_
+_+ LATITUDE: String_
+_+ TASKS: String_
+_+ LABEL: String_
+_+ LEVEL: String_
+_+ CULTURAL_ASSET_PARENT: String_
+_+ CULTURAL_ASSET_CHILDREN: String_
+_+ NOTIFICATIONS: String_
+--
++ getAddress(): String
++ setAddress(address: String)
++ getLongitude(): double
++ setLongitude(longitude: double)
++ getLatitude(): double
++ setLatitude(latitude: String)
++ getTasks(): List&lt;TaskEntity&gt;
++ setTasks(tasks: List&lt;TaskEntity&gt;)
++ getLabel(): String
++ setLabel(label: String)
++ getLevel(): int
++ setLevel(level: int)
++ getCulturalAssetParent(): CulturalAssetEntity
++ setCulturalAssetParent(culturalAssetParent: CulturalAssetEntity)
++ getCulturalAssetChildren(): List&lt;CulturalAssetEntity&gt;
++ setCulturalAssetChildren(culturalAssetChildren: List&lt;CulturalAssetEntity&gt;)
++ getNotifications(): List&lt;NotificationEntity&gt;
++ setNotifications(notifications: List&lt;NotificationEntity&gt;)
++ applyPatch(patch: CulturalAssetEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+
+group=36</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1554</x>
+      <y>1245</y>
+      <w>363</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;ReskueController&gt;&gt;
+CulturalAssetController
+--
+- locationService: LocationService
+_+ ROUTE: String_
+--
++ addCulturalAssetChild(id: long, culturalAssetId: long): ResponseEntity&lt;CulturalAssetEntity&gt;
++ removeCulturalAssetChild(id: long, culturalAssetId: long): ResponseEntity&lt;CulturalAssetEntity&gt;
++ setCulturalAssetParent(id: long, culturalAssetId: long): ResponseEntity&lt;CulturalAssetEntity&gt;
++ removeCulturalAssetParent(id: long): ResponseEntity&lt;CulturalAssetEntity&gt;
++ getAllChildren(id: long, depth: int, filter: Optional&lt;String&gt;, sort: Optional&lt;String[]&gt;, page: Optional&lt;Integer&gt;, size: Optional&lt;Integer&gt;): Page&lt;CulturalAssetEntity&gt;
++ getDistance(id: long, longitude: double, latitude: double): ResponseEntity&lt;Double&gt;
++ findInRadius(radius: double, longitude: double, latitude: double, filter: Optional&lt;String&gt;, sort: Optional&lt;String[]&gt;, page: Optional&lt;Integer&gt;, size: Optional&lt;Integer&gt;): Page&lt;CulturalAssetEntity&gt;
++ getAllTasks(id: long, filter: Optional&lt;String&gt;, sort: Optional&lt;String[]&gt;, page: Optional&lt;Integer&gt;, size: Optional&lt;Integer&gt;): Page&lt;TaskEntity&gt;
+//Style
+bg=#d3d3d3
+layer=2
+group=36</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1713</x>
+      <y>1329</y>
+      <w>267</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;ReskueService&gt;&gt;
+CulturalAssetService
+--
++ addCulturalAssetChild(id: long, culturalAssetId: long): CulturalAssetEntity
++ removeCulturalAssetChild(id: long, culturalAssetId: long): CulturalAssetEntity
++ setCulturalAssetParent(id: long, culturalAssetId: long): CulturalAssetEntity
++ removeCulturalAssetParent(id: long): CulturalAssetEntity
++ getAllChildren(id: long, depth: int, specification: EntitySpecification&lt;CulturalAssetEntity&gt;, pageable: Pageable): Page&lt;CulturalAssetEntity&gt;
++ getAllTasks(id: long, specification: EntitySpecification&lt;TaskEntity&gt;, pageable: Pageable): Page&lt;TaskEntity&gt;
+
+//Style
+bg=#d3d3d3
+layer=2
+
+group=36</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1713</x>
+      <y>1389</y>
+      <w>78</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;ReskueRepository&gt;&gt;
+&lt;&lt;interface&gt;&gt;
+CulturalAssetRepository
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=36</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1548</x>
+      <y>1233</y>
+      <w>435</w>
+      <h>297</h>
+    </coordinates>
+    <panel_attributes>culturalasset
+--
+
+//Style
+bg=white
+layer=1
+group=36</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1554</x>
+      <y>1617</y>
+      <w>126</w>
+      <h>138</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;ReskueEntity&gt;&gt;
+TaskEntity
+--
+- state: int
+- culturalAsset: CulturalAssetEntity
+- subtasks: List&lt;SubtaskEntity&gt;
+- contactUser: UserEntity
+- helperUsers: List&lt;UserEntity&gt;
+- recommendedHelperUsers: int
+_+ STATE: String_
+_+ CULTURAL_ASSET: String_
+_+ SUBTASK: String_
+_+ CONTACT_USER: String_
+_+ HELPER_USERS: String_
+_+ RECOMMENDED_HELPER_USERS: String_
+--
++ getState(): int
++ setState(state: int)
++ getCulturalAsset(): CulturalAssetEntity
++ setCulturalAsset(culturalAsset: CulturalAssetEntity)
++ getSubtasks(): List&lt;SubtaskEntity&gt;
++ setSubtasks(subtasks: List&lt;SubtaskEntity&gt;)
++ getContactUser(): UserEntity
++ setContactUser(contactUser: UserEntity)
++ getHelperUsers(): List&lt;UserEntity&gt;
++ setHelperUsers(helperUsers: List&lt;UserEntity&gt;)
++ getRecommendedHelperUsers(): int
++ setRecommendedHelperUsers(recommendedHelperUsers: int)
++ applyPatch(patch: TaskEntity)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=35</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1554</x>
+      <y>1554</y>
+      <w>279</w>
+      <h>51</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;ReskueController&gt;&gt;
+TaskController
+--
+_+ ROUTE: String_
+--
++ addHelper(id: long, userId: long): ResponseEntity&lt;TaskEntity&gt;
++ removeHelper(id: long, userId: long): ResponseEntity&lt;TaskEntity&gt;
++ changeState(id: long, state: int): ResponseEntity&lt;TaskEntity&gt;
++ getAllSubtasks(id: long, filter: Optional&lt;String&gt;, sort: Optional&lt;String[]&gt;, page: Optional&lt;Integer&gt;, size: Optional&lt;Integer&gt;): Page&lt;SubtaskEntity&gt;
++ getAllHelpers(id: long, filter: Optional&lt;String&gt;, sort: Optional&lt;String[]&gt;, page: Optional&lt;Integer&gt;, size: Optional&lt;Integer&gt;): Page&lt;UserEntity&gt;
+
+//Style
+bg=#d3d3d3
+layer=2
+group=35</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1692</x>
+      <y>1617</y>
+      <w>231</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;ReskueService&gt;&gt;
+TaskService
+--
++ addHelper(id: long, userId: long): TaskEntity
++ removeHelper(id: long, userId: long): TaskEntity
++ changeState(id: long, state: int): TaskEntity
++ getAllSubtasks(id: long, specification: EntitySpecification&lt;SubtaskEntity&gt;, pageable: Pageable): Page&lt;SubtaskEntity&gt;
++ getAllHelpers(id: long, specification: EntitySpecification&lt;UserEntity&gt;, pageable: Pageable): Page&lt;UserEntity&gt;
+
+//Style
+bg=#d3d3d3
+layer=2
+group=35</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1692</x>
+      <y>1671</y>
+      <w>78</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;ReskueRepository&gt;&gt;
+&lt;&lt;interface&gt;&gt;
+TaskRepository
+--
+
+//Style
+bg=#d3d3d3
+layer=2
+group=35</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1548</x>
+      <y>1542</y>
+      <w>381</w>
+      <h>219</h>
+    </coordinates>
+    <panel_attributes>task
+--
+
+//Style
+bg=white
+layer=1
+group=35</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1320</x>
+      <y>1143</y>
+      <w>240</w>
+      <h>255</h>
+    </coordinates>
+    <panel_attributes>lt=-
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;290.0;10.0;640.0;830.0;780.0;830.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1320</x>
+      <y>1140</y>
+      <w>240</w>
+      <h>447</h>
+    </coordinates>
+    <panel_attributes>lt=-
+layer=4</panel_attributes>
+    <additional_attributes>780.0;10.0;640.0;10.0;290.0;1470.0;10.0;1470.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1320</x>
+      <y>1164</y>
+      <w>72</w>
+      <h>615</h>
+    </coordinates>
+    <panel_attributes>lt=-
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;220.0;10.0;220.0;2030.0;10.0;2030.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1320</x>
+      <y>1185</y>
+      <w>51</w>
+      <h>573</h>
+    </coordinates>
+    <panel_attributes>lt=-
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;150.0;10.0;150.0;1890.0;10.0;1890.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1530</x>
+      <y>1410</y>
+      <w>30</w>
+      <h>234</h>
+    </coordinates>
+    <panel_attributes>lt=-
+layer=4</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0;10.0;760.0;80.0;760.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1320</x>
+      <y>1380</y>
+      <w>240</w>
+      <h>285</h>
+    </coordinates>
+    <panel_attributes>lt=-
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;290.0;10.0;640.0;930.0;780.0;930.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1320</x>
+      <y>1677</y>
+      <w>240</w>
+      <h>123</h>
+    </coordinates>
+    <panel_attributes>lt=-
+layer=4</panel_attributes>
+    <additional_attributes>10.0;390.0;260.0;390.0;610.0;10.0;780.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1320</x>
+      <y>1698</y>
+      <w>240</w>
+      <h>123</h>
+    </coordinates>
+    <panel_attributes>lt=-
+layer=4</panel_attributes>
+    <additional_attributes>10.0;390.0;290.0;390.0;640.0;10.0;780.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>912</x>
+      <y>1020</y>
+      <w>1080</w>
+      <h>1038</h>
+    </coordinates>
+    <panel_attributes>reskue
+--
+
+//Style
+bg=white
+layer=0</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1320</x>
+      <y>1833</y>
+      <w>30</w>
+      <h>171</h>
+    </coordinates>
+    <panel_attributes>lt=-
+layer=4</panel_attributes>
+    <additional_attributes>10.0;550.0;80.0;550.0;80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1320</x>
+      <y>1599</y>
+      <w>30</w>
+      <h>138</h>
+    </coordinates>
+    <panel_attributes>lt=-
+layer=4</panel_attributes>
+    <additional_attributes>10.0;440.0;80.0;440.0;80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>975</x>
+      <y>1068</y>
+      <w>48</w>
+      <h>654</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.
+&lt;&lt;uses&gt;&gt;
+layer=4</panel_attributes>
+    <additional_attributes>10.0;2160.0;10.0;10.0;140.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2022</x>
+      <y>1269</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;BaseService&gt;&gt;
+LocationService</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1914</x>
+      <y>1269</y>
+      <w>114</w>
+      <h>12</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.
+&lt;&lt;uses&gt;&gt;
+layer=4</panel_attributes>
+    <additional_attributes>360.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+</diagram>
