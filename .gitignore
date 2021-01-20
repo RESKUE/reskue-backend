@@ -15,6 +15,7 @@ LogFile*
 /demo/auth-db/data/
 /demo/reskue-db/data/
 /demo/rabbitmq/data/
+/demo/location-db/data/
 
 ### Eclipse ###
 .metadata
