@@ -2,6 +2,8 @@ package kueres.media;
 
 import java.io.IOException;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,10 @@ public class MediaService {
 	
 	@Autowired
 	private FileSystemRepository fileSystemRepository;
+	
+	public void setFileSystemRepository(FileSystemRepository fileSystemRepository) {
+		this.fileSystemRepository = fileSystemRepository;
+	}
 	
 	public MediaEntity save(MultipartFile multipartFile) {
 		

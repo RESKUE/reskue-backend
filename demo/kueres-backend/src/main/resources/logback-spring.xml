@@ -50,9 +50,35 @@
 			</pattern>
 		</encoder>
 	</appender>
+	
+	<property name="LOG_FILE_EVENT" value="LogFileEvent" />
+	<appender name="FILE_EVENT"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_FILE_EVENT}.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${LOG_FILE_EVENT}.%d{yyyy-MM-dd}.gz
+			</fileNamePattern>
+
+			<!-- keep 30 days' worth of history capped at 3GB total size -->
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>3GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>
+				%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
 
 	<logger name="logger" level="INFO" additivity="false">
 		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="event" level="INFO" additivity="false">
+		<appender-ref ref="FILE_EVENT" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 

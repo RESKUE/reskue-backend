@@ -20,3 +20,9 @@ public class EventController extends BaseController<EventEntity, EventRepository
 	
 	
 }
+
+@RestController
+@RequestMapping("/api/event")
+class TestingController {
+	
+}

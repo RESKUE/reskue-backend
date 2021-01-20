@@ -5,14 +5,12 @@ import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import kueres.entities.BaseEntity;
-import kueres.entities.event.EventEntity;
 
 @SuppressWarnings("serial")
 public class EntitySpecification<E extends BaseEntity<E>> implements Specification<E> {

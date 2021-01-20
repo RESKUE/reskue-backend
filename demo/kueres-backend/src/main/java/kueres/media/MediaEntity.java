@@ -6,8 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import kueres.entities.BaseEntity;
+
 @Entity
-public class MediaEntity {
+public class MediaEntity{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
