@@ -8,9 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import kueres.entities.BaseEntity;
@@ -75,7 +75,7 @@ public class EventEntity extends BaseEntity<EventEntity> {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "test_id")
 	private TestEntity test;
-
+	public static final String TEST = "test";
 	public TestEntity getTest() {
 		return this.test;
 	}

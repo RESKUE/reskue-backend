@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,8 @@ import org.springframework.stereotype.Repository;
 import kueres.utility.Utility;
 
 @Repository
-public class FileSystemRepository {
+@Primary
+public class DefaultFileSystemRepository implements FileSystemRepository {
 
 	@Value("${media.dir}")
 	private String MEDIA_DIR;

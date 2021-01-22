@@ -1,0 +1,13 @@
+{
+  "name": "CulturalAsset",
+  "description": "another cultural asset",
+  "Locations": [{
+    "name": "location",
+    "description": "location of the cultural asset",
+    "encodingType": "application/vnd.geo+json",
+    "location": {
+      "type": "Point",
+      "coordinates": [0.5, 0.5]
+    }
+  }]
+}

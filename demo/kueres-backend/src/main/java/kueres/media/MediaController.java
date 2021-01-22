@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/media")
 public class MediaController {
-
+	
 	@Autowired
 	private MediaService service;
 	

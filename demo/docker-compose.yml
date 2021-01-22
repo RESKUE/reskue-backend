@@ -84,5 +84,49 @@ services:
       - ./rabbitmq/logs/:/var/log/rabbitmq/
     networks: 
       - reskue-network
+  location-db:
+    container_name: location-db
+    restart: always
+    image: location-database:latest
+    build:
+      context: ./location-db
+      dockerfile: ./location.db.dockerfile
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: ${POSTGRES_INITDB_ARGS}
+      POSTGRES_HOST_AUTH_METHOD: ${POSTGRES_HOST_AUTH_METHOD}
+      POSTGRES_DB: ${LOCATION_DB}
+    volumes:
+      - ./location-db/data/:/var/lib/postgresql/data
+    expose: 
+      - ${POSTGRES_PORT}
+    ports:
+      - ${LOCATION_DB_PORT}:${POSTGRES_PORT}
+    networks: 
+      - reskue-network
+  location-api:
+    image: fraunhoferiosb/frost-server:latest
+    container_name: location-api
+    restart: always
+    depends_on: 
+      - location-db
+    environment:
+      serviceRootUrl: http://localhost:${LOCATION_API_PORT}/FROST-Server
+      http_cors_enable: 'true'
+      http_cors_allowed.origins: '*'
+      persistence_db_driver: org.postgresql.Driver
+      persistence_db_url: jdbc:postgresql://location-db:${POSTGRES_PORT}/${LOCATION_DB}
+      persistence_db_username: ${POSTGRES_USER}
+      persistence_db_password: ${POSTGRES_PASSWORD}
+      persistence_autoUpdateDatabase: 'true'
+    expose:
+      - ${LOCATION_API_INTERNAL_PORT}
+      - ${LOCATION_API_MQTT_INTERNAL_PORT}
+    ports:
+      - ${LOCATION_API_PORT}:${LOCATION_API_INTERNAL_PORT}
+      - ${LOCATION_API_MQTT_PORT}:${LOCATION_API_MQTT_INTERNAL_PORT}
+    networks: 
+      - reskue-network
 networks:
   reskue-network:
