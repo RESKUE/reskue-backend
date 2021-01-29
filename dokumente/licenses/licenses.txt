@@ -1,0 +1,81 @@
+License types:
+- GNU General Public License, version 2, with the Classpath Exception
+- GNU General Public License v2.0
+- GNU Affero General Public License v3.0
+- Apache License 2.0
+- Creative Commons Zero v1.0 Universal
+- MIT License
+- Mozilla Public License Version 2.0
+- PostgreSQL License
+- EPL v1.0 and the LGPL 2.1
+- CC BY-SA 2.0
+- Open Data Commons
+
+Java: GNU General Public License, version 2, with the Classpath Exception
+https://openjdk.java.net/legal/gplv2+ce.html
+
+Geofabrik: Open Data Commons CC BY-SA 2.0
+https://download.geofabrik.de/europe/germany.html
+
+Docker engine: Apache License 2.0
+https://github.com/docker/engine/blob/master/LICENSE
+
+Docker CLI: Apache License 2.0
+https://github.com/docker/cli/blob/master/LICENSE
+
+Docker compose: Apache License 2.0
+https://github.com/docker/compose/blob/master/LICENSE
+
+Docker compose CLI: Apache License 2.0
+https://github.com/docker/compose-cli/blob/main/LICENSE
+
+Nominatim Docker: Creative Commons Zero v1.0 Universal
+https://github.com/mediagis/nominatim-docker/blob/master/LICENSE
+
+Nominatim by OSM: GNU General Public License v2.0
+https://github.com/osm-search/Nominatim/blob/master/COPYING
+
+OSM Website: GNU General Public License v2.0
+https://github.com/openstreetmap/openstreetmap-website/blob/master/LICENSE
+
+Overpass API Docker: MIT License
+https://github.com/wiktorn/Overpass-API/blob/master/LICENSE
+
+Overpass API: GNU Affero General Public License v3.0
+https://github.com/drolbr/Overpass-API/blob/master/COPYING
+
+Keycloak: Apache License 2.0
+https://github.com/keycloak/keycloak/blob/master/LICENSE.txt
+
+Vagrant: MIT License
+https://github.com/hashicorp/vagrant/blob/main/LICENSE
+
+Virtualbox: GNU General Public License v2.0
+https://www.virtualbox.org/wiki/GPL
+
+RabbitMQ Website: Apache License 2.0
+https://github.com/rabbitmq/rabbitmq-website/blob/live/LICENSE
+
+RabbitMQ Docker: Mozilla Public License Version 2.0
+https://www.rabbitmq.com/mpl.html
+
+Spring Boot: Apache License 2.0
+https://github.com/spring-projects/spring-boot/blob/master/LICENSE.txt
+
+Spring Data: Apache License 2.0
+https://www.apache.org/licenses/LICENSE-2.0.html
+
+Spring Security: Apache License 2.0
+https://github.com/spring-projects/spring-security/blob/master/LICENSE.txt
+
+Spring AMQP: Apache License 2.0
+https://github.com/spring-projects/spring-amqp/blob/master/src/dist/license.txt
+
+PostgreSQL: PostgreSQL License
+https://www.postgresql.org/about/licence/
+
+Logback: EPL v1.0 and the LGPL 2.1
+http://logback.qos.ch/license.html
+
+SLF4J: MIT license
+http://www.slf4j.org/license.html

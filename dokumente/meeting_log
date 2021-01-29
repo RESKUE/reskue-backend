@@ -1,0 +1,7 @@
+ToDo:
+- Error Handling
+- Query params in Swagger API
+- "ER"-Diagramm
+
+Fragen an Betreuer:
+- Uses und extends zu externen libs? bsp: rabbitTemplate, JpaRepository: muss nicht
