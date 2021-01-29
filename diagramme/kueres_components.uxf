@@ -24,7 +24,7 @@ group=3</panel_attributes>
       <w>468</w>
       <h>260</h>
     </coordinates>
-    <panel_attributes>entities
+    <panel_attributes>base
 --
 //Style
 bg=white
@@ -76,7 +76,7 @@ group=1</panel_attributes>
 //Style
 bg=white
 layer=1
-group=28</panel_attributes>
+group=31</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -100,8 +100,8 @@ group=10</panel_attributes>
     <coordinates>
       <x>1573</x>
       <y>312</y>
-      <w>325</w>
-      <h>182</h>
+      <w>377</w>
+      <h>247</h>
     </coordinates>
     <panel_attributes>utility
 --
@@ -264,7 +264,7 @@ group=27</panel_attributes>
 //Style
 bg=#d3d3d3
 layer=2
-group=28</panel_attributes>
+group=31</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -280,7 +280,7 @@ group=28</panel_attributes>
 //Style
 bg=#d3d3d3
 layer=2
-group=28</panel_attributes>
+group=31</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -296,7 +296,7 @@ group=28</panel_attributes>
 //Style
 bg=#d3d3d3
 layer=2
-group=28</panel_attributes>
+group=31</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -312,7 +312,7 @@ group=28</panel_attributes>
 //Style
 bg=#d3d3d3
 layer=2
-group=28</panel_attributes>
+group=31</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -328,23 +328,7 @@ group=28</panel_attributes>
 //Style
 bg=#d3d3d3
 layer=2
-group=28</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>845</x>
-      <y>481</y>
-      <w>325</w>
-      <h>39</h>
-    </coordinates>
-    <panel_attributes>MediaConfigurationProperties
-
-//Style
-bg=#d3d3d3
-layer=2
-group=28</panel_attributes>
+group=31</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -607,7 +591,7 @@ group=27</panel_attributes>
 &lt;&lt;uses&gt;&gt;
 
 layer=4
-group=28</panel_attributes>
+group=31</panel_attributes>
     <additional_attributes>10.0;30.0;10.0;10.0</additional_attributes>
   </element>
   <element>
@@ -622,7 +606,7 @@ group=28</panel_attributes>
 &lt;&lt;uses&gt;&gt;
 
 layer=4
-group=28</panel_attributes>
+group=31</panel_attributes>
     <additional_attributes>180.0;10.0;180.0;20.0;10.0;20.0;10.0;30.0</additional_attributes>
   </element>
   <element>
@@ -637,7 +621,7 @@ group=28</panel_attributes>
 &lt;&lt;uses&gt;&gt;
 
 layer=4
-group=28</panel_attributes>
+group=31</panel_attributes>
     <additional_attributes>170.0;30.0;170.0;20.0;10.0;20.0;10.0;10.0</additional_attributes>
   </element>
   <element>
@@ -698,7 +682,7 @@ group=29</panel_attributes>
 //Style
 bg=#d3d3d3
 layer=2
-group=28</panel_attributes>
+group=31</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -712,7 +696,7 @@ group=28</panel_attributes>
     <panel_attributes>lt=&lt;&lt;.
 
 layer=4
-group=28</panel_attributes>
+group=31</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
   </element>
   <element>
@@ -830,7 +814,7 @@ layer=4</panel_attributes>
     <coordinates>
       <x>78</x>
       <y>117</y>
-      <w>1846</w>
+      <w>1898</w>
       <h>793</h>
     </coordinates>
     <panel_attributes>kueres
@@ -844,7 +828,7 @@ layer=0</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>1599</x>
-      <y>559</y>
+      <y>637</y>
       <w>195</w>
       <h>39</h>
     </coordinates>
@@ -852,14 +836,15 @@ layer=0</panel_attributes>
 
 //Style
 bg=#d3d3d3
-layer=2</panel_attributes>
+layer=2
+group=30</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLPackage</id>
     <coordinates>
       <x>1573</x>
-      <y>507</y>
+      <y>585</y>
       <w>312</w>
       <h>208</h>
     </coordinates>
@@ -867,14 +852,15 @@ layer=2</panel_attributes>
 --
 //Style
 bg=white
-layer=1</panel_attributes>
+layer=1
+group=30</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
       <x>1599</x>
-      <y>650</y>
+      <y>728</y>
       <w>260</w>
       <h>39</h>
     </coordinates>
@@ -882,20 +868,37 @@ layer=1</panel_attributes>
 
 //Style
 bg=#d3d3d3
-layer=2</panel_attributes>
+layer=2
+group=30</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>1677</x>
-      <y>585</y>
+      <y>663</y>
       <w>39</w>
       <h>91</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.
 
-layer=4</panel_attributes>
+layer=4
+group=30</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1599</x>
+      <y>494</y>
+      <w>325</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>KueresConfigurationProperties
+
+//Style
+bg=#d3d3d3
+layer=2</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>

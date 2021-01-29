@@ -129,15 +129,15 @@ layer=4</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>756</x>
+      <x>702</x>
       <y>477</y>
       <w>135</w>
       <h>45</h>
     </coordinates>
-    <panel_attributes>API
+    <panel_attributes>Traefik
 valign=center
+transparency=100
 layer=1
-transparency=0
 bg=#d3d3d3</panel_attributes>
     <additional_attributes/>
   </element>
@@ -146,12 +146,12 @@ bg=#d3d3d3</panel_attributes>
     <coordinates>
       <x>639</x>
       <y>513</y>
-      <w>135</w>
+      <w>81</w>
       <h>234</h>
     </coordinates>
     <panel_attributes>lt=-
 layer=4</panel_attributes>
-    <additional_attributes>10.0;240.0;130.0;10.0</additional_attributes>
+    <additional_attributes>10.0;240.0;70.0;10.0</additional_attributes>
   </element>
   <element>
     <type>CustomElementImpl</type>
@@ -203,14 +203,14 @@ bg=#d3d3d3</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>882</x>
+      <x>828</x>
       <y>495</y>
-      <w>90</w>
+      <w>144</w>
       <h>27</h>
     </coordinates>
     <panel_attributes>lt=-
 layer=4</panel_attributes>
-    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;140.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLPackage</id>
@@ -222,7 +222,8 @@ layer=4</panel_attributes>
     </coordinates>
     <panel_attributes>RESKUE Backend
 --
-bg=white</panel_attributes>
+bg=white
+layer=0</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -230,12 +231,12 @@ bg=white</panel_attributes>
     <coordinates>
       <x>675</x>
       <y>495</y>
-      <w>99</w>
+      <w>45</w>
       <h>27</h>
     </coordinates>
     <panel_attributes>lt=-
 layer=4</panel_attributes>
-    <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;30.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
@@ -245,7 +246,7 @@ layer=4</panel_attributes>
       <w>135</w>
       <h>81</h>
     </coordinates>
-    <panel_attributes>Frost Server
+    <panel_attributes>FROST-Server
 service
 layer=1
 bg=#d3d3d3</panel_attributes>
@@ -267,7 +268,7 @@ layer=4</panel_attributes>
   <element>
     <type>CustomElementImpl</type>
     <coordinates>
-      <x>180</x>
+      <x>162</x>
       <y>126</y>
       <w>370</w>
       <h>154</h>
@@ -314,11 +315,11 @@ layer=4</panel_attributes>
     <coordinates>
       <x>630</x>
       <y>270</y>
-      <w>144</w>
+      <w>90</w>
       <h>225</h>
     </coordinates>
     <panel_attributes>lt=-
 layer=4</panel_attributes>
-    <additional_attributes>10.0;10.0;140.0;230.0</additional_attributes>
+    <additional_attributes>10.0;10.0;80.0;230.0</additional_attributes>
   </element>
 </diagram>

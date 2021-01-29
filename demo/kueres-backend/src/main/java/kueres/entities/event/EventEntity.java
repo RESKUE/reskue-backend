@@ -46,6 +46,19 @@ public class EventEntity extends BaseEntity<EventEntity> {
 		this.type = type;
 	}
 	
+	@Column(name = "state", nullable = false)
+	private int state = -1;
+	public static final String STATE = "state";
+	public static final String STATE_MAPPING = "/{state}";
+
+	public int getState() {
+		return this.state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
+	
 	@Column(name = "sender", nullable = false)
 	private String sender;
 	public static final String SENDER = "sender";

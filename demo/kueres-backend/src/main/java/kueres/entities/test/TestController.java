@@ -1,5 +1,6 @@
 package kueres.entities.test;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,7 @@ import kueres.entities.BaseController;
 public class TestController extends BaseController<TestEntity, TestRepository, TestService> {
 
 	public static final String IDENTIFIER = "TestController";
-	public static final String ROUTE = BaseController.API_ENDPOINT + "/test";
+	public static final String ROUTE = "/api/test";
 	public static final String ROUTING_KEY = "test";
 	
 	@Autowired

@@ -35,7 +35,8 @@ public class EventService extends BaseService<EventEntity, EventRepository> {
 		
 		EventEntity event = new EventEntity();
 		event.setMessage(message);
-		event.setType((int)(Math.random() * 10));
+		event.setType((int)(Math.random() * 2));
+		event.setState((int)(Math.random() * 2));
 		event.setSender(senderIdentifier);
 		event.setSendAt(new Date());
 		event.setTest(new TestEntity("test"));

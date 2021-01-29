@@ -4,7 +4,7 @@
     <id>UMLClass</id>
     <coordinates>
       <x>14</x>
-      <y>42</y>
+      <y>105</y>
       <w>147</w>
       <h>49</h>
     </coordinates>
@@ -22,7 +22,7 @@ layer=1</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>189</x>
-      <y>70</y>
+      <y>133</y>
       <w>385</w>
       <h>77</h>
     </coordinates>
@@ -43,7 +43,7 @@ group=3</panel_attributes>
     <id>UMLPackage</id>
     <coordinates>
       <x>175</x>
-      <y>42</y>
+      <y>105</y>
       <w>413</w>
       <h>119</h>
     </coordinates>
@@ -58,12 +58,12 @@ group=3</panel_attributes>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>7</x>
-      <y>700</y>
+      <x>14</x>
+      <y>1337</y>
       <w>1554</w>
       <h>385</h>
     </coordinates>
-    <panel_attributes>entities
+    <panel_attributes>base
 --
 
 //Style
@@ -75,25 +75,25 @@ group=36</panel_attributes>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>1736</x>
-      <y>700</y>
-      <w>1435</w>
+      <x>14</x>
+      <y>1736</y>
+      <w>1505</w>
       <h>504</h>
     </coordinates>
-    <panel_attributes>entities.event
+    <panel_attributes>event
 --
 
 //Style
 bg=white
 layer=1
-group=37</panel_attributes>
+group=43</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1750</x>
-      <y>882</y>
+      <x>833</x>
+      <y>1918</y>
       <w>672</w>
       <h>308</h>
     </coordinates>
@@ -126,14 +126,14 @@ _+ SEND_AT: String_
 //Style
 bg=#d3d3d3
 layer=2
-group=37</panel_attributes>
+group=43</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1750</x>
-      <y>833</y>
+      <x>833</x>
+      <y>1869</y>
       <w>672</w>
       <h>35</h>
     </coordinates>
@@ -144,14 +144,14 @@ EventRepository
 //Style
 bg=#d3d3d3
 layer=2
-group=37</panel_attributes>
+group=43</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1750</x>
-      <y>728</y>
+      <x>833</x>
+      <y>1764</y>
       <w>672</w>
       <h>91</h>
     </coordinates>
@@ -166,16 +166,16 @@ EventService
 //Style
 bg=#d3d3d3
 layer=2
-group=37</panel_attributes>
+group=43</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2485</x>
-      <y>728</y>
-      <w>672</w>
-      <h>91</h>
+      <x>28</x>
+      <y>1764</y>
+      <w>749</w>
+      <h>119</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Controller&gt;&gt;
 EventController
@@ -184,19 +184,21 @@ _+ ROUTE: String_
 # service: EventService
 --
 + sendEvent(message: String, type: int, sender: String, receivers: String[], entity: BaseEntity): Map&lt;String, Boolean&gt;
++ findAll(filter: Optional&lt;String&gt;, sort: Optional&lt;String[]&gt;, page: Optional&lt;Integer&gt;, size: Optional&lt;Integer&gt;): Page&lt;EventEntity&gt;
++ findById(id: long): ResponseEntity&lt;EventEntity&gt;
 + delete(id: long): Map&lt;String, Boolean&gt;
 
 //Style
 bg=#d3d3d3
 layer=2
-group=37</panel_attributes>
+group=43</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>798</x>
-      <y>994</y>
+      <x>805</x>
+      <y>1631</y>
       <w>693</w>
       <h>77</h>
     </coordinates>
@@ -218,8 +220,8 @@ group=36</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>798</x>
-      <y>924</y>
+      <x>805</x>
+      <y>1561</y>
       <w>693</w>
       <h>42</h>
     </coordinates>
@@ -236,8 +238,8 @@ group=36</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>798</x>
-      <y>763</y>
+      <x>805</x>
+      <y>1400</y>
       <w>693</w>
       <h>140</h>
     </coordinates>
@@ -263,31 +265,21 @@ group=36</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>28</x>
-      <y>763</y>
+      <x>35</x>
+      <y>1400</y>
       <w>693</w>
-      <h>245</h>
+      <h>119</h>
     </coordinates>
     <panel_attributes>/BaseController/
 --
 _+ API_ENDPOINT: String_
 # service: S
-+ findAllExecutor: FindAllExecutor
-+ findByIdExecutor: FindByIdExecutor
-+ createExecutor: CreateExecutor
-+ updateExecutor: UpdateExecutor
-+ deleteExecutor: DeleteExecutor
 --
 + findAll(filter: Optional&lt;String&gt;, sort: Optional&lt;String[]&gt;, page: Optional&lt;Integer&gt;, size: Optional&lt;Integer&gt;): Page&lt;E&gt;
 + findById(id: long): ResponseEntity&lt;E&gt;
 + create(entity: E): ResponseEntity&lt;E&gt;
 + update(id: long, details: E): ResponseEntity&lt;E&gt;
 + delete(id: long): Map&lt;String, Boolean&gt;
-+ setFindAllExecutor(findAllExecutor: FindAllExecutor)
-+ setFindByIdExecutor(findByIdExecutor: FindByIdExecutor)
-+ setCreateExecutor(createExecutor: CreateExecutor)
-+ setUpdateExecutor(updateExecutor: UpdateExecutor)
-+ DeleteExecutor(deleteExecutor: DeleteExecutor)
 
 //Style
 bg=#d3d3d3
@@ -298,8 +290,8 @@ group=36</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1449</x>
-      <y>980</y>
+      <x>1456</x>
+      <y>1617</y>
       <w>84</w>
       <h>21</h>
     </coordinates>
@@ -316,8 +308,8 @@ group=36</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1449</x>
-      <y>917</y>
+      <x>1456</x>
+      <y>1554</y>
       <w>84</w>
       <h>21</h>
     </coordinates>
@@ -335,8 +327,8 @@ group=36</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1435</x>
-      <y>742</y>
+      <x>1442</x>
+      <y>1379</y>
       <w>112</w>
       <h>35</h>
     </coordinates>
@@ -354,8 +346,8 @@ group=36</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>672</x>
-      <y>728</y>
+      <x>679</x>
+      <y>1365</y>
       <w>112</w>
       <h>49</h>
     </coordinates>
@@ -374,23 +366,23 @@ group=36</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>2415</x>
-      <y>728</y>
-      <w>84</w>
+      <x>770</x>
+      <y>1764</y>
+      <w>77</w>
       <h>35</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;uses&gt;&gt;
 
 layer=4
-group=37</panel_attributes>
-    <additional_attributes>100.0;20.0;10.0;20.0</additional_attributes>
+group=43</panel_attributes>
+    <additional_attributes>10.0;20.0;90.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>714</x>
-      <y>777</y>
+      <x>721</x>
+      <y>1414</y>
       <w>98</w>
       <h>35</h>
     </coordinates>
@@ -404,8 +396,8 @@ group=36</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1141</x>
-      <y>896</y>
+      <x>1148</x>
+      <y>1533</y>
       <w>56</w>
       <h>42</h>
     </coordinates>
@@ -419,8 +411,8 @@ group=36</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2401</x>
-      <y>175</y>
+      <x>1141</x>
+      <y>133</y>
       <w>497</w>
       <h>105</h>
     </coordinates>
@@ -438,30 +430,30 @@ _+ LOG: Logger_
 //Style
 bg=#d3d3d3
 layer=2
-group=30</panel_attributes>
+group=41</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>2387</x>
-      <y>147</y>
+      <x>1127</x>
+      <y>105</y>
       <w>525</w>
-      <h>217</h>
+      <h>539</h>
     </coordinates>
     <panel_attributes>utility
 --
 //Style
 bg=white
 layer=1
-group=30</panel_attributes>
+group=41</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1750</x>
-      <y>182</y>
+      <x>686</x>
+      <y>798</y>
       <w>504</w>
       <h>77</h>
     </coordinates>
@@ -483,8 +475,8 @@ group=33</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1750</x>
-      <y>273</y>
+      <x>686</x>
+      <y>889</y>
       <w>504</w>
       <h>168</h>
     </coordinates>
@@ -512,12 +504,12 @@ group=33</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1750</x>
-      <y>455</y>
+      <x>686</x>
+      <y>1071</y>
       <w>504</w>
       <h>175</h>
     </coordinates>
-    <panel_attributes>&lt;&lt;enumeratiom&gt;&gt;
+    <panel_attributes>&lt;&lt;enumeration&gt;&gt;
 SearchOperation
 --
 GREATER_THAN
@@ -542,8 +534,8 @@ group=33</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1750</x>
-      <y>644</y>
+      <x>686</x>
+      <y>1260</y>
       <w>504</w>
       <h>35</h>
     </coordinates>
@@ -560,8 +552,8 @@ group=33</panel_attributes>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>1736</x>
-      <y>147</y>
+      <x>672</x>
+      <y>763</y>
       <w>560</w>
       <h>546</h>
     </coordinates>
@@ -577,8 +569,8 @@ group=33</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2198</x>
-      <y>175</y>
+      <x>1134</x>
+      <y>791</y>
       <w>84</w>
       <h>21</h>
     </coordinates>
@@ -595,8 +587,8 @@ group=33</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1981</x>
-      <y>252</y>
+      <x>917</x>
+      <y>868</y>
       <w>21</w>
       <h>35</h>
     </coordinates>
@@ -610,8 +602,8 @@ group=33</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1981</x>
-      <y>434</y>
+      <x>917</x>
+      <y>1050</y>
       <w>21</w>
       <h>35</h>
     </coordinates>
@@ -625,8 +617,8 @@ group=33</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1491</x>
-      <y>462</y>
+      <x>378</x>
+      <y>1078</y>
       <w>189</w>
       <h>182</h>
     </coordinates>
@@ -649,14 +641,14 @@ MediaEntity
 //Style
 bg=#d3d3d3
 layer=2
-group=39</panel_attributes>
+group=42</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1274</x>
-      <y>280</y>
+      <x>161</x>
+      <y>896</y>
       <w>420</w>
       <h>105</h>
     </coordinates>
@@ -674,14 +666,14 @@ MediaService
 //Style
 bg=#d3d3d3
 layer=2
-group=39</panel_attributes>
+group=42</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1491</x>
-      <y>413</y>
+      <x>378</x>
+      <y>1029</y>
       <w>189</w>
       <h>35</h>
     </coordinates>
@@ -691,14 +683,14 @@ MediaRepository
 //Style
 bg=#d3d3d3
 layer=2
-group=39</panel_attributes>
+group=42</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1274</x>
-      <y>175</y>
+      <x>161</x>
+      <y>791</y>
       <w>420</w>
       <h>91</h>
     </coordinates>
@@ -714,36 +706,14 @@ _+ ROUTE: String_
 //Style
 bg=#d3d3d3
 layer=2
-group=39</panel_attributes>
+group=42</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1141</x>
-      <y>595</y>
-      <w>196</w>
-      <h>77</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;Configuration&gt;&gt;
-MediaConfigurationProperties
---
-- dir: String
---
-+ getDir(): String
-+ setDir(dir: String)
-
-//Style
-bg=#d3d3d3
-layer=2
-group=39</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>1141</x>
-      <y>504</y>
+      <x>28</x>
+      <y>1120</y>
       <w>329</w>
       <h>77</h>
     </coordinates>
@@ -758,16 +728,16 @@ DefaultFileSystemRepository
 //Style
 bg=#d3d3d3
 layer=2
-group=39</panel_attributes>
+group=42</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>1127</x>
-      <y>147</y>
+      <x>14</x>
+      <y>763</y>
       <w>581</w>
-      <h>539</h>
+      <h>511</h>
     </coordinates>
     <panel_attributes>media
 --
@@ -775,14 +745,14 @@ group=39</panel_attributes>
 //Style
 bg=white
 layer=1
-group=39</panel_attributes>
+group=42</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLPackage</id>
     <coordinates>
       <x>602</x>
-      <y>49</y>
+      <y>105</y>
       <w>392</w>
       <h>112</h>
     </coordinates>
@@ -798,7 +768,7 @@ group=20</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>616</x>
-      <y>77</y>
+      <y>133</y>
       <w>364</w>
       <h>70</h>
     </coordinates>
@@ -818,8 +788,8 @@ group=20</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1547</x>
-      <y>378</y>
+      <x>434</x>
+      <y>994</y>
       <w>56</w>
       <h>49</h>
     </coordinates>
@@ -827,28 +797,28 @@ group=20</panel_attributes>
 &lt;&lt;uses&gt;&gt;
 
 layer=4
-group=39</panel_attributes>
+group=42</panel_attributes>
     <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1456</x>
-      <y>259</y>
+      <x>343</x>
+      <y>875</y>
       <w>21</w>
       <h>35</h>
     </coordinates>
     <panel_attributes>lt=-
 
 layer=4
-group=39</panel_attributes>
+group=42</panel_attributes>
     <additional_attributes>10.0;30.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1141</x>
-      <y>413</y>
+      <x>28</x>
+      <y>1029</y>
       <w>329</w>
       <h>63</h>
     </coordinates>
@@ -861,28 +831,28 @@ FileSystemRepository
 //Style
 bg=#d3d3d3
 layer=2
-group=39</panel_attributes>
+group=42</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1302</x>
-      <y>469</y>
+      <x>189</x>
+      <y>1085</y>
       <w>21</w>
       <h>49</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.
 
 layer=4
-group=39</panel_attributes>
+group=42</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1302</x>
-      <y>378</y>
+      <x>189</x>
+      <y>994</y>
       <w>98</w>
       <h>49</h>
     </coordinates>
@@ -890,14 +860,14 @@ group=39</panel_attributes>
 &lt;&lt;uses&gt;&gt;
 
 layer=4
-group=39</panel_attributes>
+group=42</panel_attributes>
     <additional_attributes>10.0;50.0;10.0;30.0;120.0;30.0;120.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
       <x>28</x>
-      <y>203</y>
+      <y>266</y>
       <w>658</w>
       <h>119</h>
     </coordinates>
@@ -922,7 +892,7 @@ group=35</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>28</x>
-      <y>343</y>
+      <y>406</y>
       <w>658</w>
       <h>126</h>
     </coordinates>
@@ -949,7 +919,7 @@ group=35</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>28</x>
-      <y>490</y>
+      <y>553</y>
       <w>658</w>
       <h>168</h>
     </coordinates>
@@ -978,7 +948,7 @@ group=35</panel_attributes>
     <id>UMLPackage</id>
     <coordinates>
       <x>14</x>
-      <y>175</y>
+      <y>238</y>
       <w>1085</w>
       <h>497</h>
     </coordinates>
@@ -995,7 +965,7 @@ group=35</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>350</x>
-      <y>462</y>
+      <y>525</y>
       <w>56</w>
       <h>42</h>
     </coordinates>
@@ -1010,7 +980,7 @@ group=35</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>700</x>
-      <y>343</y>
+      <y>406</y>
       <w>385</w>
       <h>49</h>
     </coordinates>
@@ -1029,7 +999,7 @@ group=35</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>679</x>
-      <y>343</y>
+      <y>406</y>
       <w>35</w>
       <h>28</h>
     </coordinates>
@@ -1042,8 +1012,8 @@ group=35</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2401</x>
-      <y>294</y>
+      <x>1141</x>
+      <y>252</y>
       <w>497</w>
       <h>56</h>
     </coordinates>
@@ -1055,99 +1025,144 @@ ReceiveMessageExecutor
 //Style
 bg=#d3d3d3
 layer=2
-group=30</panel_attributes>
+group=41</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>2646</x>
-      <y>273</y>
+      <x>1386</x>
+      <y>231</y>
       <w>21</w>
       <h>35</h>
     </coordinates>
     <panel_attributes>lt=-
 
 layer=4
-group=30</panel_attributes>
+group=41</panel_attributes>
     <additional_attributes>10.0;30.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1484</x>
-      <y>735</y>
-      <w>280</w>
-      <h>112</h>
+      <x>1491</x>
+      <y>1463</y>
+      <w>231</w>
+      <h>329</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 &lt;&lt;bind&gt;&gt;
 &lt;E -&gt; EventEntity,
 R -&gt; EventRepository&gt;
 layer=4</panel_attributes>
-    <additional_attributes>10.0;140.0;140.0;140.0;140.0;10.0;380.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;130.0;10.0;130.0;450.0;20.0;450.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1484</x>
-      <y>945</y>
-      <w>280</w>
-      <h>98</h>
+      <x>1491</x>
+      <y>1659</y>
+      <w>154</w>
+      <h>287</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 &lt;&lt;bind&gt;&gt;
 &lt;E -&gt; EventEntity&gt;
 layer=4</panel_attributes>
-    <additional_attributes>10.0;120.0;180.0;120.0;180.0;10.0;380.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;50.0;10.0;50.0;390.0;20.0;390.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1484</x>
-      <y>840</y>
-      <w>280</w>
-      <h>126</h>
+      <x>1491</x>
+      <y>1582</y>
+      <w>182</w>
+      <h>315</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 &lt;&lt;bind&gt;&gt;
 &lt;E -&gt; EventEntity&gt;
 layer=4</panel_attributes>
-    <additional_attributes>10.0;160.0;160.0;160.0;160.0;10.0;380.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;90.0;10.0;90.0;430.0;20.0;430.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>644</x>
+      <y>714</y>
+      <w>336</w>
+      <h>700</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+
+layer=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;870.0;460.0;870.0;460.0;980.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>350</x>
-      <y>651</y>
-      <w>630</w>
-      <h>126</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-
-
-layer=4</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;50.0;880.0;50.0;880.0;160.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>679</x>
-      <y>287</y>
-      <w>609</w>
-      <h>224</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-
-
-layer=4</panel_attributes>
-    <additional_attributes>10.0;300.0;620.0;300.0;620.0;10.0;850.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>350</x>
-      <y>315</y>
+      <y>378</y>
       <w>56</w>
       <h>42</h>
     </coordinates>
@@ -1162,9 +1177,9 @@ group=35</panel_attributes>
     <id>UMLPackage</id>
     <coordinates>
       <x>0</x>
-      <y>14</y>
-      <w>3185</w>
-      <h>1204</h>
+      <y>77</y>
+      <w>1785</w>
+      <h>2177</h>
     </coordinates>
     <panel_attributes>kueres
 --
@@ -1177,8 +1192,8 @@ layer=0</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2401</x>
-      <y>406</y>
+      <x>1260</x>
+      <y>791</y>
       <w>497</w>
       <h>112</h>
     </coordinates>
@@ -1202,8 +1217,8 @@ group=38</panel_attributes>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>2387</x>
-      <y>378</y>
+      <x>1246</x>
+      <y>763</y>
       <w>525</w>
       <h>294</h>
     </coordinates>
@@ -1218,8 +1233,8 @@ group=38</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2401</x>
-      <y>546</y>
+      <x>1260</x>
+      <y>931</y>
       <w>497</w>
       <h>112</h>
     </coordinates>
@@ -1243,8 +1258,8 @@ group=38</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>2639</x>
-      <y>511</y>
+      <x>1498</x>
+      <y>896</y>
       <w>21</w>
       <h>49</h>
     </coordinates>
@@ -1253,5 +1268,69 @@ group=38</panel_attributes>
 layer=4
 group=38</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>574</x>
+      <y>896</y>
+      <w>91</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+layer=4</panel_attributes>
+    <additional_attributes>10.0;20.0;110.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Text</id>
+    <coordinates>
+      <x>0</x>
+      <y>0</y>
+      <w>658</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>KUERES Klassendiagramm
+
+//Style
+fontsize=48</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1141</x>
+      <y>322</y>
+      <w>497</w>
+      <h>308</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Configuration&gt;&gt;
+KueresConfigurationProperties
+--
+- api: String
+- eventRoute: String
+- mediaRoute: String
+- mediaDir: String
+- topicExchange: String
+- defaultQueue: String
+--
++ getApi(): String
++ getEventRoute(): String
++ getMediaRoute(): String
++ getMediaDir(): String
++ getTopicExchange(): String
++ getDefaultQueue(): String
++ setApi(api: String)
++ setEventRoute(eventRoute: String)
++ setMediaRoute(mediaRoute: String)
++ setMediaDir(mediaDir: String)
++ setTopicExchange(topicExchange: String)
++ setDefaultQueue(defaultQueue: String)
+
+//Style
+bg=#d3d3d3
+layer=2
+group=41</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>

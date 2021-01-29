@@ -11,7 +11,7 @@ import kueres.entities.BaseController;
 public class EventController extends BaseController<EventEntity, EventRepository, EventService>{
 
 	public static final String IDENTIFIER = "EventController";
-	public static final String ROUTE = BaseController.API_ENDPOINT + "/event";
+	public static final String ROUTE = "${kueres.api}" + "${kueres.event-route}";
 	public static final String ROUTING_KEY = "event";
 	
 	@Autowired
