@@ -1,2 +1,0 @@
-cat api_schema.yml | grep "\/api\(\/[a-zA-Z{}]*\)\+:" > ./routes.txt
-
