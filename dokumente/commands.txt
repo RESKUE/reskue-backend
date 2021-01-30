@@ -1,7 +1,0 @@
-docker run --restart=always -p 6432:5432 -p 7070:8080 -d --name nominatim -v /media/tim/SSD_Ubuntu/osm/data/germany/postgresdata:/var/lib/postgresql/12/main nominatim bash /app/start.sh
-
-
-docker run -v /media/tim/SSD_Ubuntu/osm/data/germany:/var/lib/postgresql homme/openstreetmap-website initdb startdb createuser createdb createdbfuncs migrate
-docker run -v /media/tim/SSD_Ubuntu/osm/data/germany:/var/lib/postgresql homme/openstreetmap-website startservices
-
-7h import
