@@ -6,6 +6,9 @@
 /services/rabbitmq/logs
 /services/.env
 
+### Custom Project ###
+/reskue/backend/target/
+
 ### Eclipse ###
 .metadata
 bin/
