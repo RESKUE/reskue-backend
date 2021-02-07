@@ -1,11 +1,7 @@
-image: docker:19
-services:
-  - docker:19-dind
-
 variables:
   SPRING_PROFILES_ACTIVE: gitlab-ci
   DOCKER_HOST: tcp://docker:2376
-  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_CERTDIR: ""
 
 stages:
   - build
@@ -22,11 +18,13 @@ maven-build:
       - target/*.jar
 
 docker-build:
+  image: docker:19
+  services:
+  - docker:19-dind
   stage: deploy
   tags:
     - ILT
   script:
-    - docker info
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - >
