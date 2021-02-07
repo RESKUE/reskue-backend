@@ -18,7 +18,7 @@ maven-build:
 docker-build:
   image: docker:latest
   services:
-  - dind
+  - docker:dind
   stage: deploy
   tags:
     - ILT
