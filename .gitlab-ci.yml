@@ -20,7 +20,7 @@ maven-build:
 docker-build:
   image: docker:18.09
   services:
-  - docker:18.09-dind
+  - docker:18.09.7-dind
   stage: deploy
   tags:
     - ILT
