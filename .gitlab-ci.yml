@@ -1,6 +1,6 @@
 variables:
   SPRING_PROFILES_ACTIVE: gitlab-ci
-  DOCKER_HOST: tcp://localhost:2375
+  DOCKER_HOST: tcp://localhost:2376
   DOCKER_TLS_CERTDIR: ""
 
 stages:
