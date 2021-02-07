@@ -7,12 +7,10 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import kueres.base.BaseEntity;
 import kueres.media.MediaEntity;
-import reskue.ReskueEntity;
 import reskue.user.UserEntity;
 
 public class CommentEntity extends BaseEntity<CommentEntity>{

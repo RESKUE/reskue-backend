@@ -21,18 +21,6 @@
 		</repository>
 	</repositories>
 
-	<distributionManagement>
-		<repository>
-			<id>gitlab-maven</id>
-			<url>https://gitlab-ext.iosb.fraunhofer.de/api/v4/projects/2562/packages/maven</url>
-		</repository>
-
-		<snapshotRepository>
-			<id>gitlab-maven</id>
-			<url>https://gitlab-ext.iosb.fraunhofer.de/api/v4/projects/2562/packages/maven</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<dependencies>
 		<dependency>
 			<groupId>kueres</groupId>
