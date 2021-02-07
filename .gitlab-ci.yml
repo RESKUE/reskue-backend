@@ -1,0 +1,30 @@
+image: docker:latest
+services:
+  - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay
+  SPRING_PROFILES_ACTIVE: gitlab-ci
+
+stages:
+  - build
+  - deploy
+
+maven-build:
+  image: maven:3.6.3-jdk-11
+  stage: build
+  tags:
+    - ILT
+  script: "mvn verify -B"
+  artifacts:
+    paths:
+      - target/*.jar
+
+docker-build:
+  stage: deploy
+  tags:
+    - ILT
+  script:
+  - docker build -t gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend -f ./services/spring/spring.dockerfile
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN gitlab-ext.iosb.fraunhofer.de:4567
+  - docker push gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend

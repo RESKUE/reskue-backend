@@ -120,8 +120,8 @@ services:
       http_cors_allowed.origins: '*'
       persistence_db_driver: org.postgresql.Driver
       persistence_db_url: jdbc:postgresql://location-db:5432/${LOCATION_DB}
-      persistence_db_username: ${LOCATION_USER}
-      persistence_db_password: ${LOCATION_PASSWORD}
+      persistence_db_username: ${LOCATION_DB_USER}
+      persistence_db_password: ${LOCATION_DB_PASSWORD}
       persistence_autoUpdateDatabase: 'true'
     expose:
       - 8080
