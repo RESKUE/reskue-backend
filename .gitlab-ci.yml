@@ -35,6 +35,5 @@ docker-build:
       --build-arg VCS_URL=$CI_PROJECT_URL
       --cache-from $CI_REGISTRY_IMAGE:latest
       --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-      --file /services/spring/spring.dockerfile
-      -
+      .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
