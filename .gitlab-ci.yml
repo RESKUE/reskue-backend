@@ -29,6 +29,15 @@ docker-build:
   services:
     - docker:dind
   script:
-  - docker build -t gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend -f ./services/spring/spring.dockerfile -
-  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN gitlab-ext.iosb.fraunhofer.de:4567
-  - docker push gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend
+    - docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - >
+      docker build
+      --pull
+      --build-arg VCS_REF=$CI_COMMIT_SHA
+      --build-arg VCS_URL=$CI_PROJECT_URL
+      --cache-from $CI_REGISTRY_IMAGE:latest
+      --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+      -f ./services/spring/spring.dockerfile
+      -
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
