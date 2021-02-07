@@ -26,6 +26,8 @@ docker-build:
   stage: deploy
   tags:
     - ILT
+  services:
+    - docker:dind
   script:
   - docker build -t gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend -f ./services/spring/spring.dockerfile -
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN gitlab-ext.iosb.fraunhofer.de:4567
