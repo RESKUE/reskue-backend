@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 import kueres.base.BaseEntity;
 import kueres.media.MediaEntity;
@@ -18,12 +17,16 @@ import reskue.user.UserEntity;
 
 public class CommentEntity extends BaseEntity<CommentEntity>{
 	
+	/**
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "comments")
 	private ReskueEntity reskueEntity;
 	public static final String RESKUE_ENTITY = "reskueEntity";
 	public ReskueEntity getReskueEntity() { return this.reskueEntity; }
 	public void setReskueEntity(ReskueEntity reskueEntity) { this.reskueEntity = reskueEntity; }
+	**/
+	
+	
 	
 	@Column(name = "text", nullable = false)
 	private String text = "";
@@ -31,8 +34,6 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	public String getText() { return this.text; }
 	public void setText(String text) { this.text = text; }
 	
-	// needs JSON Converter etc to connect to media entity
-	@OneToMany(mappedBy = "reskueEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Column(name = "media", nullable = false)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";

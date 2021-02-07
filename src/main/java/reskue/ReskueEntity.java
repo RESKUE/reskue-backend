@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 import kueres.base.BaseEntity;
@@ -32,8 +33,8 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	public String[] getTags() { return this.tags; }
 	public void setTags(String[] tags) { this.tags = tags; }
 	
-	@OneToMany(mappedBy = "reskueEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Column(name = "comments", nullable = false)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "comments", nullable = false)
 	private List<CommentEntity> comments = new ArrayList<CommentEntity>();
 	public static final String COMMENTS = "comments";
 	public List<CommentEntity> getComments() { return this.comments; }
