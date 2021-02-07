@@ -7,7 +7,10 @@
 /services/.env
 
 ### Custom Project ###
-/reskue/backend/target/
+target/
+.classpath
+.project
+LogFile*
 
 ### Eclipse ###
 .metadata
