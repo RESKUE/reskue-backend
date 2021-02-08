@@ -31,7 +31,7 @@ docker-build:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - docker pull $CI_PROJECT_NAME:latest || true
+    - docker pull gitlab-ext.iosb.fraunhofer.de:4567/$CI_PROJECT_NAME:latest || true
     - >
       docker build
       --pull
@@ -43,4 +43,4 @@ docker-build:
       --tag $CI_PROJECT_NAME:latest
       --file services/spring/spring.dockerfile
       .
-    - docker push $CI_PROJECT_NAME:latest
+    - docker push gitlab-ext.iosb.fraunhofer.de:4567/$CI_PROJECT_NAME:latest
