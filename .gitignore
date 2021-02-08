@@ -6,6 +6,12 @@
 /services/rabbitmq/logs
 /services/.env
 
+### Custom Project ###
+target/
+.classpath
+.project
+LogFile*
+
 ### Eclipse ###
 .metadata
 bin/

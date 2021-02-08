@@ -1,0 +1,46 @@
+variables:
+  SPRING_PROFILES_ACTIVE: gitlab-ci
+  DOCKER_HOST: tcp://localhost:2375
+  DOCKER_TLS_CERTDIR: ""
+  ARTIFACT_ID: backend
+  VERSION: 0.0.1-SNAPSHOT
+
+stages:
+  - build
+  - deploy
+
+maven-build:
+  image: maven:3.6.3-jdk-11
+  stage: build
+  tags:
+    - ILT
+  script: "mvn verify -B -s ci_settings.xml"
+  artifacts:
+    paths:
+      - target/*.jar
+
+docker-build:
+  image: docker:18.09
+  services:
+  - docker:18.09.7-dind
+  stage: deploy
+  tags:
+    - ILT
+  only:
+    - master
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker pull $CI_PROJECT_NAME:latest || true
+    - >
+      docker build
+      --pull
+      --build-arg VCS_REF=$CI_COMMIT_SHA
+      --build-arg VCS_URL=$CI_PROJECT_URL
+      --build-arg ARTIFACT_ID=$ARTIFACT_ID
+      --build-arg VERSION=$VERSION
+      --cache-from $CI_PROJECT_NAME:latest
+      --tag $CI_PROJECT_NAME:latest
+      --file services/spring/spring.dockerfile
+      .
+    - docker push $CI_PROJECT_NAME:latest
