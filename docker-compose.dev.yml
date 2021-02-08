@@ -5,7 +5,7 @@ services:
     restart: always
     image: content-db:latest
     build:
-      context: ./content-db
+      context: ./services/content-db
       dockerfile: ./content.db.dockerfile
     environment: 
       POSTGRES_USER: ${CONTENT_DB_USER}
@@ -14,7 +14,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: ${POSTGRES_HOST_AUTH_METHOD}
       POSTGRES_DB: ${CONTENT_DB}
     volumes:
-      - ./content-db/data/:/var/lib/postgresql/data
+      - ./services/content-db/data/:/var/lib/postgresql/data
     expose:
       - 5432
     ports:
@@ -26,7 +26,7 @@ services:
     restart: always
     image: auth-db:latest
     build:
-      context: ./auth-db
+      context: ./services/auth-db
       dockerfile: ./auth.db.dockerfile
     environment: 
       POSTGRES_USER: ${AUTH_DB_USER}
@@ -35,7 +35,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: ${POSTGRES_HOST_AUTH_METHOD}
       POSTGRES_DB: ${AUTH_DB}
     volumes:
-      - ./auth-db/data/:/var/lib/postgresql/data
+      - ./services/auth-db/data/:/var/lib/postgresql/data
     expose:
       - 5432
     ports:
@@ -47,7 +47,7 @@ services:
     restart: always
     image: location-db:latest
     build:
-      context: ./location-db
+      context: ./services/location-db
       dockerfile: ./location.db.dockerfile
     environment: 
       POSTGRES_USER: ${LOCATION_DB_USER}
@@ -56,7 +56,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: ${POSTGRES_HOST_AUTH_METHOD}
       POSTGRES_DB: ${LOCATION_DB}
     volumes:
-      - ./location-db/data/:/var/lib/postgresql/data
+      - ./services/location-db/data/:/var/lib/postgresql/data
     expose:
       - 5432
     ports:
@@ -86,7 +86,7 @@ services:
     ports: 
       - ${KEYCLOAK_PORT}:8080
     volumes: 
-      - ./keycloak/realms/realm-export.json:/tmp/realm-export.json
+      - ./services/keycloak/realms/realm-export.json:/tmp/realm-export.json
     networks: 
       - reskue-network
   rabbitmq:
@@ -103,9 +103,9 @@ services:
       - ${RABBITMQ_PORT}:5672
       - ${RABBITMQ_MANAGEMENT_PORT}:15672
     volumes:
-      - ./rabbitmq/etc/:/etc/rabbitmq/
-      - ./rabbitmq/data/:/var/lib/rabbitmq/
-      - ./rabbitmq/logs/:/var/log/rabbitmq/
+      - ./services/rabbitmq/etc/:/etc/rabbitmq/
+      - ./services/rabbitmq/data/:/var/lib/rabbitmq/
+      - ./services/rabbitmq/logs/:/var/log/rabbitmq/
     networks: 
       - reskue-network
   frost:
