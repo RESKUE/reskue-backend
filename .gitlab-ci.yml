@@ -40,7 +40,7 @@ docker-build:
       --build-arg ARTIFACT_ID=$ARTIFACT_ID
       --build-arg VERSION=$VERSION
       --cache-from $CI_PROJECT_NAME:latest
-      --tag $CI_PROJECT_NAME:latest
+      --tag gitlab-ext.iosb.fraunhofer.de:4567/$CI_PROJECT_NAME:latest
       --file services/spring/spring.dockerfile
       .
     - docker push gitlab-ext.iosb.fraunhofer.de:4567/$CI_PROJECT_NAME:latest
