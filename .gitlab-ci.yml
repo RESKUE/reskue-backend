@@ -31,7 +31,7 @@ docker-build:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - docker pull gitlab-ext.iosb.fraunhofer.de:4567/$CI_PROJECT_NAME:latest || true
+    - docker pull  $CI_REGISTRY_IMAGE:latest || true
     - >
       docker build
       --pull
@@ -39,8 +39,8 @@ docker-build:
       --build-arg VCS_URL=$CI_PROJECT_URL
       --build-arg ARTIFACT_ID=$ARTIFACT_ID
       --build-arg VERSION=$VERSION
-      --cache-from $CI_PROJECT_NAME:latest
-      --tag gitlab-ext.iosb.fraunhofer.de:4567/$CI_PROJECT_NAME:latest
+      --cache-from $CI_REGISTRY_IMAGE:latest
+      --tag $CI_REGISTRY_IMAGE:latest
       --file services/spring/spring.dockerfile
       .
-    - docker push gitlab-ext.iosb.fraunhofer.de:4567/$CI_PROJECT_NAME:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
