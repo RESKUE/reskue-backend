@@ -132,7 +132,7 @@ services:
     networks:
       - reskue-network
   spring:
-    image: reskue-backend:latest
+    image: gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend:latest
     container_name: spring
     restart: always
     depends_on:
