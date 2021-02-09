@@ -7,4 +7,8 @@ VOLUME /tmp
 
 ADD /target/${ARTIFACT_ID}-${VERSION}.jar app.jar
 
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+COPY /services/spring/spring-wait.sh /spring-wait.sh
+RUN chmod +x /spring-wait.sh
+
+ENTRYPOINT [ "/spring-wait.sh" ]
+CMD ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]

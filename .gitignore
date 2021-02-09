@@ -6,6 +6,10 @@
 /services/rabbitmq/logs
 /services/.env
 
+# .env
+prod.env
+dev.env
+
 ### Custom Project ###
 target/
 .classpath
