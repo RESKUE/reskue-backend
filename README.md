@@ -6,13 +6,13 @@
 3. Start the services in either development or production mode
   * Start services in development mode
 ```
-sudo docker-compose -f ./docker-compose.dev.yml --env-file ./dev.env up --build
+sudo docker-compose -f ./docker-compose.dev.yml up --build --env-file ./dev.env
 ```
   * Start services in production mode
 ```
 docker login gitlab-ext.iosb.fraunhofer.de:4567
-docker pull gitlab-ext.iosb.fraunhofer.de:4567/reskue-backend:latest
-sudo docker-compose -f ../docker-compose.prod.yml --env-file ./prod.env up -d
+docker pull gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend:latest
+sudo docker-compose -f ../docker-compose.prod.yml up -d --env-file ./prod.env
 ```
 4. Stop all services
 ```
