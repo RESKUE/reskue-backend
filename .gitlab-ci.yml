@@ -2,8 +2,6 @@ variables:
   SPRING_PROFILES_ACTIVE: gitlab-ci
   DOCKER_HOST: tcp://localhost:2375
   DOCKER_TLS_CERTDIR: ""
-  ARTIFACT_ID: backend
-  VERSION: 0.0.1-SNAPSHOT
 
 stages:
   - build
@@ -37,8 +35,6 @@ docker-build:
       --pull
       --build-arg VCS_REF=$CI_COMMIT_SHA
       --build-arg VCS_URL=$CI_PROJECT_URL
-      --build-arg ARTIFACT_ID=$ARTIFACT_ID
-      --build-arg VERSION=$VERSION
       --cache-from $CI_REGISTRY_IMAGE:latest
       --tag $CI_REGISTRY_IMAGE:latest
       --file services/spring/spring.dockerfile
