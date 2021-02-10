@@ -48,5 +48,4 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	public List<MediaEntity> getMedia() { return this.media; }
 	public void setMedia(List<MediaEntity> media) { this.media = media; }
 	
-	
 }

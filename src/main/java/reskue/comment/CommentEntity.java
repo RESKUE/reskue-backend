@@ -59,7 +59,28 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 
 	@Override
 	public void applyPatch(CommentEntity details) {
-		// TODO Auto-generated method stub
+		
+		String text = details.getText();
+		List<MediaEntity> media = details.getMedia();
+		UserEntity author = details.getAuthor();
+		Date createdAt = details.getCreatedAt();
+		Date updatedAt = details.getUpdatedAt();
+		
+		if (text != null) {
+			this.setText(text);
+		}
+		if (media != null) {
+			this.setMedia(media);
+		}
+		if (author != null) {
+			this.setAuthor(author);
+		}
+		if (createdAt != null) {
+			this.setCreatedAt(createdAt);
+		}
+		if (updatedAt != null) {
+			this.setUpdatedAt(updatedAt);
+		}
 		
 	}
 
