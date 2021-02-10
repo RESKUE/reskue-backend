@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import kueres.base.BaseEntity;
+import kueres.utility.Utility;
 import reskue.culturalasset.CulturalAssetEntity;
 import reskue.user.UserEntity;
 
@@ -69,41 +70,10 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public CulturalAssetEntity getEntity() { return this.entity; }
 	public void setEntity(CulturalAssetEntity entity) { this.entity = entity; }
 	
-	
-	// needs to throw exception instead
 	@Override
 	public void applyPatch(NotificationEntity details) {
-		
-		String title = details.getTitle();
-		String message = details.getMessage();
-		int type = details.getType();
-		UserEntity sender = details.getSender();
-		List<UserEntity> receivers = details.getReceivers();
-		Date sendAt = details.getSendAt();
-		long entityId = details.getEntityId();
-		CulturalAssetEntity entity = details.getEntity();
-
-		if (title != null) {
-			this.setTitle(title);
-		}
-		if (message != null) {
-			this.setMessage(message);
-		}
-		this.setType(type);
-		if (sender != null) {
-			this.setSender(sender);
-		}
-		if (receivers != null) {
-			this.setReceivers(receivers);
-		}
-		if (sendAt != null) {
-			this.setSendAt(sendAt);
-		}
-		this.setEntityId(entityId);
-		if (entity != null) {
-			this.setEntity(entity);
-		}
-
+		Utility.LOG.error("NotificationEntities can not be updated");
+		throw new UnsupportedOperationException("NotificationEntities can not be updated!");
 	}
 
 }

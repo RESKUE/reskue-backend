@@ -1,6 +1,7 @@
 package reskue;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,6 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 import kueres.base.BaseService;
 import kueres.media.MediaEntity;
@@ -30,7 +30,7 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 	public Page<CommentEntity> getAllComments(long id, EntitySpecification<CommentEntity> specification,
 			Pageable pageable) {
 
-		E entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found: " + id));
+		E entity = this.findById(id);
 
 		List<CommentEntity> comments = entity.getComments();
 
@@ -48,11 +48,10 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 		
 	}
 	
-	/**
 	@SuppressWarnings("unchecked")
 	public Page<MediaEntity> getAllMedia(long id, EntitySpecification<MediaEntity> specification, Pageable pageable) {
 
-		E entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found: " + id));
+		E entity = this.findById(id);
 
 		List<MediaEntity> media = entity.getMedia();
 
@@ -69,36 +68,13 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 		return page;
 		
 	}
-	**/
-	
 	
 	public E addTag(long id, String tag) {
 		
-		E entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found: " + id));
+		E entity = this.findById(id);
 
-		String[] newTags;
-
-		// Entity has no tags
-		if (entity.getTags() != null) {
-			String[] oldTags = entity.getTags();
-			int newLength = oldTags.length + 1;
-			newTags = new String[newLength];
-
-			for (int i = 0; i < newLength; i++) {
-
-				// Tag already exists
-				if (oldTags[i] == tag) {
-					return entity;
-				} else if (i + 1 == newLength) {
-					newTags[i] = tag;
-				} else {
-					newTags[i] = oldTags[i];
-				}
-			}
-		} else {
-			newTags = new String[] { tag };
-		}
-
+		Set<String> newTags = entity.getTags();
+		newTags.add(tag);
 		entity.setTags(newTags);
 
 		final E updatedEntity = repository.save(entity);
@@ -108,37 +84,10 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 
 	public E removeTag(long id, String tag) {
 		
-		E entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found: " + id));
-
-		String[] newTags;
-
-		// Entity has no tags
-		if (entity.getTags() != null) {
-			String[] oldTags = entity.getTags();
-			int oldLength = oldTags.length;
-			newTags = new String[oldLength - 1];
-			boolean removed = false;
-
-			for (int i = 0; i < oldLength; i++) {
-
-				if (!removed) {
-					if (oldTags[i] == tag) {
-						removed = true;
-
-						// Entity doesnt have this tag
-					} else if (i + 1 == oldLength) {
-						return entity;
-					} else {
-						newTags[i] = oldTags[i];
-					}
-				} else {
-					newTags[i - 1] = oldTags[i];
-				}
-			}
-		} else {
-			return entity;
-		}
-
+		E entity = this.findById(id);
+		
+		Set<String> newTags = entity.getTags();
+		newTags.remove(tag);
 		entity.setTags(newTags);
 
 		final E updatedEntity = repository.save(entity);

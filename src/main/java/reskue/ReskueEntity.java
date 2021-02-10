@@ -1,7 +1,9 @@
 package reskue;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,10 +30,10 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	public void setDescription(String description) { this.description = description; }
 	
 	@Column(name = "tags", nullable = false)
-	private String[] tags;
+	private Set<String> tags = new HashSet<String>();
 	public static final String TAGS = "tags";
-	public String[] getTags() { return this.tags; }
-	public void setTags(String[] tags) { this.tags = tags; }
+	public Set<String> getTags() { return this.tags; }
+	public void setTags(Set<String> tags) { this.tags = tags; }
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "comments", nullable = false)

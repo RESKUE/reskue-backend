@@ -5,7 +5,6 @@ import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import kueres.location.LocationService;
 import kueres.query.EntitySpecification;
 import kueres.query.SearchCriteria;
 import kueres.query.SortBuilder;
@@ -28,11 +26,42 @@ import reskue.task.TaskEntity;
 public class CulturalAssetController extends ReskueController<CulturalAssetEntity, CulturalAssetRepository, CulturalAssetService>{
 	
 	public static final String ROUTE = "/culturalAsset";
-
-	@Autowired
-	protected LocationService locationService;
 	
-	//@GetMapping("/radius/{" + CulturalAssetEntity + "}")
+	@GetMapping("/radius")
+	@RolesAllowed({ "administrator", "helper" })
+	public Page<CulturalAssetEntity> findInRadius(
+			@RequestParam double radius,
+			@RequestParam double longitude,
+			@RequestParam double latitiude,
+			@RequestParam Optional<String> filter, 
+			@RequestParam Optional<String[]> sort,
+			@RequestParam Optional<Integer> page, 
+			@RequestParam Optional<Integer> size) {
+
+		EntitySpecification<CulturalAssetEntity> specification = null;
+		if (filter.isPresent()) {
+			String[] filters = filter.get().split(",");
+			specification = new EntitySpecification<CulturalAssetEntity>();
+			for (String searchFilter : filters) {
+				specification.add(new SearchCriteria(searchFilter));
+			}
+		}
+
+		Sort sorting = Sort.unsorted();
+		if (sort.isPresent()) {
+			sorting = SortBuilder.buildSort(sort.get());
+		}
+
+		Pageable pagination = Pageable.unpaged();
+		if (page.isPresent() && size.isPresent()) {
+			pagination = PageRequest.of(page.get(), size.get());
+		}
+
+		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
+		
+		return service.findInRadius(radius, longitude, latitiude, specification, pagination);
+		
+	}
 	
 	@GetMapping("/{" + CulturalAssetEntity.ID + "}/tasks")
 	@RolesAllowed({ "administrator", "helper" })
@@ -63,7 +92,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		}
 
 		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
-
+		
 		return service.getAllTasks(id, specification, pagination);
 		
 	}
@@ -102,7 +131,17 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		
 	}
 	
-	//@GetMapping("/{" + CulturalAssetEntity.ID + "}/distance")
+	@GetMapping("/{" + CulturalAssetEntity.ID + "}/distance")
+	@RolesAllowed({ "administrator", "helper" })
+	public double getDistance(
+			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@RequestParam double longitude,
+			@RequestParam double latitude
+			) {
+
+		return service.getDistance(id, longitude, latitude);
+		
+	}	
 	
 	@PutMapping("/{" + CulturalAssetEntity.ID + "}/addChild/{" + CulturalAssetEntity.CULTURAL_ASSET_CHILDREN + "}")
 	@RolesAllowed("administrator")

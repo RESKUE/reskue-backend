@@ -11,16 +11,20 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
+import kueres.location.LocationService;
 import kueres.query.EntitySpecification;
 import reskue.ReskueService;
 import reskue.task.TaskEntity;
 
 public class CulturalAssetService extends ReskueService<CulturalAssetEntity, CulturalAssetRepository>{
+	
+	@Autowired
+	protected LocationService locationService;
 	
 	@PersistenceContext
 	private EntityManager em;
@@ -32,11 +36,32 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		this.routingKey = CulturalAssetController.ROUTE;
 		this.startReceivingEvents();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public Page<CulturalAssetEntity> findInRadius(double radius, double longitude, double latitiude,
+			EntitySpecification<CulturalAssetEntity> specification, Pageable pageable) {
+	
+		List<Long> entityIds = locationService.findInRadius(radius, new double[] {longitude, latitiude});
+		
+		List<CulturalAssetEntity> entities = entityIds.stream().map(this::findById).collect(Collectors.toList());
+		
+		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+		CriteriaQuery<CulturalAssetEntity> criteriaQuery = criteriaBuilder.createQuery(CulturalAssetEntity.class);
+		Root<CulturalAssetEntity> root = criteriaQuery.from(CulturalAssetEntity.class);
+
+		entities = entities.stream().filter(
+				(Predicate<? super CulturalAssetEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+				.collect(Collectors.toList());
+
+		Page<CulturalAssetEntity> page = new PageImpl<CulturalAssetEntity>(entities, pageable, entities.size());
+
+		return page;
+	}
 
 	@SuppressWarnings("unchecked")
 	public Page<TaskEntity> getAllTasks(long id, EntitySpecification<TaskEntity> specification, Pageable pageable) {
 
-		CulturalAssetEntity entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found: " + id));
+		CulturalAssetEntity entity = this.findById(id);
 
 		List<TaskEntity> tasks = entity.getTasks();
 
@@ -58,7 +83,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	public Page<CulturalAssetEntity> getAllChildren(long id, EntitySpecification<CulturalAssetEntity> specification,
 			Pageable pageable) {
 
-		CulturalAssetEntity entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found: " + id));
+		CulturalAssetEntity entity = this.findById(id);
 
 		List<CulturalAssetEntity> children = entity.getCulturalAssetChildren();
 
@@ -75,11 +100,21 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		return page;
 		
 	}
+	
+	public double getDistance(long id, double longitude, double latitude) {
+		
+		CulturalAssetEntity entity = this.findById(id);
+		
+		double[] entityLocation = new double[] {entity.getLongitude(), entity.getLatitude()};
+		
+		return locationService.calculateDistance(entityLocation, new double[] {longitude, latitude});
+		
+	}
 
 	public CulturalAssetEntity addCulturalAssetChild(long id, long childId) {
 		
-		CulturalAssetEntity entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found: " + id));
-		CulturalAssetEntity child = repository.findById(childId).orElseThrow(() -> new ResourceNotFoundException("Entity not found: " + childId));
+		CulturalAssetEntity entity = this.findById(id);
+		CulturalAssetEntity child = this.findById(childId);
 		
 		List<CulturalAssetEntity> newChildren = entity.getCulturalAssetChildren();
 		
@@ -98,8 +133,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 	public CulturalAssetEntity removeCulturalAssetChild(long id, long childId) {
 		
-		CulturalAssetEntity entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found: " + id));
-		CulturalAssetEntity child = repository.findById(childId).orElseThrow(() -> new ResourceNotFoundException("Entity not found: " + childId));
+		CulturalAssetEntity entity = this.findById(id);
+		CulturalAssetEntity child = this.findById(childId);
 		
 		List<CulturalAssetEntity> newChildren = entity.getCulturalAssetChildren();
 		
@@ -118,8 +153,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 	public CulturalAssetEntity setCulturalAssetParent(long id, long parentId) {
 		
-		CulturalAssetEntity entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found: " + id));
-		CulturalAssetEntity parent = repository.findById(parentId).orElseThrow(() -> new ResourceNotFoundException("Entity not found: " + parentId));
+		CulturalAssetEntity entity = this.findById(id);
+		CulturalAssetEntity parent = this.findById(parentId);
 		
 		entity.setCulturalAssetParent(parent);
 		
@@ -130,7 +165,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 	public CulturalAssetEntity removeCulturalAssetParent(long id) {
 		
-		CulturalAssetEntity entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found: " + id));
+		CulturalAssetEntity entity = this.findById(id);
 		
 		entity.setCulturalAssetParent(null);
 		

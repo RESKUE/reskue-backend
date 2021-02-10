@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import kueres.base.BaseController;
+import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
 import kueres.query.SearchCriteria;
 import kueres.query.SortBuilder;
@@ -60,7 +61,6 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 		
 	}
 	
-	/**
 	@GetMapping("/{" + ReskueEntity.ID + "}/media")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<MediaEntity> getAllMedia(
@@ -94,7 +94,6 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 		return service.getAllMedia(id, specification, pagination);
 		
 	}
-	**/
 	
 	
 	@PutMapping("/{" + ReskueEntity.ID + "}/addTag/{" + ReskueEntity.TAGS + "}")
