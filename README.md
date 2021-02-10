@@ -30,7 +30,3 @@ sudo docker-compose -f docker-compose.prod.yml --env-file prod.env down
 ```
 ./clean.sh keycloak,rabbitmq,content-db,location-db
 ```
-
-## Updating reskue-backend version
-1. Update version in all .env files: VERSION
-2. Update version in .gitlab-ci.yml: VERSION
