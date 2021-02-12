@@ -2,18 +2,23 @@ package reskue.culturalasset;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-
+import kueres.media.MediaEntity;
 import reskue.ReskueEntity;
+import reskue.comment.CommentEntity;
 import reskue.notification.NotificationEntity;
 import reskue.task.TaskEntity;
 
+@Entity
 public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	
 	@Column(name = "address", nullable = false)
@@ -34,8 +39,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public double getLatitude() { return this.latitude; }
 	public void setLatitude(double latitude) { this.latitude = latitude; }
 	
-	@OneToMany(mappedBy = "culturalAsset", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Column(name = "tasks", nullable = false)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<TaskEntity> tasks = new ArrayList<TaskEntity>();
 	public static final String TASKS = "tasks";
 	public List<TaskEntity> getTasks() { return this.tasks; }
@@ -54,29 +58,84 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public void setLevel(int level) { this.level = level; }
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Column(name = "culturalAssetParent", nullable = false)
+	@JoinColumn(name = "culturalAssetParent")
 	private CulturalAssetEntity culturalAssetParent;
 	public static final String CULTURAL_ASSET_PARENT = "culturalAssetParent";
 	public CulturalAssetEntity getCulturalAssetParent() { return this.culturalAssetParent; }
 	public void setCulturalAssetParent(CulturalAssetEntity culturalAssetParent) { this.culturalAssetParent = culturalAssetParent; }
 	
-	@OneToMany(mappedBy = "culturalAssetParent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Column(name = "culturalAssetChildren", nullable = false)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<CulturalAssetEntity> culturalAssetChildren = new ArrayList<CulturalAssetEntity>();
 	public static final String CULTURAL_ASSET_CHILDREN = "culturalAssetChildren";
 	public List<CulturalAssetEntity> getCulturalAssetChildren() { return this.culturalAssetChildren; }
 	public void setCulturalAssetChildren(List<CulturalAssetEntity> culturalAssetChildren) { this.culturalAssetChildren = culturalAssetChildren; }
 	
-	@OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Column(name = "notifications", nullable = false)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<NotificationEntity> notifications = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATIONS = "notifications";
 	public List<NotificationEntity> getNotifications() { return this.notifications; }
 	public void setNotifications(List<NotificationEntity> notifications) { this.notifications = notifications; }
 	
+	
+	// needs overhaul
 	@Override
 	public void applyPatch(CulturalAssetEntity details) {
-		// TODO Auto-generated method stub
+		
+		String name = details.getName();
+		String description = details.getDescription();
+		Set<String> tags = details.getTags();
+		List<CommentEntity> comments = details.getComments();
+		List<MediaEntity> media = details.getMedia();	
+		
+		String address = details.getAddress();
+		double longitude = details.getLongitude();
+		double latitude = details.getLatitude();
+		List<TaskEntity> tasks = details.getTasks();
+		String label = details.getLabel();
+		int level = details.getLevel();
+		CulturalAssetEntity culturalAssetParent = details.getCulturalAssetParent();
+		List<CulturalAssetEntity> culturalAssetChildren = details.getCulturalAssetChildren();
+		List<NotificationEntity> notifications = details.getNotifications();
+
+		if (name != null) {
+			this.setName(name);
+		}
+		if (description != null) {
+			this.setDescription(description);
+		}
+		if (tags != null) {
+			this.setTags(tags);
+		}
+		if (comments != null) {
+			this.setComments(comments);
+		}
+		if (media != null) {
+			this.setMedia(media);
+		}
+
+		
+		
+		if (address != null) {
+			this.setAddress(address);
+		}
+		this.setLongitude(longitude);
+		this.setLatitude(latitude);
+		if (tasks != null) {
+			this.setTasks(tasks);
+		}
+		if (label != null) {
+			this.setLabel(label);
+		}
+		this.setLevel(level);
+		if (culturalAssetParent != null) {
+			this.setCulturalAssetParent(culturalAssetParent);
+		}
+		if (culturalAssetChildren != null) {
+			this.setCulturalAssetChildren(culturalAssetChildren);
+		}
+		if (notifications != null) {
+			this.setNotifications(notifications);
+		}
 		
 	}
 

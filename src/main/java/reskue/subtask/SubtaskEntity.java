@@ -2,16 +2,19 @@ package reskue.subtask;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import kueres.base.BaseEntity;
 import reskue.task.TaskEntity;
 
+@Entity
 public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Column(name = "task", nullable = false)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
+	@JoinColumn(name = "subtasks")
 	private TaskEntity task;
 	public static final String TASK = "task";
 	public TaskEntity getTask() { return this.task; }
@@ -37,7 +40,20 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 
 	@Override
 	public void applyPatch(SubtaskEntity details) {
-		// TODO Auto-generated method stub
+		
+		TaskEntity task = details.getTask();
+		int state = details.getState();
+		String text = details.getText();
+		boolean isRequired = details.getIsRequired();
+		
+		if (task != null) {
+			this.setTask(task);
+		}
+		this.setState(state);
+		if (text != null) {
+			this.setText(text);
+		}
+		this.setIsRequired(isRequired);
 		
 	}
 
