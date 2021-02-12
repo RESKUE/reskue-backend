@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: __CI_PROJECT_NAME__-__CI_ENVIRONMENT_SLUG__
+spec:
+  template:
+    spec:
+      imagePullSecrets:
+      - name: gitlab-ext
+      containers:
+      - name: app
+        image: gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend:__CI_COMMIT_REF_SLUG__
+        env:
+          - name: SPRING_MAIN_BANNER_MODE
+            value: "off"
+          - name: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_LOB_NON_CONTEXTUAL_CREATION
+            value: "true"
+          - name: KEYCLOAK_USE_RESOURCE_ROLE_MAPPINGS
+            value: "true"
+          - name: KEYCLOAK_BEARER_ONLY
+            value: "true"
+          - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK
+            value: WARN
+          - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+            value: create
+          - name: SPRING_DATASOURCE_INITIALIZATION_MODE
+            value: always
+          - name: SPRING_DATASOURCE_PLATFORM
+            value: postgres
+          - name: SPRING_DATASOURCE_URL
+            value: jdbc:postgresql://reskue-content-db:5432/content_db
+          - name: SPRING_DATASOURCE_USERNAME
+            value: reskue
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: reskue-pw
+          - name: KEYCLOAK_REALM
+            value: reskue
+          - name: KEYCLOAK_AUTH_SERVER_URL
+            value: https://reskue.k8s.ilt-dmz.iosb.fraunhofer.de/auth
+          - name: KEYCLOAK_SSL_REQUIRED
+            value: external
+          - name: KEYCLOAK_RESOURCE
+            value: reskue
+          - name: SPRING_RABBITMQ_HOST
+            value: reskue-rabbitmq
+          - name: SPRING_RABBITMQ_PORT
+            value: '5672'
+          - name: SPRING_RABBITMQ_USERNAME
+            value: reskue
+          - name: SPRING_RABBITMQ_PASSWORD
+            value: reskue-pw
+          - name: KUERES_MEDIA_DIR
+            value: /media-dir
+          - name: KUERES_TOPIC-EXCHANGE
+            value: reskue-events
+          - name: KUERES_DEFAULT-QUEUE
+            value: event-consumer
+          - name: KUERES_FROST_URL
+            value: https://reskue-frost.k8s.ilt-dmz.iosb.fraunhofer.de/
+          - name: KUERES_NOMINATIM_URL
+            value: https://nominatim.openstreetmap.org
+          - name: LOGGING_LEVEL_ROOT
+            value: INFO
