@@ -44,7 +44,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>2.4.2</version>
 				<configuration>
-					<mainClass>kueres.Application</mainClass>
+					<mainClass>reskue.App</mainClass>
 				</configuration>
 
 				<executions>

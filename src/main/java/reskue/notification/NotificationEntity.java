@@ -8,8 +8,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 import kueres.base.BaseEntity;
 import kueres.utility.Utility;
@@ -26,7 +27,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public void setTitle(String title) { this.title = title; }
 
 	@Column(name = "message", nullable = false)
-	private String message;
+	private String message = "";
 	public static final String MESSAGE = "message";
 	public String getMessage() { return this.message; }
 	public void setMessage(String message) { this.message = message; }
@@ -37,15 +38,14 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public int getType() { return this.type; }
 	public void setType(int type) { this.type = type; }
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Column(name = "sender", nullable = false)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
+	@JoinColumn(name = "notificationSender")
 	private UserEntity sender;
 	public static final String SENDER = "sender";
 	public UserEntity getSender() { return this.sender; }
 	public void setSender(UserEntity sender) { this.sender = sender; }
 
-	@OneToMany(mappedBy = "notificationReceiver", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Column(name = "receivers", nullable = false)
+	@ManyToMany(mappedBy = "notificationReceiver", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<UserEntity> receivers = new ArrayList<UserEntity>();
 	public static final String RECEIVERS = "receivers";
 	public List<UserEntity> getReceivers() { return this.receivers; }
@@ -63,8 +63,8 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public long getEntityId() { return this.entityId; }
 	public void setEntityId(long entityId) { this.entityId = entityId; }
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Column(name = "entity", nullable = false)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
+	@JoinColumn(name = "notifications")
 	private CulturalAssetEntity entity;
 	public static final String ENTITY = "entity";
 	public CulturalAssetEntity getEntity() { return this.entity; }

@@ -6,14 +6,22 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import kueres.base.BaseEntity;
 import kueres.media.MediaEntity;
 import reskue.user.UserEntity;
 
+@Entity
 public class CommentEntity extends BaseEntity<CommentEntity>{
+	
 	
 	/**
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
@@ -25,6 +33,15 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	**/
 	
 	
+	// currently no relation
+	
+//	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
+//	@JoinColumn(name = "comments")
+	@Column(name = "reskueEntityJSON", nullable = false)
+	private String reskueEntityJSON;
+	public static final String RESKUE_ENTITY = "reskueEntityJSON";
+	public String getReskueEntityJSON() { return this.reskueEntityJSON; }
+	public void setReskueEntityJSON(String reskueEntityJSON) { this.reskueEntityJSON = reskueEntityJSON; }
 	
 	@Column(name = "text", nullable = false)
 	private String text = "";
@@ -32,14 +49,16 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	public String getText() { return this.text; }
 	public void setText(String text) { this.text = text; }
 	
-	@Column(name = "media", nullable = false)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "media_entity_id")
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";
 	public List<MediaEntity> getMedia() { return this.media; }
 	public void setMedia(List<MediaEntity> media) { this.media = media; }
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
-	@Column(name = "author", nullable = false)
+	@JoinColumn(name = "commentAuthor")
 	private UserEntity author;
 	public static final String AUTHOR = "author";
 	public UserEntity getAuthor() { return this.author; }
@@ -72,8 +91,8 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 		if (media != null) {
 			this.setMedia(media);
 		}
-		if (author != null) {
-			this.setAuthor(author);
+		if (author != null) {		
+			this.setAuthor(author);	
 		}
 		if (createdAt != null) {
 			this.setCreatedAt(createdAt);

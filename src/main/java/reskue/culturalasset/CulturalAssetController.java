@@ -3,26 +3,28 @@ package reskue.culturalasset;
 import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
-import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import kueres.base.BaseController;
 import kueres.query.EntitySpecification;
 import kueres.query.SearchCriteria;
 import kueres.query.SortBuilder;
 import reskue.ReskueController;
 import reskue.task.TaskEntity;
 
+@RestController
+@RequestMapping(BaseController.API_ENDPOINT + CulturalAssetController.ROUTE)
 public class CulturalAssetController extends ReskueController<CulturalAssetEntity, CulturalAssetRepository, CulturalAssetService>{
 	
 	public static final String ROUTE = "/culturalAsset";
@@ -32,7 +34,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 	public Page<CulturalAssetEntity> findInRadius(
 			@RequestParam double radius,
 			@RequestParam double longitude,
-			@RequestParam double latitiude,
+			@RequestParam double latitude,
 			@RequestParam Optional<String> filter, 
 			@RequestParam Optional<String[]> sort,
 			@RequestParam Optional<Integer> page, 
@@ -57,9 +59,9 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 			pagination = PageRequest.of(page.get(), size.get());
 		}
 
-		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
+//		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
 		
-		return service.findInRadius(radius, longitude, latitiude, specification, pagination);
+		return service.findInRadius(radius, longitude, latitude, specification, pagination);
 		
 	}
 	
@@ -91,7 +93,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 			pagination = PageRequest.of(page.get(), size.get());
 		}
 
-		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
+//		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
 		
 		return service.getAllTasks(id, specification, pagination);
 		
@@ -125,7 +127,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 			pagination = PageRequest.of(page.get(), size.get());
 		}
 
-		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
+//		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
 
 		return service.getAllChildren(id, specification, pagination);
 		
@@ -136,8 +138,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 	public double getDistance(
 			@PathVariable(value = CulturalAssetEntity.ID) long id,
 			@RequestParam double longitude,
-			@RequestParam double latitude
-			) {
+			@RequestParam double latitude) {
 
 		return service.getDistance(id, longitude, latitude);
 		
@@ -147,9 +148,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 	@RolesAllowed("administrator")
 	public ResponseEntity<CulturalAssetEntity> addCulturalAssetChild(
 			@PathVariable(value = CulturalAssetEntity.ID) long id,
-			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_CHILDREN) long childId, 
-			@Valid @RequestBody CulturalAssetEntity details)
-			throws ResourceNotFoundException {
+			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_CHILDREN) long childId) {
 
 		CulturalAssetEntity updatedEntity = service.addCulturalAssetChild(id, childId);
 		return ResponseEntity.ok().body(updatedEntity);
@@ -160,9 +159,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 	@RolesAllowed("administrator")
 	public ResponseEntity<CulturalAssetEntity> removeCulturalAssetChild(
 			@PathVariable(value = CulturalAssetEntity.ID) long id,
-			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_CHILDREN) long childId, 
-			@Valid @RequestBody CulturalAssetEntity details)
-			throws ResourceNotFoundException {
+			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_CHILDREN) long childId) {
 
 		CulturalAssetEntity updatedEntity = service.removeCulturalAssetChild(id, childId);
 		return ResponseEntity.ok().body(updatedEntity);
@@ -173,9 +170,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 	@RolesAllowed("administrator")
 	public ResponseEntity<CulturalAssetEntity> setCulturalAssetParent(
 			@PathVariable(value = CulturalAssetEntity.ID) long id,
-			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_PARENT) long parentId, 
-			@Valid @RequestBody CulturalAssetEntity details)
-			throws ResourceNotFoundException {
+			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_PARENT) long parentId) {
 
 		CulturalAssetEntity updatedEntity = service.setCulturalAssetParent(id, parentId);
 		return ResponseEntity.ok().body(updatedEntity);
@@ -185,15 +180,11 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 	@PutMapping("/{" + CulturalAssetEntity.ID + "}/removeParent")
 	@RolesAllowed("administrator")
 	public ResponseEntity<CulturalAssetEntity> removeCulturalAssetParent(
-			@PathVariable(value = CulturalAssetEntity.ID) long id,
-			@Valid @RequestBody CulturalAssetEntity details)
-			throws ResourceNotFoundException {
+			@PathVariable(value = CulturalAssetEntity.ID) long id) {
 
 		CulturalAssetEntity updatedEntity = service.removeCulturalAssetParent(id);
 		return ResponseEntity.ok().body(updatedEntity);
 		
-	}
-	
-	
+	}	
 
 }

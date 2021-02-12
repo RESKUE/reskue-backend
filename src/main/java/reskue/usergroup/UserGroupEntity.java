@@ -5,12 +5,14 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 
 import kueres.base.BaseEntity;
 import reskue.user.UserEntity;
 
+@Entity
 public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	
 	@Column(name = "name", nullable = false)
@@ -20,7 +22,6 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	public void setName(String name) { this.name = name; }
 	
 	@ManyToMany(mappedBy = "userGroups", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Column(name = "users", nullable = false)
 	private List<UserEntity> users = new ArrayList<UserEntity>();
 	public static final String NOTIFICATION_RECEIVER = "users";
 	public List<UserEntity> getUsers() { return this.users; }
@@ -28,7 +29,16 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 
 	@Override
 	public void applyPatch(UserGroupEntity details) {
-		// TODO Auto-generated method stub
+		
+		String name = details.getName();
+		List<UserEntity> users = details.getUsers();
+		
+		if (name != null) {
+			this.setName(name);
+		}
+		if (users != null) {
+			this.setUsers(users);
+		}
 		
 	}
 

@@ -15,12 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import kueres.location.LocationService;
 import kueres.query.EntitySpecification;
 import reskue.ReskueService;
 import reskue.task.TaskEntity;
 
+@Service
 public class CulturalAssetService extends ReskueService<CulturalAssetEntity, CulturalAssetRepository>{
 	
 	@Autowired
@@ -32,30 +34,31 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	@Override
 	@PostConstruct
 	public void init() {
-		this.identifier = CulturalAssetController.ROUTE;
-		this.routingKey = CulturalAssetController.ROUTE;
-		this.startReceivingEvents();
+
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Page<CulturalAssetEntity> findInRadius(double radius, double longitude, double latitiude,
+	public Page<CulturalAssetEntity> findInRadius(double radius, double longitude, double latitude,
 			EntitySpecification<CulturalAssetEntity> specification, Pageable pageable) {
 	
-		List<Long> entityIds = locationService.findInRadius(radius, new double[] {longitude, latitiude});
+		List<Long> entityIds = locationService.findInRadius(radius, new double[] {longitude, latitude});
 		
 		List<CulturalAssetEntity> entities = entityIds.stream().map(this::findById).collect(Collectors.toList());
 		
-		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-		CriteriaQuery<CulturalAssetEntity> criteriaQuery = criteriaBuilder.createQuery(CulturalAssetEntity.class);
-		Root<CulturalAssetEntity> root = criteriaQuery.from(CulturalAssetEntity.class);
+		if (specification != null) {
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<CulturalAssetEntity> criteriaQuery = criteriaBuilder.createQuery(CulturalAssetEntity.class);
+			Root<CulturalAssetEntity> root = criteriaQuery.from(CulturalAssetEntity.class);
 
-		entities = entities.stream().filter(
-				(Predicate<? super CulturalAssetEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-				.collect(Collectors.toList());
+			entities = entities.stream().filter(
+					(Predicate<? super CulturalAssetEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+					.collect(Collectors.toList());
+		}
 
 		Page<CulturalAssetEntity> page = new PageImpl<CulturalAssetEntity>(entities, pageable, entities.size());
 
 		return page;
+		
 	}
 
 	@SuppressWarnings("unchecked")
@@ -65,13 +68,15 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 		List<TaskEntity> tasks = entity.getTasks();
 
-		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-		CriteriaQuery<TaskEntity> criteriaQuery = criteriaBuilder.createQuery(TaskEntity.class);
-		Root<TaskEntity> root = criteriaQuery.from(TaskEntity.class);
+		if (specification != null) {
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<TaskEntity> criteriaQuery = criteriaBuilder.createQuery(TaskEntity.class);
+			Root<TaskEntity> root = criteriaQuery.from(TaskEntity.class);
 
-		tasks = tasks.stream().filter(
-				(Predicate<? super TaskEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-				.collect(Collectors.toList());
+			tasks = tasks.stream().filter(
+					(Predicate<? super TaskEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+					.collect(Collectors.toList());
+		}
 
 		Page<TaskEntity> page = new PageImpl<TaskEntity>(tasks, pageable, tasks.size());
 
@@ -87,13 +92,15 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 		List<CulturalAssetEntity> children = entity.getCulturalAssetChildren();
 
-		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-		CriteriaQuery<CulturalAssetEntity> criteriaQuery = criteriaBuilder.createQuery(CulturalAssetEntity.class);
-		Root<CulturalAssetEntity> root = criteriaQuery.from(CulturalAssetEntity.class);
+		if (specification != null) {
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<CulturalAssetEntity> criteriaQuery = criteriaBuilder.createQuery(CulturalAssetEntity.class);
+			Root<CulturalAssetEntity> root = criteriaQuery.from(CulturalAssetEntity.class);
 
-		children = children.stream().filter(
-				(Predicate<? super CulturalAssetEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-				.collect(Collectors.toList());
+			children = children.stream().filter(
+					(Predicate<? super CulturalAssetEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+					.collect(Collectors.toList());
+		}
 
 		Page<CulturalAssetEntity> page = new PageImpl<CulturalAssetEntity>(children, pageable, children.size());
 

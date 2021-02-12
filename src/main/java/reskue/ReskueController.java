@@ -3,18 +3,15 @@ package reskue;
 import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
-import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import kueres.base.BaseController;
@@ -55,7 +52,7 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 			pagination = PageRequest.of(page.get(), size.get());
 		}
 
-		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
+//		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
 
 		return service.getAllComments(id, specification, pagination);
 		
@@ -89,7 +86,7 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 			pagination = PageRequest.of(page.get(), size.get());
 		}
 
-		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
+//		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
 
 		return service.getAllMedia(id, specification, pagination);
 		
@@ -98,9 +95,9 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 	
 	@PutMapping("/{" + ReskueEntity.ID + "}/addTag/{" + ReskueEntity.TAGS + "}")
 	@RolesAllowed("administrator")
-	public ResponseEntity<E> addTag(@PathVariable(value = ReskueEntity.ID) long id,
-			@PathVariable(value = ReskueEntity.TAGS) String tag, @Valid @RequestBody E details)
-			throws ResourceNotFoundException {
+	public ResponseEntity<E> addTag(
+			@PathVariable(value = ReskueEntity.ID) long id,
+			@PathVariable(value = ReskueEntity.TAGS) String tag) {
 
 		E updatedEntity = service.addTag(id, tag);
 		return ResponseEntity.ok().body(updatedEntity);
@@ -109,9 +106,9 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 
 	@PutMapping("/{" + ReskueEntity.ID + "}/removeTag/{" + ReskueEntity.TAGS + "}")
 	@RolesAllowed("administrator")
-	public ResponseEntity<E> removeTag(@PathVariable(value = ReskueEntity.ID) long id,
-			@PathVariable(value = ReskueEntity.TAGS) String tag, @Valid @RequestBody E details)
-			throws ResourceNotFoundException {
+	public ResponseEntity<E> removeTag(
+			@PathVariable(value = ReskueEntity.ID) long id,
+			@PathVariable(value = ReskueEntity.TAGS) String tag) {
 
 		E updatedEntity = service.removeTag(id, tag);
 		return ResponseEntity.ok().body(updatedEntity);
