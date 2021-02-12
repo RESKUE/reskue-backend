@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: rescue_keycloak
+  labels:
+    app: rescue_keycloak
+spec:
+  rules:
+  - host: keycloak-__CI_ENVIRONMENT_HOST__
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: rescue_keycloak
+          servicePort: 8000

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: __CI_PROJECT_NAME__-__CI_ENVIRONMENT_SLUG__
+spec:
+  template:
+    spec:
+      containers:
+      - name: app
+        image: gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend:latest
+        env:
+          - name: SPRING_MAIN_BANNER-MODE
+            value: "off"
+          - name: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_LOB_NON_CONTEXTUAL_CREATION
+            value: "true"
+          - name: KEYCLOAK_USE-RESOURCE-ROLE-MAPPINGS
+            value: "true"
+          - name: KEYCLOAK_BEARER-ONLY
+            value: "true"
+          - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK
+            value: WARN
+          - name: SPRING_JPA_HIBERNATE_DDL-AUTO
+            value: none
+          - name: SPRING_DATASOURCE_INITIALIZATION-MODE
+            value: always
+          - name: SPRING_DATASOURCE_PLATFORM
+            value: postgres
+          - name: SPRING_DATASOURCE_URL
+            value: jdbc:postgresql://content-db:5432/content_db
+          - name: SPRING_DATASOURCE_USERNAME
+            value: ''
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: ''
+          - name: KEYCLOAK_REALM
+            value: reskue
+          - name: KEYCLOAK_AUTH-SERVER-URL
+            value: http://keycloak:8080/auth
+          - name: KEYCLOAK_SSL-REQUIRED
+            value: external
+          - name: KEYCLOAK_RESOURCE
+            value: reskue
+          - name: SPRING_RABBITMQ_HOST
+            value: rabbitmq
+          - name: SPRING_RABBITMQ_PORT
+            value: '5672'
+          - name: SPRING_RABBITMQ_USERNAME
+            value: ''
+          - name: SPRING_RABBITMQ_PASSWORD
+            value: ''
+          - name: KUERES_MEDIA_DIR
+            value: /media-dir
+          - name: KUERES_TOPIC-EXCHANGE
+            value: reskue-events
+          - name: KUERES_DEFAULT-QUEUE
+            value: event-consumer

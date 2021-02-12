@@ -1,9 +1,20 @@
+include:
+  - remote: https://ci-templates.docker01.ilt-dmz.iosb.fraunhofer.de/templates/gitlab-ci-common.yml
+  - remote: https://ci-templates.k8s.ilt-dmz.iosb.fraunhofer.de/templates/default/gitlab-ci-k8s-deploy-staging.yml
+
 variables:
   SPRING_PROFILES_ACTIVE: gitlab-ci
   DOCKER_HOST: tcp://localhost:2375
   DOCKER_TLS_CERTDIR: ""
   ARTIFACT_ID: backend
   VERSION: 0.0.1-SNAPSHOT
+  K8S_NAMESPACE: pse-reskue
+  APPLICATION_PORT: 8080
+  K8S_KUSTOMIZE_PATH: services/k8s
+
+default:
+  tags:
+    - ILT
 
 stages:
   - build
@@ -12,8 +23,6 @@ stages:
 maven-build:
   image: maven:3.6.3-jdk-11
   stage: build
-  tags:
-    - ILT
   script: "mvn verify -B -s ci_settings.xml"
   artifacts:
     paths:
@@ -24,8 +33,6 @@ docker-build:
   services:
   - docker:18.09.7-dind
   stage: deploy
-  tags:
-    - ILT
   only:
     - master
   before_script:
