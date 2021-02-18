@@ -63,9 +63,9 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 			pageSize = size.get();
 		}
 		
-		Pageable pagination = PageRequest.of(pageNumber, pageSize, sorting);
+		Pageable pageable = PageRequest.of(pageNumber, pageSize, sorting);
 		
-		return service.findInRadius(radius, longitude, latitude, specification, pagination);
+		return service.findInRadius(radius, longitude, latitude, specification, pageable);
 		
 	}
 	
@@ -101,9 +101,9 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 			pageSize = size.get();
 		}
 		
-		Pageable pagination = PageRequest.of(pageNumber, pageSize, sorting);
+		Pageable pageable = PageRequest.of(pageNumber, pageSize, sorting);
 		
-		return service.getAllTasks(id, specification, pagination);
+		return service.getAllTasks(id, specification, pageable);
 		
 	}
 	
@@ -139,9 +139,9 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 			pageSize = size.get();
 		}
 		
-		Pageable pagination = PageRequest.of(pageNumber, pageSize, sorting);
+		Pageable pageable = PageRequest.of(pageNumber, pageSize, sorting);
 
-		return service.getAllChildren(id, specification, pagination);
+		return service.getAllChildren(id, specification, pageable);
 		
 	}
 	

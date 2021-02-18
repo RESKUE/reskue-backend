@@ -60,9 +60,9 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 			pageSize = size.get();
 		}
 		
-		Pageable pagination = PageRequest.of(pageNumber, pageSize, sorting);
+		Pageable pageable = PageRequest.of(pageNumber, pageSize, sorting);
 		
-		return service.getAllUsers(id, specification, pagination);
+		return service.getAllUsers(id, specification, pageable);
 			
 	}
 	

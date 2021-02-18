@@ -62,9 +62,9 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 			pageSize = size.get();
 		}
 		
-		Pageable pagination = PageRequest.of(pageNumber, pageSize, sorting);
+		Pageable pageable = PageRequest.of(pageNumber, pageSize, sorting);
 		
-		return service.getAllSubtasks(id, specification, pagination);
+		return service.getAllSubtasks(id, specification, pageable);
 			
 	}
 	
@@ -100,9 +100,9 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 			pageSize = size.get();
 		}
 		
-		Pageable pagination = PageRequest.of(pageNumber, pageSize, sorting);
+		Pageable pageable = PageRequest.of(pageNumber, pageSize, sorting);
 		
-		return service.getAllHelpers(id, specification, pagination);
+		return service.getAllHelpers(id, specification, pageable);
 		
 	}
 	

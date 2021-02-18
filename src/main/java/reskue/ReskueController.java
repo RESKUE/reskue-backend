@@ -56,9 +56,9 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 			pageSize = size.get();
 		}
 		
-		Pageable pagination = PageRequest.of(pageNumber, pageSize, sorting);
+		Pageable pageable = PageRequest.of(pageNumber, pageSize, sorting);
 
-		return service.getAllComments(id, specification, pagination);
+		return service.getAllComments(id, specification, pageable);
 		
 	}
 	
@@ -94,9 +94,9 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 			pageSize = size.get();
 		}
 		
-		Pageable pagination = PageRequest.of(pageNumber, pageSize, sorting);
+		Pageable pageable = PageRequest.of(pageNumber, pageSize, sorting);
 
-		return service.getAllMedia(id, specification, pagination);
+		return service.getAllMedia(id, specification, pageable);
 		
 	}
 	
