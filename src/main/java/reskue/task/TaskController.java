@@ -3,18 +3,15 @@ package reskue.task;
 import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
-import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,17 +48,21 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 			}
 		}
 
-		Sort sorting = Sort.unsorted();
+		Sort sorting = Sort.unsorted();		// default sort
+		int pageNumber = 0;					// default page number, starts at 0
+		int pageSize = Integer.MAX_VALUE;	// default page size, might change to 20
+		
 		if (sort.isPresent()) {
 			sorting = SortBuilder.buildSort(sort.get());
 		}
-
-		Pageable pagination = Pageable.unpaged();
-		if (page.isPresent() && size.isPresent()) {
-			pagination = PageRequest.of(page.get(), size.get());
+		if (page.isPresent()) {
+			pageNumber = page.get();
 		}
-
-		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
+		if (size.isPresent()) {
+			pageSize = size.get();
+		}
+		
+		Pageable pagination = PageRequest.of(pageNumber, pageSize, sorting);
 		
 		return service.getAllSubtasks(id, specification, pagination);
 			
@@ -85,17 +86,21 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 			}
 		}
 
-		Sort sorting = Sort.unsorted();
+		Sort sorting = Sort.unsorted();		// default sort
+		int pageNumber = 0;					// default page number, starts at 0
+		int pageSize = Integer.MAX_VALUE;	// default page size, might change to 20
+		
 		if (sort.isPresent()) {
 			sorting = SortBuilder.buildSort(sort.get());
 		}
-
-		Pageable pagination = Pageable.unpaged();
-		if (page.isPresent() && size.isPresent()) {
-			pagination = PageRequest.of(page.get(), size.get());
+		if (page.isPresent()) {
+			pageNumber = page.get();
 		}
-
-		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
+		if (size.isPresent()) {
+			pageSize = size.get();
+		}
+		
+		Pageable pagination = PageRequest.of(pageNumber, pageSize, sorting);
 		
 		return service.getAllHelpers(id, specification, pagination);
 		
@@ -105,9 +110,7 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	@RolesAllowed({ "administrator", "helper" })
 	public ResponseEntity<TaskEntity> changeState(
 			@PathVariable(value = TaskEntity.ID) long id,
-			@PathVariable(value = TaskEntity.STATE) int state, 
-			@Valid @RequestBody TaskEntity details)
-			throws ResourceNotFoundException {
+			@PathVariable(value = TaskEntity.STATE) int state) {
 
 		TaskEntity updatedEntity = service.changeState(id, state);
 		return ResponseEntity.ok().body(updatedEntity);
@@ -118,9 +121,7 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	@RolesAllowed({ "administrator", "helper" })
 	public ResponseEntity<TaskEntity> addHelper(
 			@PathVariable(value = TaskEntity.ID) long id,
-			@PathVariable(value = TaskEntity.HELPER_USERS) long helperId, 
-			@Valid @RequestBody TaskEntity details)
-			throws ResourceNotFoundException {
+			@PathVariable(value = TaskEntity.HELPER_USERS) long helperId) {
 
 		TaskEntity updatedEntity = service.addHelper(id, helperId);
 		return ResponseEntity.ok().body(updatedEntity);
@@ -131,9 +132,7 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	@RolesAllowed({ "administrator", "helper" })
 	public ResponseEntity<TaskEntity> removeHelper(
 			@PathVariable(value = TaskEntity.ID) long id,
-			@PathVariable(value = TaskEntity.HELPER_USERS) long helperId, 
-			@Valid @RequestBody TaskEntity details)
-			throws ResourceNotFoundException {
+			@PathVariable(value = TaskEntity.HELPER_USERS) long helperId) {
 
 		TaskEntity updatedEntity = service.removeHelper(id, helperId);
 		return ResponseEntity.ok().body(updatedEntity);

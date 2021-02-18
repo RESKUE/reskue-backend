@@ -23,9 +23,7 @@ public class SubtaskController extends BaseController<SubtaskEntity, SubtaskRepo
 	@RolesAllowed({ "administrator", "helper" })
 	public ResponseEntity<SubtaskEntity> changeState(
 			@PathVariable(value = SubtaskEntity.ID) long id,
-			@PathVariable(value = SubtaskEntity.STATE) int state, 
-			@Valid @RequestBody SubtaskEntity details)
-			throws ResourceNotFoundException {
+			@PathVariable(value = SubtaskEntity.STATE) int state) {
 
 		SubtaskEntity updatedEntity = service.changeState(id, state);
 		return ResponseEntity.ok().body(updatedEntity);

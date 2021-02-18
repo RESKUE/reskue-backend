@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import kueres.base.BaseService;
 import kueres.query.EntitySpecification;
+import reskue.notification.NotificationEntity;
 import reskue.usergroup.UserGroupEntity;
 
 @Service
@@ -37,19 +38,44 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		UserEntity entity = this.findById(id);
 
 		List<UserGroupEntity> userGroups = entity.getUserGroups();
-		
-		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-		CriteriaQuery<UserGroupEntity> criteriaQuery = criteriaBuilder.createQuery(UserGroupEntity.class);
-		Root<UserGroupEntity> root = criteriaQuery.from(UserGroupEntity.class);
+	
+		if (specification != null) {
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<UserGroupEntity> criteriaQuery = criteriaBuilder.createQuery(UserGroupEntity.class);
+			Root<UserGroupEntity> root = criteriaQuery.from(UserGroupEntity.class);
 
-		userGroups = userGroups.stream().filter(
-				(Predicate<? super UserGroupEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-				.collect(Collectors.toList());
+			userGroups = userGroups.stream().filter(
+					(Predicate<? super UserGroupEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+					.collect(Collectors.toList());
+		}
 
 		Page<UserGroupEntity> page = new PageImpl<UserGroupEntity>(userGroups, pageable, userGroups.size());
 
 		return page;
 		
+	}
+
+	@SuppressWarnings("unchecked")
+	public Page<NotificationEntity> getNotificationsForUser(long id,
+			EntitySpecification<NotificationEntity> specification, Pageable pageable) {
+		
+		UserEntity entity = this.findById(id);
+
+		List<NotificationEntity> notifications = entity.getNotificationReceiver();
+	
+		if (specification != null) {
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<NotificationEntity> criteriaQuery = criteriaBuilder.createQuery(NotificationEntity.class);
+			Root<NotificationEntity> root = criteriaQuery.from(NotificationEntity.class);
+
+			notifications = notifications.stream().filter(
+					(Predicate<? super NotificationEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+					.collect(Collectors.toList());
+		}
+
+		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(notifications, pageable, notifications.size());
+
+		return page;
 	}
 
 }

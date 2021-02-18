@@ -3,18 +3,15 @@ package reskue.usergroup;
 import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
-import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,17 +46,21 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 			}
 		}
 
-		Sort sorting = Sort.unsorted();
+		Sort sorting = Sort.unsorted();		// default sort
+		int pageNumber = 0;					// default page number, starts at 0
+		int pageSize = Integer.MAX_VALUE;	// default page size, might change to 20
+		
 		if (sort.isPresent()) {
 			sorting = SortBuilder.buildSort(sort.get());
 		}
-
-		Pageable pagination = Pageable.unpaged();
-		if (page.isPresent() && size.isPresent()) {
-			pagination = PageRequest.of(page.get(), size.get());
+		if (page.isPresent()) {
+			pageNumber = page.get();
 		}
-
-		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
+		if (size.isPresent()) {
+			pageSize = size.get();
+		}
+		
+		Pageable pagination = PageRequest.of(pageNumber, pageSize, sorting);
 		
 		return service.getAllUsers(id, specification, pagination);
 			
@@ -69,9 +70,7 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 	@RolesAllowed({ "administrator", "helper" })
 	public ResponseEntity<UserGroupEntity> addUser(
 			@PathVariable(value = UserGroupEntity.ID) long id,
-			@PathVariable(value = UserEntity.ID) long userId, 
-			@Valid @RequestBody UserGroupEntity details)
-			throws ResourceNotFoundException {
+			@PathVariable(value = UserEntity.ID) long userId) {
 
 		UserGroupEntity updatedEntity = service.addUser(id, userId);
 		return ResponseEntity.ok().body(updatedEntity);
@@ -82,9 +81,7 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 	@RolesAllowed({ "administrator", "helper" })
 	public ResponseEntity<UserGroupEntity> removeUser(
 			@PathVariable(value = UserGroupEntity.ID) long id,
-			@PathVariable(value = UserEntity.ID) long userId, 
-			@Valid @RequestBody UserGroupEntity details)
-			throws ResourceNotFoundException {
+			@PathVariable(value = UserEntity.ID) long userId) {
 
 		UserGroupEntity updatedEntity = service.removeUser(id, userId);
 		return ResponseEntity.ok().body(updatedEntity);

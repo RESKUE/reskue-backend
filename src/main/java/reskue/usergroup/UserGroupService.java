@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,12 +19,16 @@ import org.springframework.stereotype.Service;
 import kueres.base.BaseService;
 import kueres.query.EntitySpecification;
 import reskue.user.UserEntity;
+import reskue.user.UserService;
 
 @Service
 public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepository>{
 	
 	@PersistenceContext
 	private EntityManager em;
+	
+	@Autowired
+	protected UserService userService;
 	
 	@Override
 	public void init() {
@@ -37,13 +42,15 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 
 		List<UserEntity> users = entity.getUsers();
 		
-		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-		CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
-		Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
+		if (specification != null) {
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
+			Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
 
-		users = users.stream().filter(
-				(Predicate<? super UserEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-				.collect(Collectors.toList());
+			users = users.stream().filter(
+					(Predicate<? super UserEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+					.collect(Collectors.toList());
+		}
 
 		Page<UserEntity> page = new PageImpl<UserEntity>(users, pageable, users.size());
 
@@ -52,13 +59,43 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	}
 
 	public UserGroupEntity addUser(long id, long userId) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		UserGroupEntity entity = this.findById(id);
+		UserEntity user = userService.findById(userId);
+		
+		List<UserEntity> newUsers = entity.getUsers();
+		
+		//if the user is already a user
+		if(newUsers.contains(user)) {
+			newUsers.add(user);
+			entity.setUsers(newUsers);
+		} else {
+			return entity;
+		}
+		
+		final UserGroupEntity updatedEntity = repository.save(entity);
+		return updatedEntity;
+		
 	}
 
 	public UserGroupEntity removeUser(long id, long userId) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		UserGroupEntity entity = this.findById(id);
+		UserEntity user = userService.findById(userId);
+		
+		List<UserEntity> newUsers = entity.getUsers();
+		
+		//if the user is actually a user
+		if(newUsers.contains(user)) {
+			newUsers.remove(user);
+			entity.setUsers(newUsers);
+		} else {
+			return entity;
+		}
+		
+		final UserGroupEntity updatedEntity = repository.save(entity);
+		return updatedEntity;
+	
 	}
 
 }
