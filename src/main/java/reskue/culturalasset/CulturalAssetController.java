@@ -49,17 +49,21 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 			}
 		}
 
-		Sort sorting = Sort.unsorted();
+		Sort sorting = Sort.unsorted();		// default sort
+		int pageNumber = 0;					// default page number, starts at 0
+		int pageSize = Integer.MAX_VALUE;	// default page size, might change to 20
+		
 		if (sort.isPresent()) {
 			sorting = SortBuilder.buildSort(sort.get());
 		}
-
-		Pageable pagination = Pageable.unpaged();
-		if (page.isPresent() && size.isPresent()) {
-			pagination = PageRequest.of(page.get(), size.get());
+		if (page.isPresent()) {
+			pageNumber = page.get();
 		}
-
-//		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
+		if (size.isPresent()) {
+			pageSize = size.get();
+		}
+		
+		Pageable pagination = PageRequest.of(pageNumber, pageSize, sorting);
 		
 		return service.findInRadius(radius, longitude, latitude, specification, pagination);
 		
@@ -83,17 +87,21 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 			}
 		}
 
-		Sort sorting = Sort.unsorted();
+		Sort sorting = Sort.unsorted();		// default sort
+		int pageNumber = 0;					// default page number, starts at 0
+		int pageSize = Integer.MAX_VALUE;	// default page size, might change to 20
+		
 		if (sort.isPresent()) {
 			sorting = SortBuilder.buildSort(sort.get());
 		}
-
-		Pageable pagination = Pageable.unpaged();
-		if (page.isPresent() && size.isPresent()) {
-			pagination = PageRequest.of(page.get(), size.get());
+		if (page.isPresent()) {
+			pageNumber = page.get();
 		}
-
-//		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
+		if (size.isPresent()) {
+			pageSize = size.get();
+		}
+		
+		Pageable pagination = PageRequest.of(pageNumber, pageSize, sorting);
 		
 		return service.getAllTasks(id, specification, pagination);
 		
@@ -117,17 +125,21 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 			}
 		}
 
-		Sort sorting = Sort.unsorted();
+		Sort sorting = Sort.unsorted();		// default sort
+		int pageNumber = 0;					// default page number, starts at 0
+		int pageSize = Integer.MAX_VALUE;	// default page size, might change to 20
+		
 		if (sort.isPresent()) {
 			sorting = SortBuilder.buildSort(sort.get());
 		}
-
-		Pageable pagination = Pageable.unpaged();
-		if (page.isPresent() && size.isPresent()) {
-			pagination = PageRequest.of(page.get(), size.get());
+		if (page.isPresent()) {
+			pageNumber = page.get();
 		}
-
-//		pagination = PageRequest.of(pagination.getPageNumber(), pagination.getPageSize(), sorting);
+		if (size.isPresent()) {
+			pageSize = size.get();
+		}
+		
+		Pageable pagination = PageRequest.of(pageNumber, pageSize, sorting);
 
 		return service.getAllChildren(id, specification, pagination);
 		
