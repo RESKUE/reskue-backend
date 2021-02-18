@@ -1,11 +1,11 @@
 package reskue.notification;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,17 +30,11 @@ public class NotificationController
 	public static final String ROUTE = "/notification";
 
 	@Autowired
-	protected UserService userService;
-	
-	
-	//needs to block the update request
-	
-	
-	//get all notifications from a specific user
+	protected UserService userService;	
 	
 	@GetMapping("/userNotifications/{" + UserEntity.ID + "}")
 	@RolesAllowed({ "administrator", "helper" })
-	public List<NotificationEntity> getAllUserNotifications(
+	public Page<NotificationEntity> getNotificationsForUser(
 			@PathVariable(value = UserEntity.ID) long id,
 			@RequestParam Optional<String> filter, 
 			@RequestParam Optional<String[]> sort,
@@ -57,19 +51,23 @@ public class NotificationController
 			}
 		}
 		
-		Sort sorting = Sort.unsorted();
+		Sort sorting = Sort.unsorted();		// default sort
+		int pageNumber = 0;					// default page number, starts at 0
+		int pageSize = Integer.MAX_VALUE;	// default page size, might change to 20
+		
 		if (sort.isPresent()) {
 			sorting = SortBuilder.buildSort(sort.get());
 		}
-		
-		Pageable pagination = Pageable.unpaged();
-		if (page.isPresent() && size.isPresent()) {
-			pagination = PageRequest.of(page.get(), size.get());
+		if (page.isPresent()) {
+			pageNumber = page.get();
 		}
-
-		//doesnt use filter and pagination yet
+		if (size.isPresent()) {
+			pageSize = size.get();
+		}
 		
-		return userService.findById(id).getNotificationReceiver();
+		Pageable pagination = PageRequest.of(pageNumber, pageSize, sorting);
+		
+		return userService.getNotificationsForUser(id, specification, pagination);
 		
 	}
 

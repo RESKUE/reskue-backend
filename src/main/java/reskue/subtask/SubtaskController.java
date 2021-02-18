@@ -1,13 +1,10 @@
 package reskue.subtask;
 
 import javax.annotation.security.RolesAllowed;
-import javax.validation.Valid;
 
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,9 +20,7 @@ public class SubtaskController extends BaseController<SubtaskEntity, SubtaskRepo
 	@RolesAllowed({ "administrator", "helper" })
 	public ResponseEntity<SubtaskEntity> changeState(
 			@PathVariable(value = SubtaskEntity.ID) long id,
-			@PathVariable(value = SubtaskEntity.STATE) int state, 
-			@Valid @RequestBody SubtaskEntity details)
-			throws ResourceNotFoundException {
+			@PathVariable(value = SubtaskEntity.STATE) int state) {
 
 		SubtaskEntity updatedEntity = service.changeState(id, state);
 		return ResponseEntity.ok().body(updatedEntity);

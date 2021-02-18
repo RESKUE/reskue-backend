@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -20,12 +21,16 @@ import kueres.query.EntitySpecification;
 import reskue.ReskueService;
 import reskue.subtask.SubtaskEntity;
 import reskue.user.UserEntity;
+import reskue.user.UserService;
 
 @Service
 public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	
 	@PersistenceContext
 	private EntityManager em;
+	
+	@Autowired
+	protected UserService userService;
 
 	@Override
 	@PostConstruct
@@ -41,13 +46,15 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 
 		List<SubtaskEntity> subtasks = entity.getSubtasks();
 
-		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-		CriteriaQuery<SubtaskEntity> criteriaQuery = criteriaBuilder.createQuery(SubtaskEntity.class);
-		Root<SubtaskEntity> root = criteriaQuery.from(SubtaskEntity.class);
+		if (specification != null) {
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<SubtaskEntity> criteriaQuery = criteriaBuilder.createQuery(SubtaskEntity.class);
+			Root<SubtaskEntity> root = criteriaQuery.from(SubtaskEntity.class);
 
-		subtasks = subtasks.stream().filter(
-				(Predicate<? super SubtaskEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-				.collect(Collectors.toList());
+			subtasks = subtasks.stream().filter(
+					(Predicate<? super SubtaskEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+					.collect(Collectors.toList());
+		}
 
 		Page<SubtaskEntity> page = new PageImpl<SubtaskEntity>(subtasks, pageable, subtasks.size());
 
@@ -62,13 +69,15 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 
 		List<UserEntity> helpers = entity.getHelperUsers();
 
-		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-		CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
-		Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
+		if (specification != null) {
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
+			Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
 
-		helpers = helpers.stream().filter(
-				(Predicate<? super UserEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-				.collect(Collectors.toList());
+			helpers = helpers.stream().filter(
+					(Predicate<? super UserEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+					.collect(Collectors.toList());
+		}
 
 		Page<UserEntity> page = new PageImpl<UserEntity>(helpers, pageable, helpers.size());
 
@@ -88,13 +97,43 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	}
 
 	public TaskEntity addHelper(long id, long helperId) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		TaskEntity entity = this.findById(id);
+		UserEntity helper = userService.findById(helperId);
+		
+		List<UserEntity> newHelpers = entity.getHelperUsers();
+		
+		//if the helper is already a helper
+		if(newHelpers.contains(helper)) {
+			newHelpers.add(helper);
+			entity.setHelperUsers(newHelpers);
+		} else {
+			return entity;
+		}
+		
+		final TaskEntity updatedEntity = repository.save(entity);
+		return updatedEntity;
+		
 	}
 
 	public TaskEntity removeHelper(long id, long helperId) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		TaskEntity entity = this.findById(id);
+		UserEntity helper = userService.findById(helperId);
+		
+		List<UserEntity> newHelpers = entity.getHelperUsers();
+		
+		//if the helper is actually a helper
+		if(newHelpers.contains(helper)) {
+			newHelpers.remove(helper);
+			entity.setHelperUsers(newHelpers);
+		} else {
+			return entity;
+		}
+		
+		final TaskEntity updatedEntity = repository.save(entity);
+		return updatedEntity;
+		
 	}
 
 }
