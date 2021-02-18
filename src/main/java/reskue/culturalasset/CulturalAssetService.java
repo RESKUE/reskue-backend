@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import kueres.location.LocationService;
 import kueres.query.EntitySpecification;
 import reskue.ReskueService;
+import reskue.notification.NotificationEntity;
 import reskue.task.TaskEntity;
 
 @Service
@@ -103,6 +104,30 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		}
 
 		Page<CulturalAssetEntity> page = new PageImpl<CulturalAssetEntity>(children, pageable, children.size());
+
+		return page;
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Page<NotificationEntity> getAllNotifications(long id, EntitySpecification<NotificationEntity> specification,
+			Pageable pageable) {
+
+		CulturalAssetEntity entity = this.findById(id);
+
+		List<NotificationEntity> notifications = entity.getNotifications();
+
+		if (specification != null) {
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<NotificationEntity> criteriaQuery = criteriaBuilder.createQuery(NotificationEntity.class);
+			Root<NotificationEntity> root = criteriaQuery.from(NotificationEntity.class);
+
+			notifications = notifications.stream().filter(
+					(Predicate<? super NotificationEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+					.collect(Collectors.toList());
+		}
+
+		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(notifications, pageable, notifications.size());
 
 		return page;
 		

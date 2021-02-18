@@ -5,19 +5,25 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+<<<<<<< HEAD
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.representations.AccessToken;
+=======
+>>>>>>> f8f4ed79736cf9758ccc6cc7287333dc0dd1381f
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+<<<<<<< HEAD
 import kueres.base.BaseController;
 import kueres.query.EntitySpecification;
 import kueres.query.SearchCriteria;
 import kueres.utility.Utility;
 
+=======
+>>>>>>> f8f4ed79736cf9758ccc6cc7287333dc0dd1381f
 @Component
 public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 	

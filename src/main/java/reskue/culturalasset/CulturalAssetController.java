@@ -21,6 +21,7 @@ import kueres.query.EntitySpecification;
 import kueres.query.SearchCriteria;
 import kueres.query.SortBuilder;
 import reskue.ReskueController;
+import reskue.notification.NotificationEntity;
 import reskue.task.TaskEntity;
 
 @RestController
@@ -51,7 +52,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 
 		Sort sorting = Sort.unsorted();		// default sort
 		int pageNumber = 0;					// default page number, starts at 0
-		int pageSize = Integer.MAX_VALUE;	// default page size, might change to 20
+		int pageSize = 25;					// default page size, 25
 		
 		if (sort.isPresent()) {
 			sorting = SortBuilder.buildSort(sort.get());
@@ -89,7 +90,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 
 		Sort sorting = Sort.unsorted();		// default sort
 		int pageNumber = 0;					// default page number, starts at 0
-		int pageSize = Integer.MAX_VALUE;	// default page size, might change to 20
+		int pageSize = 25;					// default page size, 25
 		
 		if (sort.isPresent()) {
 			sorting = SortBuilder.buildSort(sort.get());
@@ -127,7 +128,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 
 		Sort sorting = Sort.unsorted();		// default sort
 		int pageNumber = 0;					// default page number, starts at 0
-		int pageSize = Integer.MAX_VALUE;	// default page size, might change to 20
+		int pageSize = 25;					// default page size, 25
 		
 		if (sort.isPresent()) {
 			sorting = SortBuilder.buildSort(sort.get());
@@ -142,6 +143,44 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		Pageable pageable = PageRequest.of(pageNumber, pageSize, sorting);
 
 		return service.getAllChildren(id, specification, pageable);
+		
+	}
+	
+	@GetMapping("/{" + CulturalAssetEntity.ID + "}/notifications")
+	@RolesAllowed({ "administrator", "helper" })
+	public Page<NotificationEntity> getAllNotifications(
+			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@RequestParam Optional<String> filter, 
+			@RequestParam Optional<String[]> sort,
+			@RequestParam Optional<Integer> page, 
+			@RequestParam Optional<Integer> size) {
+
+		EntitySpecification<NotificationEntity> specification = null;
+		if (filter.isPresent()) {
+			String[] filters = filter.get().split(",");
+			specification = new EntitySpecification<NotificationEntity>();
+			for (String searchFilter : filters) {
+				specification.add(new SearchCriteria(searchFilter));
+			}
+		}
+
+		Sort sorting = Sort.unsorted();		// default sort
+		int pageNumber = 0;					// default page number, starts at 0
+		int pageSize = 25;					// default page size, 25
+		
+		if (sort.isPresent()) {
+			sorting = SortBuilder.buildSort(sort.get());
+		}
+		if (page.isPresent()) {
+			pageNumber = page.get();
+		}
+		if (size.isPresent()) {
+			pageSize = size.get();
+		}
+		
+		Pageable pageable = PageRequest.of(pageNumber, pageSize, sorting);
+
+		return service.getAllNotifications(id, specification, pageable);
 		
 	}
 	
