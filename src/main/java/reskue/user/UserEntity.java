@@ -25,13 +25,13 @@ import reskue.usergroup.UserGroupEntity;
 public class UserEntity extends BaseEntity<UserEntity>{
 	
 	@Column(name = "name", nullable = false)
-	private String name;
+	private String name = "";
 	public static final String NAME = "name";
 	public String getName() { return this.name; }
 	public void setName(String name) { this.name = name; }
 	
 	@Column(name = "keycloakId", nullable = false)
-	private String keycloakId;
+	private String keycloakId = "";
 	public static final String KEYCLOAK_ID = "keycloakId";
 	public String getKeycloakId() { return this.keycloakId; }
 	public void setKeycloakId(String keycloakId) { this.keycloakId = keycloakId; }

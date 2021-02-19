@@ -27,13 +27,13 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	public void setState(int state) { this.state = state; }
 	
 	@Column(name = "text", nullable = false)
-	private String text;
+	private String text = "";
 	public static final String TEXT = "text";
 	public String getText() { return this.text; }
 	public void setText(String text) { this.text = text; }
 	
 	@Column(name = "isRequired", nullable = false)
-	private boolean isRequired;
+	private boolean isRequired = false;
 	public static final String IS_REQUIRED = "isRequired";
 	public boolean getIsRequired() { return this.isRequired; }
 	public void setIsRequired(boolean isRequired) { this.isRequired = isRequired; }

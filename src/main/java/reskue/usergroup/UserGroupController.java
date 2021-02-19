@@ -26,7 +26,7 @@ import reskue.user.UserEntity;
 @RequestMapping(BaseController.API_ENDPOINT + UserGroupController.ROUTE)
 public class UserGroupController extends BaseController<UserGroupEntity, UserGroupRepository, UserGroupService>{
 	
-	public static final String ROUTE = "/userGroups";
+	public static final String ROUTE = "/userGroup";
 	
 	@GetMapping("/{" + UserGroupEntity.ID + "}/users")
 	@RolesAllowed({ "administrator", "helper" })

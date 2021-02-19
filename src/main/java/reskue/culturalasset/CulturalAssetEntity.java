@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import kueres.media.MediaEntity;
 import reskue.ReskueEntity;
 import reskue.comment.CommentEntity;
@@ -42,6 +44,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<TaskEntity> tasks = new ArrayList<TaskEntity>();
 	public static final String TASKS = "tasks";
+	@JsonIgnore
 	public List<TaskEntity> getTasks() { return this.tasks; }
 	public void setTasks(List<TaskEntity> tasks) { this.tasks = tasks; }
 	
@@ -66,13 +69,15 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<CulturalAssetEntity> culturalAssetChildren = new ArrayList<CulturalAssetEntity>();
-	public static final String CULTURAL_ASSET_CHILDREN = "culturalAssetChildren";
+	public static final String CULTURAL_ASSET_CHILDREN = "culturalAssetChildren";	
+	@JsonIgnore
 	public List<CulturalAssetEntity> getCulturalAssetChildren() { return this.culturalAssetChildren; }
 	public void setCulturalAssetChildren(List<CulturalAssetEntity> culturalAssetChildren) { this.culturalAssetChildren = culturalAssetChildren; }
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<NotificationEntity> notifications = new ArrayList<NotificationEntity>();
-	public static final String NOTIFICATIONS = "notifications";
+	public static final String NOTIFICATIONS = "notifications";	
+	@JsonIgnore
 	public List<NotificationEntity> getNotifications() { return this.notifications; }
 	public void setNotifications(List<NotificationEntity> notifications) { this.notifications = notifications; }
 	
