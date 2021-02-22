@@ -29,19 +29,14 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public String getAddress() { return this.address; }
 	public void setAddress(String address) { this.address = address; }
 	
-	@Column(name = "locationId", nullable = false)
-	private long locationId = 0;
-	public static final String LOCATION_ID = "locationId";
-	@JsonIgnore
-	public long getLocationId() { return this.locationId; }
-	public void setLocationId(long locationId) { this.locationId = locationId; }
-	
+	//TODO: necessary?
 	@Column(name = "longitude", nullable = false)
 	private double longitude = 0;
 	public static final String LONGITUDE = "longitude";
 	public double getLongitude() { return this.longitude; }
 	public void setLongitude(double longitude) { this.longitude = longitude; }
 	
+	//TODO: necessary?
 	@Column(name = "latitude", nullable = false)
 	private double latitude = 0;
 	public static final String LATITUDE = "latitude";
@@ -67,6 +62,13 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public int getLevel() { return this.level; }
 	public void setLevel(int level) { this.level = level; }
 	
+	//TODO: hidden?
+	@Column(name = "locationId", nullable = false)
+	private String locationId;
+	public static final String LOCATION_ID = "locationId";
+	public String getLocationId() { return this.locationId; }
+	public void setLocationId(String locationId) { this.locationId = locationId; }
+	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "culturalAssetParent")
 	private CulturalAssetEntity culturalAssetParent;
@@ -88,7 +90,6 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public List<NotificationEntity> getNotifications() { return this.notifications; }
 	public void setNotifications(List<NotificationEntity> notifications) { this.notifications = notifications; }
 	
-	
 	// needs overhaul
 	@Override
 	public void applyPatch(CulturalAssetEntity details) {
@@ -100,7 +101,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		List<MediaEntity> media = details.getMedia();	
 		
 		String address = details.getAddress();
-		long locationId = details.getLocationId();
+		String locationId = details.getLocationId();
 		double longitude = details.getLongitude();
 		double latitude = details.getLatitude();
 		List<TaskEntity> tasks = details.getTasks();

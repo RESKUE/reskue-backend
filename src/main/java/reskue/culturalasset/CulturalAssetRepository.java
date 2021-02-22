@@ -7,4 +7,6 @@ import reskue.ReskueRepository;
 @Repository
 public interface CulturalAssetRepository extends ReskueRepository<CulturalAssetEntity>{
 
+	CulturalAssetEntity findByLocationId(String locationId);
+	
 }
