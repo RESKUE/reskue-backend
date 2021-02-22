@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import kueres.base.BaseEntity;
 import kueres.utility.Utility;
 import reskue.culturalasset.CulturalAssetEntity;
@@ -48,6 +50,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	@ManyToMany(mappedBy = "notificationReceiver", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<UserEntity> receivers = new ArrayList<UserEntity>();
 	public static final String RECEIVERS = "receivers";
+	@JsonIgnore
 	public List<UserEntity> getReceivers() { return this.receivers; }
 	public void setReceivers(List<UserEntity> receivers) { this.receivers = receivers; }
 	

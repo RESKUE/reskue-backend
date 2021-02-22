@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import kueres.base.BaseEntity;
 import kueres.media.MediaEntity;
 import reskue.user.UserEntity;
@@ -38,7 +40,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 //	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
 //	@JoinColumn(name = "comments")
 	@Column(name = "reskueEntityJSON", nullable = false)
-	private String reskueEntityJSON;
+	private String reskueEntityJSON = "";
 	public static final String RESKUE_ENTITY = "reskueEntityJSON";
 	public String getReskueEntityJSON() { return this.reskueEntityJSON; }
 	public void setReskueEntityJSON(String reskueEntityJSON) { this.reskueEntityJSON = reskueEntityJSON; }
@@ -54,6 +56,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	@JoinColumn(name = "media_entity_id")
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";
+	@JsonIgnore
 	public List<MediaEntity> getMedia() { return this.media; }
 	public void setMedia(List<MediaEntity> media) { this.media = media; }
 	
@@ -65,13 +68,13 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	public void setAuthor(UserEntity author) { this.author = author; }
 	
 	@Column(name = "createdAt", nullable = false)
-	private Date createdAt;
+	private Date createdAt = new Date();
 	public static final String CREATED_AT = "createdAt";
 	public Date getCreatedAt() { return this.createdAt; }
 	public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
 	
 	@Column(name = "updatedAt", nullable = false)
-	private Date updatedAt;
+	private Date updatedAt = new Date();
 	public static final String UPDATED_AT = "updatedAt";
 	public Date getUpdatedAt() { return this.updatedAt; }
 	public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }

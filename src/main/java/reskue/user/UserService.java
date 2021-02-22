@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 
 import kueres.base.BaseService;
 import kueres.query.EntitySpecification;
+import reskue.comment.CommentEntity;
 import reskue.notification.NotificationEntity;
+import reskue.task.TaskEntity;
 import reskue.usergroup.UserGroupEntity;
 
 @Service
@@ -32,7 +34,79 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	}
 
 	@SuppressWarnings("unchecked")
-	public Page<UserGroupEntity> getAllUserGroups(long id, EntitySpecification<UserGroupEntity> specification,
+	public Page<TaskEntity> getTasksWhereUserIsContact(long id, EntitySpecification<TaskEntity> specification,
+			Pageable pageable) {
+		
+		UserEntity entity = this.findById(id);
+
+		List<TaskEntity> contactTasks = entity.getTaskContact();
+	
+		if (specification != null) {
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<TaskEntity> criteriaQuery = criteriaBuilder.createQuery(TaskEntity.class);
+			Root<TaskEntity> root = criteriaQuery.from(TaskEntity.class);
+
+			contactTasks = contactTasks.stream().filter(
+					(Predicate<? super TaskEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+					.collect(Collectors.toList());
+		}
+
+		Page<TaskEntity> page = new PageImpl<TaskEntity>(contactTasks, pageable, contactTasks.size());
+
+		return page;
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	public Page<TaskEntity> getTasksWhereUserIsHelper(long id, EntitySpecification<TaskEntity> specification,
+			Pageable pageable) {
+		
+		UserEntity entity = this.findById(id);
+
+		List<TaskEntity> helperTasks = entity.getTaskHelper();
+	
+		if (specification != null) {
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<TaskEntity> criteriaQuery = criteriaBuilder.createQuery(TaskEntity.class);
+			Root<TaskEntity> root = criteriaQuery.from(TaskEntity.class);
+
+			helperTasks = helperTasks.stream().filter(
+					(Predicate<? super TaskEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+					.collect(Collectors.toList());
+		}
+
+		Page<TaskEntity> page = new PageImpl<TaskEntity>(helperTasks, pageable, helperTasks.size());
+
+		return page;
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	public Page<CommentEntity> getCommentsByUser(long id, EntitySpecification<CommentEntity> specification,
+			Pageable pageable) {
+		
+		UserEntity entity = this.findById(id);
+
+		List<CommentEntity> authorComments = entity.getCommentAuthor();
+	
+		if (specification != null) {
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<CommentEntity> criteriaQuery = criteriaBuilder.createQuery(CommentEntity.class);
+			Root<CommentEntity> root = criteriaQuery.from(CommentEntity.class);
+
+			authorComments = authorComments.stream().filter(
+					(Predicate<? super CommentEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+					.collect(Collectors.toList());
+		}
+
+		Page<CommentEntity> page = new PageImpl<CommentEntity>(authorComments, pageable, authorComments.size());
+
+		return page;
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	public Page<UserGroupEntity> getUserGroupsForUser(long id, EntitySpecification<UserGroupEntity> specification,
 			Pageable pageable) {
 		
 		UserEntity entity = this.findById(id);
@@ -54,6 +128,30 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		return page;
 		
 	}
+	
+	@SuppressWarnings("unchecked")
+	public Page<NotificationEntity> getNotificationsSendByUser(long id, EntitySpecification<NotificationEntity> specification,
+			Pageable pageable) {
+		
+		UserEntity entity = this.findById(id);
+
+		List<NotificationEntity> senderNotifiactions = entity.getNotificationSender();
+	
+		if (specification != null) {
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<NotificationEntity> criteriaQuery = criteriaBuilder.createQuery(NotificationEntity.class);
+			Root<NotificationEntity> root = criteriaQuery.from(NotificationEntity.class);
+
+			senderNotifiactions = senderNotifiactions.stream().filter(
+					(Predicate<? super NotificationEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+					.collect(Collectors.toList());
+		}
+
+		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(senderNotifiactions, pageable, senderNotifiactions.size());
+
+		return page;
+		
+	}
 
 	@SuppressWarnings("unchecked")
 	public Page<NotificationEntity> getNotificationsForUser(long id,
@@ -61,19 +159,19 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		
 		UserEntity entity = this.findById(id);
 
-		List<NotificationEntity> notifications = entity.getNotificationReceiver();
+		List<NotificationEntity> receiverNotifications = entity.getNotificationReceiver();
 	
 		if (specification != null) {
 			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 			CriteriaQuery<NotificationEntity> criteriaQuery = criteriaBuilder.createQuery(NotificationEntity.class);
 			Root<NotificationEntity> root = criteriaQuery.from(NotificationEntity.class);
 
-			notifications = notifications.stream().filter(
+			receiverNotifications = receiverNotifications.stream().filter(
 					(Predicate<? super NotificationEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
 					.collect(Collectors.toList());
 		}
 
-		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(notifications, pageable, notifications.size());
+		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(receiverNotifications, pageable, receiverNotifications.size());
 
 		return page;
 	}

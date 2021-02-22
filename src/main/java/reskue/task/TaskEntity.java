@@ -13,6 +13,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import kueres.media.MediaEntity;
 import reskue.ReskueEntity;
 import reskue.comment.CommentEntity;
@@ -39,6 +41,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<SubtaskEntity> subtasks = new ArrayList<SubtaskEntity>();
 	public static final String SUBTASKS = "subtasks";
+	@JsonIgnore
 	public List<SubtaskEntity> getSubtasks() { return this.subtasks; }
 	public void setSubtasks(List<SubtaskEntity> subtasks) { this.subtasks = subtasks; }
 	
@@ -52,6 +55,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	@ManyToMany(mappedBy = "taskHelper", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<UserEntity> helperUsers = new ArrayList<UserEntity>();
 	public static final String HELPER_USERS = "helperUsers";
+	@JsonIgnore
 	public List<UserEntity> getHelperUsers() { return this.helperUsers; }
 	public void setHelperUsers(List<UserEntity> helperUsers) { this.helperUsers = helperUsers; }
 	

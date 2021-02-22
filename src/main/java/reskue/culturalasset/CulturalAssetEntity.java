@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import kueres.media.MediaEntity;
 import reskue.ReskueEntity;
 import reskue.comment.CommentEntity;
@@ -26,6 +28,13 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public static final String ADDRESS = "address";
 	public String getAddress() { return this.address; }
 	public void setAddress(String address) { this.address = address; }
+	
+	@Column(name = "locationId", nullable = false)
+	private long locationId = 0;
+	public static final String LOCATION_ID = "locationId";
+	@JsonIgnore
+	public long getLocationId() { return this.locationId; }
+	public void setLocationId(long locationId) { this.locationId = locationId; }
 	
 	@Column(name = "longitude", nullable = false)
 	private double longitude = 0;
@@ -42,6 +51,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<TaskEntity> tasks = new ArrayList<TaskEntity>();
 	public static final String TASKS = "tasks";
+	@JsonIgnore
 	public List<TaskEntity> getTasks() { return this.tasks; }
 	public void setTasks(List<TaskEntity> tasks) { this.tasks = tasks; }
 	
@@ -66,13 +76,15 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<CulturalAssetEntity> culturalAssetChildren = new ArrayList<CulturalAssetEntity>();
-	public static final String CULTURAL_ASSET_CHILDREN = "culturalAssetChildren";
+	public static final String CULTURAL_ASSET_CHILDREN = "culturalAssetChildren";	
+	@JsonIgnore
 	public List<CulturalAssetEntity> getCulturalAssetChildren() { return this.culturalAssetChildren; }
 	public void setCulturalAssetChildren(List<CulturalAssetEntity> culturalAssetChildren) { this.culturalAssetChildren = culturalAssetChildren; }
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<NotificationEntity> notifications = new ArrayList<NotificationEntity>();
-	public static final String NOTIFICATIONS = "notifications";
+	public static final String NOTIFICATIONS = "notifications";	
+	@JsonIgnore
 	public List<NotificationEntity> getNotifications() { return this.notifications; }
 	public void setNotifications(List<NotificationEntity> notifications) { this.notifications = notifications; }
 	
@@ -88,6 +100,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		List<MediaEntity> media = details.getMedia();	
 		
 		String address = details.getAddress();
+		long locationId = details.getLocationId();
 		double longitude = details.getLongitude();
 		double latitude = details.getLatitude();
 		List<TaskEntity> tasks = details.getTasks();
@@ -118,6 +131,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		if (address != null) {
 			this.setAddress(address);
 		}
+		this.setLocationId(locationId);
 		this.setLongitude(longitude);
 		this.setLatitude(latitude);
 		if (tasks != null) {

@@ -12,6 +12,8 @@ import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import kueres.base.BaseEntity;
 import kueres.media.MediaEntity;
 import reskue.comment.CommentEntity;
@@ -38,21 +40,19 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	public Set<String> getTags() { return this.tags; }
 	public void setTags(Set<String> tags) { this.tags = tags; }
 	
-	// currently no relation
-//	@Column(name = "comments", nullable = false)
-	
 	@ElementCollection(targetClass = MediaEntity.class)
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<CommentEntity> comments = new ArrayList<CommentEntity>();
 	public static final String COMMENTS = "comments";
+	@JsonIgnore
 	public List<CommentEntity> getComments() { return this.comments; }
 	public void setComments(List<CommentEntity> comments) { this.comments = comments; }
 	
-	// needs JSON Converter etc to connect to media entity
 	@ElementCollection(targetClass = MediaEntity.class)
 	@Column(name = "media", nullable = false)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";
+	@JsonIgnore
 	public List<MediaEntity> getMedia() { return this.media; }
 	public void setMedia(List<MediaEntity> media) { this.media = media; }
 	
