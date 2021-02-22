@@ -42,9 +42,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	public Page<CulturalAssetEntity> findInRadius(double radius, double longitude, double latitude,
 			EntitySpecification<CulturalAssetEntity> specification, Pageable pageable) {
 	
-		List<Long> entityIds = locationService.findInRadius(radius, new double[] {longitude, latitude});
-		
-		List<CulturalAssetEntity> entities = entityIds.stream().map(this::findById).collect(Collectors.toList());
+		List<String> entityIds = locationService.findInRadius(radius, new double[] {longitude, latitude});
+		List<CulturalAssetEntity> entities = entityIds.stream().map(this.repository::findByLocationId).collect(Collectors.toList());
 		
 		if (specification != null) {
 			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
