@@ -29,6 +29,13 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public String getAddress() { return this.address; }
 	public void setAddress(String address) { this.address = address; }
 	
+	@Column(name = "locationId", nullable = false)
+	private long locationId = 0;
+	public static final String LOCATION_ID = "locationId";
+	@JsonIgnore
+	public long getLocationId() { return this.locationId; }
+	public void setLocationId(long locationId) { this.locationId = locationId; }
+	
 	@Column(name = "longitude", nullable = false)
 	private double longitude = 0;
 	public static final String LONGITUDE = "longitude";
@@ -93,6 +100,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		List<MediaEntity> media = details.getMedia();	
 		
 		String address = details.getAddress();
+		long locationId = details.getLocationId();
 		double longitude = details.getLongitude();
 		double latitude = details.getLatitude();
 		List<TaskEntity> tasks = details.getTasks();
@@ -123,6 +131,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		if (address != null) {
 			this.setAddress(address);
 		}
+		this.setLocationId(locationId);
 		this.setLongitude(longitude);
 		this.setLatitude(latitude);
 		if (tasks != null) {
