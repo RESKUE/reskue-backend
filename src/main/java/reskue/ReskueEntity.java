@@ -1,9 +1,7 @@
 package reskue;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -27,18 +25,32 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	public String getName() { return this.name; }
 	public void setName(String name) { this.name = name; }
 	
-	@Column(name = "description", nullable = false)
+	@Column(name = "description", nullable = false, columnDefinition="TEXT")
 	private String description = "";
 	public static final String DESCRIPTION = "description";
 	public String getDescription() { return this.description; }
 	public void setDescription(String description) { this.description = description; }
 	
-	@ElementCollection(targetClass = String.class)
-	@Column(name = "tags", nullable = false)
-	private Set<String> tags = new HashSet<String>();
-	public static final String TAGS = "tags";
-	public Set<String> getTags() { return this.tags; }
-	public void setTags(Set<String> tags) { this.tags = tags; }
+	// use 0 to 5 as default
+	@Column(name = "priority", nullable = false)
+	private int priority = 0;
+	public static final String PRIORITY = "priority";
+	public int getPriority() { return this.priority; }
+	public void setPriority(int priority) { this.priority = priority; }
+	
+	// use 1 for true and 0 for false
+	@Column(name = "isRequired", nullable = false)
+	private int isRequired = 0;
+	public static final String IS_REQUIRED = "isRequired";
+	public int getIsRequired() { return this.isRequired; }
+	public void setIsRequired(int isRequired) { this.isRequired = isRequired; }
+	
+//	@ElementCollection(targetClass = String.class)
+//	@Column(name = "tags", nullable = false)
+//	private Set<String> tags = new HashSet<String>();
+//	public static final String TAGS = "tags";
+//	public Set<String> getTags() { return this.tags; }
+//	public void setTags(Set<String> tags) { this.tags = tags; }
 	
 	@ElementCollection(targetClass = MediaEntity.class)
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import kueres.base.BaseService;
 import kueres.query.EntitySpecification;
+import kueres.utility.Utility;
 import reskue.comment.CommentEntity;
 import reskue.notification.NotificationEntity;
 import reskue.task.TaskEntity;
@@ -37,8 +38,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	public Page<TaskEntity> getTasksWhereUserIsContact(long id, EntitySpecification<TaskEntity> specification,
 			Pageable pageable) {
 		
+		Utility.LOG.trace("UserService.getTasksWhereUserIsContact called.");
+		
 		UserEntity entity = this.findById(id);
-
 		List<TaskEntity> contactTasks = entity.getTaskContact();
 	
 		if (specification != null) {
@@ -61,8 +63,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	public Page<TaskEntity> getTasksWhereUserIsHelper(long id, EntitySpecification<TaskEntity> specification,
 			Pageable pageable) {
 		
+		Utility.LOG.trace("UserService.getTasksWhereUserIsHelper called.");
+		
 		UserEntity entity = this.findById(id);
-
 		List<TaskEntity> helperTasks = entity.getTaskHelper();
 	
 		if (specification != null) {
@@ -85,8 +88,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	public Page<CommentEntity> getCommentsByUser(long id, EntitySpecification<CommentEntity> specification,
 			Pageable pageable) {
 		
+		Utility.LOG.trace("UserService.getCommentsByUser called.");		
+		
 		UserEntity entity = this.findById(id);
-
 		List<CommentEntity> authorComments = entity.getCommentAuthor();
 	
 		if (specification != null) {
@@ -109,8 +113,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	public Page<UserGroupEntity> getUserGroupsForUser(long id, EntitySpecification<UserGroupEntity> specification,
 			Pageable pageable) {
 		
+		Utility.LOG.trace("UserService.getUserGroupsForUser called.");				
+		
 		UserEntity entity = this.findById(id);
-
 		List<UserGroupEntity> userGroups = entity.getUserGroups();
 	
 		if (specification != null) {
@@ -133,8 +138,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	public Page<NotificationEntity> getNotificationsSendByUser(long id, EntitySpecification<NotificationEntity> specification,
 			Pageable pageable) {
 		
+		Utility.LOG.trace("UserService.getNotificationsSendByUser called.");	
+		
 		UserEntity entity = this.findById(id);
-
 		List<NotificationEntity> senderNotifiactions = entity.getNotificationSender();
 	
 		if (specification != null) {
@@ -157,8 +163,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	public Page<NotificationEntity> getNotificationsForUser(long id,
 			EntitySpecification<NotificationEntity> specification, Pageable pageable) {
 		
+		Utility.LOG.trace("UserService.getNotificationsForUser called.");	
+		
 		UserEntity entity = this.findById(id);
-
 		List<NotificationEntity> receiverNotifications = entity.getNotificationReceiver();
 	
 		if (specification != null) {

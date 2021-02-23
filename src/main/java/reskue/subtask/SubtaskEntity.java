@@ -26,7 +26,7 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	public int getState() { return this.state; }
 	public void setState(int state) { this.state = state; }
 	
-	@Column(name = "text", nullable = false)
+	@Column(name = "text", nullable = false, columnDefinition="TEXT")
 	private String text = "";
 	public static final String TEXT = "text";
 	public String getText() { return this.text; }

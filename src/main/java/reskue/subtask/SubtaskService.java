@@ -5,6 +5,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import kueres.base.BaseService;
+import kueres.utility.Utility;
 
 @Service
 public class SubtaskService extends BaseService<SubtaskEntity, SubtaskRepository>{
@@ -16,6 +17,9 @@ public class SubtaskService extends BaseService<SubtaskEntity, SubtaskRepository
 	}
 	
 	public SubtaskEntity changeState(long id, int state) {
+		
+		Utility.LOG.trace("SubtaskService.changeState called.");
+		
 		SubtaskEntity entity = this.findById(id);
 		
 		entity.setState(state);

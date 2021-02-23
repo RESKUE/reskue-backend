@@ -28,7 +28,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public String getTitle() { return this.title; }
 	public void setTitle(String title) { this.title = title; }
 
-	@Column(name = "message", nullable = false)
+	@Column(name = "message", nullable = false, columnDefinition="TEXT")
 	private String message = "";
 	public static final String MESSAGE = "message";
 	public String getMessage() { return this.message; }

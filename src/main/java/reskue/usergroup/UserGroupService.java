@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import kueres.base.BaseService;
 import kueres.query.EntitySpecification;
+import kueres.utility.Utility;
 import reskue.user.UserEntity;
 import reskue.user.UserService;
 
@@ -37,9 +38,10 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	
 	@SuppressWarnings("unchecked")
 	public Page<UserEntity> getAllUsers(long id, EntitySpecification<UserEntity> specification, Pageable pageable) {
+		
+		Utility.LOG.trace("UserGroupService.getAllUsers called.");
 
 		UserGroupEntity entity = this.findById(id);
-
 		List<UserEntity> users = entity.getUsers();
 		
 		if (specification != null) {
@@ -60,6 +62,8 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 
 	public UserGroupEntity addUser(long id, long userId) {
 		
+		Utility.LOG.trace("UserGroupService.addUser called.");
+		
 		UserGroupEntity entity = this.findById(id);
 		UserEntity user = userService.findById(userId);
 		
@@ -79,6 +83,8 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	}
 
 	public UserGroupEntity removeUser(long id, long userId) {
+		
+		Utility.LOG.trace("UserGroupService.removeUser called.");
 		
 		UserGroupEntity entity = this.findById(id);
 		UserEntity user = userService.findById(userId);

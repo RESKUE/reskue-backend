@@ -2,7 +2,6 @@ package reskue.task;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -70,7 +69,11 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 		
 		String name = details.getName();
 		String description = details.getDescription();
-		Set<String> tags = details.getTags();
+		
+//		Set<String> tags = details.getTags();
+		int priority = details.getPriority();
+		int isRequired = details.getIsRequired();
+		
 		List<CommentEntity> comments = details.getComments();
 		List<MediaEntity> media = details.getMedia();	
 		
@@ -87,9 +90,14 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 		if (description != null) {
 			this.setDescription(description);
 		}
-		if (tags != null) {
-			this.setTags(tags);
-		}
+		
+//		if (tags != null) {
+//			this.setTags(tags);
+//		}
+		this.setPriority(priority);
+		this.setIsRequired(isRequired);
+		
+		
 		if (comments != null) {
 			this.setComments(comments);
 		}

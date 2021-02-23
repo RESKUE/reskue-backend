@@ -39,13 +39,13 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	
 //	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
 //	@JoinColumn(name = "comments")
-	@Column(name = "reskueEntityJSON", nullable = false)
+	@Column(name = "reskueEntityJSON", nullable = false, columnDefinition="TEXT")
 	private String reskueEntityJSON = "";
 	public static final String RESKUE_ENTITY = "reskueEntityJSON";
 	public String getReskueEntityJSON() { return this.reskueEntityJSON; }
 	public void setReskueEntityJSON(String reskueEntityJSON) { this.reskueEntityJSON = reskueEntityJSON; }
 	
-	@Column(name = "text", nullable = false)
+	@Column(name = "text", nullable = false, columnDefinition="TEXT")
 	private String text = "";
 	public static final String TEXT = "text";
 	public String getText() { return this.text; }

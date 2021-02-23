@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import kueres.base.BaseService;
 import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
+import kueres.utility.Utility;
 
 @Service
 public class CommentService extends BaseService<CommentEntity, CommentRepository>{
@@ -34,9 +35,10 @@ public class CommentService extends BaseService<CommentEntity, CommentRepository
 
 	@SuppressWarnings("unchecked")
 	public Page<MediaEntity> getAllMedia(long id, EntitySpecification<MediaEntity> specification, Pageable pageable) {
+		
+		Utility.LOG.trace("CommentService.getAllMedia called.");
 
 		CommentEntity entity = this.findById(id);
-
 		List<MediaEntity> media = entity.getMedia();
 
 		if (specification != null) {

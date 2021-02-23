@@ -2,7 +2,6 @@ package reskue.culturalasset;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,25 +22,23 @@ import reskue.task.TaskEntity;
 @Entity
 public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	
-	@Column(name = "address", nullable = false)
-	private String address = "";
+	@Column(name = "address", nullable = true)
+	private String address = null;
 	public static final String ADDRESS = "address";
 	public String getAddress() { return this.address; }
 	public void setAddress(String address) { this.address = address; }
 	
-	//TODO: necessary?
-	@Column(name = "longitude", nullable = false)
-	private double longitude = 0;
+	@Column(name = "longitude", nullable = true)
+	private Double longitude = null;
 	public static final String LONGITUDE = "longitude";
-	public double getLongitude() { return this.longitude; }
-	public void setLongitude(double longitude) { this.longitude = longitude; }
+	public Double getLongitude() { return this.longitude; }
+	public void setLongitude(Double longitude) { this.longitude = longitude; }
 	
-	//TODO: necessary?
-	@Column(name = "latitude", nullable = false)
-	private double latitude = 0;
+	@Column(name = "latitude", nullable = true)
+	private Double latitude = null;
 	public static final String LATITUDE = "latitude";
-	public double getLatitude() { return this.latitude; }
-	public void setLatitude(double latitude) { this.latitude = latitude; }
+	public Double getLatitude() { return this.latitude; }
+	public void setLatitude(Double latitude) { this.latitude = latitude; }
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<TaskEntity> tasks = new ArrayList<TaskEntity>();
@@ -50,8 +47,8 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public List<TaskEntity> getTasks() { return this.tasks; }
 	public void setTasks(List<TaskEntity> tasks) { this.tasks = tasks; }
 	
-	@Column(name = "label", nullable = false)
-	private String label = "";
+	@Column(name = "label", nullable = true)
+	private String label = null;
 	public static final String LABEL = "label";
 	public String getLabel() { return this.label; }
 	public void setLabel(String label) { this.label = label; }
@@ -62,10 +59,10 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public int getLevel() { return this.level; }
 	public void setLevel(int level) { this.level = level; }
 	
-	//TODO: hidden?
-	@Column(name = "locationId", nullable = false)
-	private String locationId;
+	@Column(name = "locationId", nullable = true)
+	private String locationId = null;
 	public static final String LOCATION_ID = "locationId";
+	@JsonIgnore
 	public String getLocationId() { return this.locationId; }
 	public void setLocationId(String locationId) { this.locationId = locationId; }
 	
@@ -96,7 +93,11 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		
 		String name = details.getName();
 		String description = details.getDescription();
-		Set<String> tags = details.getTags();
+		
+//		Set<String> tags = details.getTags();
+		int priority = details.getPriority();
+		int isRequired = details.getIsRequired();
+		
 		List<CommentEntity> comments = details.getComments();
 		List<MediaEntity> media = details.getMedia();	
 		
@@ -117,9 +118,13 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		if (description != null) {
 			this.setDescription(description);
 		}
-		if (tags != null) {
-			this.setTags(tags);
-		}
+		
+//		if (tags != null) {
+//			this.setTags(tags);
+//		}
+		this.setPriority(priority);
+		this.setIsRequired(isRequired);
+		
 		if (comments != null) {
 			this.setComments(comments);
 		}

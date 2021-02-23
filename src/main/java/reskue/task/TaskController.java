@@ -5,9 +5,7 @@ import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kueres.base.BaseController;
 import kueres.query.EntitySpecification;
-import kueres.query.SearchCriteria;
 import kueres.query.SortBuilder;
+import kueres.utility.Utility;
 import reskue.ReskueController;
 import reskue.subtask.SubtaskEntity;
 import reskue.user.UserEntity;
@@ -34,35 +32,20 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<SubtaskEntity> getAllSubtasks(
 			@PathVariable(value = TaskEntity.ID) long id,
-			@RequestParam Optional<String> filter, 
+			@RequestParam Optional<String[]> filter,
 			@RequestParam Optional<String[]> sort,
-			@RequestParam Optional<Integer> page, 
-			@RequestParam Optional<Integer> size) {
-
+			@RequestParam Optional<Integer> page,
+			@RequestParam Optional<Integer> size
+			) {
+		
+		Utility.LOG.trace("TaskController.getAllSubtasks called.");
+		
 		EntitySpecification<SubtaskEntity> specification = null;
 		if (filter.isPresent()) {
-			String[] filters = filter.get().split(",");
-			specification = new EntitySpecification<SubtaskEntity>();
-			for (String searchFilter : filters) {
-				specification.add(new SearchCriteria(searchFilter));
-			}
-		}
-
-		Sort sorting = Sort.unsorted();		// default sort
-		int pageNumber = 0;					// default page number, starts at 0
-		int pageSize = 25;					// default page size, 25
-		
-		if (sort.isPresent()) {
-			sorting = SortBuilder.buildSort(sort.get());
-		}
-		if (page.isPresent()) {
-			pageNumber = page.get();
-		}
-		if (size.isPresent()) {
-			pageSize = size.get();
+			specification = new EntitySpecification<SubtaskEntity>(filter.get());
 		}
 		
-		Pageable pageable = PageRequest.of(pageNumber, pageSize, sorting);
+		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
 		
 		return service.getAllSubtasks(id, specification, pageable);
 			
@@ -72,35 +55,20 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<UserEntity> getAllHelpers(
 			@PathVariable(value = TaskEntity.ID) long id,
-			@RequestParam Optional<String> filter, 
+			@RequestParam Optional<String[]> filter,
 			@RequestParam Optional<String[]> sort,
-			@RequestParam Optional<Integer> page, 
-			@RequestParam Optional<Integer> size) {
-
+			@RequestParam Optional<Integer> page,
+			@RequestParam Optional<Integer> size
+			) {
+		
+		Utility.LOG.trace("TaskController.getAllHelpers called.");
+		
 		EntitySpecification<UserEntity> specification = null;
 		if (filter.isPresent()) {
-			String[] filters = filter.get().split(",");
-			specification = new EntitySpecification<UserEntity>();
-			for (String searchFilter : filters) {
-				specification.add(new SearchCriteria(searchFilter));
-			}
-		}
-
-		Sort sorting = Sort.unsorted();		// default sort
-		int pageNumber = 0;					// default page number, starts at 0
-		int pageSize = 25;					// default page size, 25
-		
-		if (sort.isPresent()) {
-			sorting = SortBuilder.buildSort(sort.get());
-		}
-		if (page.isPresent()) {
-			pageNumber = page.get();
-		}
-		if (size.isPresent()) {
-			pageSize = size.get();
+			specification = new EntitySpecification<UserEntity>(filter.get());
 		}
 		
-		Pageable pageable = PageRequest.of(pageNumber, pageSize, sorting);
+		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
 		
 		return service.getAllHelpers(id, specification, pageable);
 		
@@ -111,7 +79,9 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	public ResponseEntity<TaskEntity> changeState(
 			@PathVariable(value = TaskEntity.ID) long id,
 			@PathVariable(value = TaskEntity.STATE) int state) {
-
+		
+		Utility.LOG.trace("TaskController.changeState called.");
+		
 		TaskEntity updatedEntity = service.changeState(id, state);
 		return ResponseEntity.ok().body(updatedEntity);
 		
@@ -122,7 +92,9 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	public ResponseEntity<TaskEntity> addHelper(
 			@PathVariable(value = TaskEntity.ID) long id,
 			@PathVariable(value = TaskEntity.HELPER_USERS) long helperId) {
-
+		
+		Utility.LOG.trace("TaskController.addHelper called.");
+		
 		TaskEntity updatedEntity = service.addHelper(id, helperId);
 		return ResponseEntity.ok().body(updatedEntity);
 		
@@ -133,7 +105,9 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	public ResponseEntity<TaskEntity> removeHelper(
 			@PathVariable(value = TaskEntity.ID) long id,
 			@PathVariable(value = TaskEntity.HELPER_USERS) long helperId) {
-
+		
+		Utility.LOG.trace("TaskController.removeHelper called.");
+		
 		TaskEntity updatedEntity = service.removeHelper(id, helperId);
 		return ResponseEntity.ok().body(updatedEntity);
 		

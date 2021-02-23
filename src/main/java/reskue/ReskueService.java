@@ -1,7 +1,6 @@
 package reskue;
 
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -73,30 +72,30 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 		
 	}
 	
-	public E addTag(long id, String tag) {
-		
-		E entity = this.findById(id);
+//	public E addTag(long id, String tag) {
+//		
+//		E entity = this.findById(id);
+//
+//		Set<String> newTags = entity.getTags();
+//		newTags.add(tag);
+//		entity.setTags(newTags);
+//
+//		final E updatedEntity = repository.save(entity);
+//		return updatedEntity;
+//
+//	}
 
-		Set<String> newTags = entity.getTags();
-		newTags.add(tag);
-		entity.setTags(newTags);
-
-		final E updatedEntity = repository.save(entity);
-		return updatedEntity;
-
-	}
-
-	public E removeTag(long id, String tag) {
-		
-		E entity = this.findById(id);
-		
-		Set<String> newTags = entity.getTags();
-		newTags.remove(tag);
-		entity.setTags(newTags);
-
-		final E updatedEntity = repository.save(entity);
-		return updatedEntity;
-		
-	}
+//	public E removeTag(long id, String tag) {
+//		
+//		E entity = this.findById(id);
+//		
+//		Set<String> newTags = entity.getTags();
+//		newTags.remove(tag);
+//		entity.setTags(newTags);
+//
+//		final E updatedEntity = repository.save(entity);
+//		return updatedEntity;
+//		
+//	}
 
 }

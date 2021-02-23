@@ -8,10 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import kueres.base.BaseController;
@@ -101,26 +99,26 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 	}
 	
 	
-	@PutMapping("/{" + ReskueEntity.ID + "}/addTag/{" + ReskueEntity.TAGS + "}")
-	@RolesAllowed("administrator")
-	public ResponseEntity<E> addTag(
-			@PathVariable(value = ReskueEntity.ID) long id,
-			@PathVariable(value = ReskueEntity.TAGS) String tag) {
+//	@PutMapping("/{" + ReskueEntity.ID + "}/addTag/{" + ReskueEntity.TAGS + "}")
+//	@RolesAllowed("administrator")
+//	public ResponseEntity<E> addTag(
+//			@PathVariable(value = ReskueEntity.ID) long id,
+//			@PathVariable(value = ReskueEntity.TAGS) String tag) {
+//
+//		E updatedEntity = service.addTag(id, tag);
+//		return ResponseEntity.ok().body(updatedEntity);
+//		
+//	}
 
-		E updatedEntity = service.addTag(id, tag);
-		return ResponseEntity.ok().body(updatedEntity);
-		
-	}
-
-	@PutMapping("/{" + ReskueEntity.ID + "}/removeTag/{" + ReskueEntity.TAGS + "}")
-	@RolesAllowed("administrator")
-	public ResponseEntity<E> removeTag(
-			@PathVariable(value = ReskueEntity.ID) long id,
-			@PathVariable(value = ReskueEntity.TAGS) String tag) {
-
-		E updatedEntity = service.removeTag(id, tag);
-		return ResponseEntity.ok().body(updatedEntity);
-		
-	}
+//	@PutMapping("/{" + ReskueEntity.ID + "}/removeTag/{" + ReskueEntity.TAGS + "}")
+//	@RolesAllowed("administrator")
+//	public ResponseEntity<E> removeTag(
+//			@PathVariable(value = ReskueEntity.ID) long id,
+//			@PathVariable(value = ReskueEntity.TAGS) String tag) {
+//
+//		E updatedEntity = service.removeTag(id, tag);
+//		return ResponseEntity.ok().body(updatedEntity);
+//		
+//	}
 	
 }
