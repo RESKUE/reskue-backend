@@ -3,6 +3,7 @@ package reskue.task;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -35,10 +36,10 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	public CulturalAssetEntity getCulturalAsset() { return this.culturalAsset; }
 	public void setCulturalAsset(CulturalAssetEntity culturalAsset) { this.culturalAsset = culturalAsset; }
 	
-	@OneToMany(mappedBy = "task")
+	@OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
 	private List<SubtaskEntity> subtasks = new ArrayList<SubtaskEntity>();
 	public static final String SUBTASKS = "subtasks";
-	@JsonIgnore
+	//@JsonIgnore
 	public List<SubtaskEntity> getSubtasks() { return this.subtasks; }
 	public void setSubtasks(List<SubtaskEntity> subtasks) { this.subtasks = subtasks; }
 	
