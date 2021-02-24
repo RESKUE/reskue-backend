@@ -5,6 +5,12 @@
 /services/rabbitmq/data
 /services/rabbitmq/logs
 /services/.env
+src/test/resources/services/auth-db/data
+src/test/resources/services/content-db/data
+src/test/resources/services/location-db/data
+src/test/resources/services/rabbitmq/data
+src/test/resources/services/rabbitmq/logs
+
 
 # .env
 prod.env

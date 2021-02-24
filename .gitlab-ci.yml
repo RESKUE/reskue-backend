@@ -10,7 +10,7 @@ stages:
   - deploy
 
 maven-build:
-  image: maven:3.6.3-jdk-11
+  image: gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/kueres-backend/maven-docker-compose-cli:openjdk-11
   stage: build
   tags:
     - ILT
