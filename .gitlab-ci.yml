@@ -14,7 +14,7 @@ maven-build:
   stage: build
   tags:
     - ILT
-  script: "mvn verify -B -s ci_settings.xml"
+  script: "mvn verify -Dmaven.test.skip=true -B -s ci_settings.xml"
   artifacts:
     paths:
       - target/*.jar
