@@ -33,7 +33,8 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	
 	@Override
 	public void init() {
-		
+		this.identifier = UserController.ROUTE;
+		this.routingKey = UserController.ROUTE;
 	}
 
 	@SuppressWarnings("unchecked")

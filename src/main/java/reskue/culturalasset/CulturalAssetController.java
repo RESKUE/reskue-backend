@@ -184,6 +184,31 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		CulturalAssetEntity updatedEntity = service.removeCulturalAssetParent(id);
 		return ResponseEntity.ok().body(updatedEntity);
 		
-	}	
+	}
+	
+	@GetMapping("/test")
+	@RolesAllowed( "administrator" )
+	public void test() {
+		
+		CulturalAssetEntity testEntity1 = new CulturalAssetEntity();
+		CulturalAssetEntity testEntity2 = this.service.create(testEntity1);
+		CulturalAssetEntity testEntity3 = this.service.create(testEntity1);
+		CulturalAssetEntity testEntity4 = this.service.create(testEntity1);
+		CulturalAssetEntity testEntity5 = this.service.create(testEntity1);
+		
+		this.service.addCulturalAssetChild(testEntity2.getId(), testEntity3.getId());
+		this.service.addCulturalAssetChild(testEntity3.getId(), testEntity4.getId());
+		this.service.addCulturalAssetChild(testEntity4.getId(), testEntity5.getId());
+		this.service.addCulturalAssetChild(testEntity5.getId(), testEntity2.getId());
+		
+		long start = System.nanoTime();
+		
+		CulturalAssetEntity parent = testEntity2.getCulturalAssetParent();
+		for (int i = 0; i < 4; i++) {
+			parent = parent.getCulturalAssetParent();
+		}
+
+		Utility.LOG.info("time: {}", (System.nanoTime() - start));
+	}
 
 }

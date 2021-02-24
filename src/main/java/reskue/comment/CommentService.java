@@ -32,7 +32,8 @@ public class CommentService extends BaseService<CommentEntity, CommentRepository
 	@Override
 	@PostConstruct
 	public void init() {
-
+		this.identifier = CommentController.ROUTE;
+		this.routingKey = CommentController.ROUTE;
 	}
 
 	@SuppressWarnings("unchecked")

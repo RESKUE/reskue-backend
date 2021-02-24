@@ -35,7 +35,8 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	
 	@Override
 	public void init() {
-		
+		this.identifier = UserGroupController.ROUTE;
+		this.routingKey = UserGroupController.ROUTE;
 	}
 	
 	@SuppressWarnings("unchecked")

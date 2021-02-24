@@ -41,7 +41,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	@Override
 	@PostConstruct
 	public void init() {
-
+		this.identifier = CulturalAssetController.ROUTE;
+		this.routingKey = CulturalAssetController.ROUTE;
 	}
 	
 	@Override
@@ -258,19 +259,14 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		
 		Utility.LOG.trace("CulturalAssetService.addCulturalAssetChild called.");
 		
-		CulturalAssetEntity entity = this.findById(id);		
+		CulturalAssetEntity parent = this.findById(id);		
 		CulturalAssetEntity child = this.findById(childId);		
-		List<CulturalAssetEntity> newChildren = entity.getCulturalAssetChildren();
 		
-		//if the new child is already a child
-		if(newChildren.contains(child)) {
-			return entity;
-		} else {
-			newChildren.add(child);
-			entity.setCulturalAssetChildren(newChildren);
-		}
+		this.addConnection(child, parent);
 		
-		final CulturalAssetEntity updatedEntity = repository.save(entity);
+		final CulturalAssetEntity updatedEntity = repository.save(parent);
+		
+		repository.save(child);
 		
 		EventConsumer.sendEvent("CulturalAssetService.addCulturalAssetChild", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
 		
@@ -282,19 +278,14 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		
 		Utility.LOG.trace("CulturalAssetService.removeCulturalAssetChild called.");
 		
-		CulturalAssetEntity entity = this.findById(id);
+		CulturalAssetEntity parent = this.findById(id);
 		CulturalAssetEntity child = this.findById(childId);	
-		List<CulturalAssetEntity> newChildren = entity.getCulturalAssetChildren();
 		
-		//if the child is actually a child
-		if(newChildren.contains(child)) {
-			newChildren.remove(child);
-			entity.setCulturalAssetChildren(newChildren);
-		} else {
-			return entity;
-		}
+		this.removeConnection(child, parent);
 		
-		final CulturalAssetEntity updatedEntity = repository.save(entity);
+		final CulturalAssetEntity updatedEntity = repository.save(parent);
+		
+		repository.save(child);
 		
 		EventConsumer.sendEvent("CulturalAssetService.removeCulturalAssetChild", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
 		
@@ -306,12 +297,14 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		
 		Utility.LOG.trace("CulturalAssetService.setCulturalAssetParent called.");
 		
-		CulturalAssetEntity entity = this.findById(id);
+		CulturalAssetEntity child = this.findById(id);
 		CulturalAssetEntity parent = this.findById(parentId);
 		
-		entity.setCulturalAssetParent(parent);
+		this.addConnection(child, parent);
 		
-		final CulturalAssetEntity updatedEntity = repository.save(entity);
+		final CulturalAssetEntity updatedEntity = repository.save(child);
+		
+		repository.save(parent);
 		
 		EventConsumer.sendEvent("CulturalAssetService.setCulturalAssetParent", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
 		
@@ -323,14 +316,52 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		
 		Utility.LOG.trace("CulturalAssetService.removeCulturalAssetParent called.");
 		
-		CulturalAssetEntity entity = this.findById(id);	
-		entity.setCulturalAssetParent(null);
+		CulturalAssetEntity child = this.findById(id);
+		CulturalAssetEntity parent = child.getCulturalAssetParent();
 		
-		final CulturalAssetEntity updatedEntity = repository.save(entity);
+		this.removeConnection(child, parent);
+		
+		final CulturalAssetEntity updatedEntity = repository.save(child);
+		
+		repository.save(parent);
 		
 		EventConsumer.sendEvent("CulturalAssetService.removeCulturalAssetParent", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
 		
 		return updatedEntity;
+		
+	}
+	
+	private void addConnection(CulturalAssetEntity child, CulturalAssetEntity parent) {
+		
+		Utility.LOG.trace("CulturalAssetService.addConnection called.");
+			
+		List<CulturalAssetEntity> newChildren = parent.getCulturalAssetChildren();
+		
+		//if the new child is already a child
+		if(!newChildren.contains(child)) {
+			newChildren.add(child);
+			parent.setCulturalAssetChildren(newChildren);
+			child.setCulturalAssetParent(parent);
+		} 		
+		
+	}
+	
+	private void removeConnection(CulturalAssetEntity child, CulturalAssetEntity parent) {
+		
+		Utility.LOG.trace("CulturalAssetService.removeConnection called.");
+		
+		List<CulturalAssetEntity> newChildren = parent.getCulturalAssetChildren();
+		
+		//if the child is actually a child
+		if(newChildren.contains(child)) {
+			newChildren.remove(child);
+			parent.setCulturalAssetChildren(newChildren);
+			child.setCulturalAssetParent(null);
+		} 	
+		
+	}
+	
+	private void updateLevels(CulturalAssetEntity entity) {
 		
 	}
 

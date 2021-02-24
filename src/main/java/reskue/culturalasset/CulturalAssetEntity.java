@@ -57,7 +57,17 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	private int level = 0;
 	public static final String LEVEL = "level";
 	public int getLevel() { return this.level; }
-	public void setLevel(int level) { this.level = level; }
+	public void setLevel(int level) {
+		
+//		if(level >= 4) {
+//			
+//		}
+		this.level = level; 
+//		this.culturalAssetChildren.stream().forEach((CulturalAssetEntity entity) -> {
+//			entity.setLevel(level + 1);
+//		});
+//		
+	}
 	
 	@Column(name = "locationId", nullable = true)
 	private String locationId = null;

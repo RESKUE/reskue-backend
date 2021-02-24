@@ -15,7 +15,8 @@ public class SubtaskService extends BaseService<SubtaskEntity, SubtaskRepository
 	@Override
 	@PostConstruct
 	public void init() {
-		
+		this.identifier = SubtaskController.ROUTE;
+		this.routingKey = SubtaskController.ROUTE;
 	}
 	
 	public SubtaskEntity changeState(long id, int state) {

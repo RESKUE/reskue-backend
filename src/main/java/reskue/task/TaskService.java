@@ -38,7 +38,8 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	@Override
 	@PostConstruct
 	public void init() {
-		
+		this.identifier = TaskController.ROUTE;
+		this.routingKey = TaskController.ROUTE;
 	}
 
 	@SuppressWarnings("unchecked")
