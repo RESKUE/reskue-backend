@@ -1,7 +1,6 @@
 package reskue;
 
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -16,6 +15,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import kueres.base.BaseService;
+import kueres.event.EventType;
+import kueres.eventbus.EventConsumer;
 import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
 import reskue.comment.CommentEntity;
@@ -45,6 +46,8 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 		}
 
 		Page<CommentEntity> page = new PageImpl<CommentEntity>(comments, pageable, comments.size());
+		
+		EventConsumer.sendEvent("ReskueService.getAllComments", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -68,35 +71,37 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 		}
 
 		Page<MediaEntity> page = new PageImpl<MediaEntity>(media, pageable, media.size());
+		
+		EventConsumer.sendEvent("ReskueService.getAllMedia", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
 	}
 	
-	public E addTag(long id, String tag) {
-		
-		E entity = this.findById(id);
+//	public E addTag(long id, String tag) {
+//		
+//		E entity = this.findById(id);
+//
+//		Set<String> newTags = entity.getTags();
+//		newTags.add(tag);
+//		entity.setTags(newTags);
+//
+//		final E updatedEntity = repository.save(entity);
+//		return updatedEntity;
+//
+//	}
 
-		Set<String> newTags = entity.getTags();
-		newTags.add(tag);
-		entity.setTags(newTags);
-
-		final E updatedEntity = repository.save(entity);
-		return updatedEntity;
-
-	}
-
-	public E removeTag(long id, String tag) {
-		
-		E entity = this.findById(id);
-		
-		Set<String> newTags = entity.getTags();
-		newTags.remove(tag);
-		entity.setTags(newTags);
-
-		final E updatedEntity = repository.save(entity);
-		return updatedEntity;
-		
-	}
+//	public E removeTag(long id, String tag) {
+//		
+//		E entity = this.findById(id);
+//		
+//		Set<String> newTags = entity.getTags();
+//		newTags.remove(tag);
+//		entity.setTags(newTags);
+//
+//		final E updatedEntity = repository.save(entity);
+//		return updatedEntity;
+//		
+//	}
 
 }

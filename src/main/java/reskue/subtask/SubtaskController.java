@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kueres.base.BaseController;
+import kueres.utility.Utility;
 
 @RestController
 @RequestMapping(BaseController.API_ENDPOINT + SubtaskController.ROUTE)
@@ -21,7 +22,9 @@ public class SubtaskController extends BaseController<SubtaskEntity, SubtaskRepo
 	public ResponseEntity<SubtaskEntity> changeState(
 			@PathVariable(value = SubtaskEntity.ID) long id,
 			@PathVariable(value = SubtaskEntity.STATE) int state) {
-
+		
+		Utility.LOG.trace("SubtaskController.changeState called.");
+		
 		SubtaskEntity updatedEntity = service.changeState(id, state);
 		return ResponseEntity.ok().body(updatedEntity);
 		

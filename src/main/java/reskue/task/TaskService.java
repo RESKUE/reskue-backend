@@ -17,7 +17,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import kueres.event.EventType;
+import kueres.eventbus.EventConsumer;
 import kueres.query.EntitySpecification;
+import kueres.utility.Utility;
 import reskue.ReskueService;
 import reskue.subtask.SubtaskEntity;
 import reskue.user.UserEntity;
@@ -35,15 +38,17 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	@Override
 	@PostConstruct
 	public void init() {
-		
+		this.identifier = TaskController.ROUTE;
+		this.routingKey = TaskController.ROUTE;
 	}
 
 	@SuppressWarnings("unchecked")
 	public Page<SubtaskEntity> getAllSubtasks(long id, EntitySpecification<SubtaskEntity> specification,
 			Pageable pageable) {	
 		
+		Utility.LOG.trace("TaskService.getAllSubtasks called.");
+		
 		TaskEntity entity = this.findById(id);
-
 		List<SubtaskEntity> subtasks = entity.getSubtasks();
 
 		if (specification != null) {
@@ -57,6 +62,8 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		}
 
 		Page<SubtaskEntity> page = new PageImpl<SubtaskEntity>(subtasks, pageable, subtasks.size());
+		
+		EventConsumer.sendEvent("TaskService.getAllSubtasks", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -65,8 +72,9 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	@SuppressWarnings("unchecked")
 	public Page<UserEntity> getAllHelpers(long id, EntitySpecification<UserEntity> specification, Pageable pageable) {
 		
+		Utility.LOG.trace("TaskService.getAllHelpers called.");
+		
 		TaskEntity entity = this.findById(id);
-
 		List<UserEntity> helpers = entity.getHelperUsers();
 
 		if (specification != null) {
@@ -80,6 +88,8 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		}
 
 		Page<UserEntity> page = new PageImpl<UserEntity>(helpers, pageable, helpers.size());
+		
+		EventConsumer.sendEvent("TaskService.getAllHelpers", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -87,20 +97,26 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 
 	public TaskEntity changeState(long id, int state) {
 		
+		Utility.LOG.trace("TaskService.changeState called.");
+		
 		TaskEntity entity = this.findById(id);
 		
 		entity.setState(state);
 		
 		final TaskEntity updatedEntity = repository.save(entity);
+		
+		EventConsumer.sendEvent("TaskService.changeState", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
+		
 		return updatedEntity;
 		
 	}
 
 	public TaskEntity addHelper(long id, long helperId) {
 		
-		TaskEntity entity = this.findById(id);
-		UserEntity helper = userService.findById(helperId);
+		Utility.LOG.trace("TaskService.addHelper called.");
 		
+		TaskEntity entity = this.findById(id);
+		UserEntity helper = userService.findById(helperId);		
 		List<UserEntity> newHelpers = entity.getHelperUsers();
 		
 		//if the helper is already a helper
@@ -112,15 +128,19 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		}
 		
 		final TaskEntity updatedEntity = repository.save(entity);
+		
+		EventConsumer.sendEvent("TaskService.addHelper", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
+		
 		return updatedEntity;
 		
 	}
 
 	public TaskEntity removeHelper(long id, long helperId) {
 		
-		TaskEntity entity = this.findById(id);
-		UserEntity helper = userService.findById(helperId);
+		Utility.LOG.trace("TaskService.removeHelper called.");
 		
+		TaskEntity entity = this.findById(id);
+		UserEntity helper = userService.findById(helperId);	
 		List<UserEntity> newHelpers = entity.getHelperUsers();
 		
 		//if the helper is actually a helper
@@ -132,6 +152,9 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		}
 		
 		final TaskEntity updatedEntity = repository.save(entity);
+		
+		EventConsumer.sendEvent("TaskService.removeHelper", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
+		
 		return updatedEntity;
 		
 	}

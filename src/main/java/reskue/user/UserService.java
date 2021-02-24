@@ -16,7 +16,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import kueres.base.BaseService;
+import kueres.event.EventType;
+import kueres.eventbus.EventConsumer;
 import kueres.query.EntitySpecification;
+import kueres.utility.Utility;
 import reskue.comment.CommentEntity;
 import reskue.notification.NotificationEntity;
 import reskue.task.TaskEntity;
@@ -30,15 +33,17 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	
 	@Override
 	public void init() {
-		
+		this.identifier = UserController.ROUTE;
+		this.routingKey = UserController.ROUTE;
 	}
 
 	@SuppressWarnings("unchecked")
 	public Page<TaskEntity> getTasksWhereUserIsContact(long id, EntitySpecification<TaskEntity> specification,
 			Pageable pageable) {
 		
+		Utility.LOG.trace("UserService.getTasksWhereUserIsContact called.");
+		
 		UserEntity entity = this.findById(id);
-
 		List<TaskEntity> contactTasks = entity.getTaskContact();
 	
 		if (specification != null) {
@@ -52,6 +57,8 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		}
 
 		Page<TaskEntity> page = new PageImpl<TaskEntity>(contactTasks, pageable, contactTasks.size());
+		
+		EventConsumer.sendEvent("UserService.getTasksWhereUserIsContact", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -61,8 +68,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	public Page<TaskEntity> getTasksWhereUserIsHelper(long id, EntitySpecification<TaskEntity> specification,
 			Pageable pageable) {
 		
+		Utility.LOG.trace("UserService.getTasksWhereUserIsHelper called.");
+		
 		UserEntity entity = this.findById(id);
-
 		List<TaskEntity> helperTasks = entity.getTaskHelper();
 	
 		if (specification != null) {
@@ -76,6 +84,8 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		}
 
 		Page<TaskEntity> page = new PageImpl<TaskEntity>(helperTasks, pageable, helperTasks.size());
+		
+		EventConsumer.sendEvent("UserService.getTasksWhereUserIsHelper", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -85,8 +95,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	public Page<CommentEntity> getCommentsByUser(long id, EntitySpecification<CommentEntity> specification,
 			Pageable pageable) {
 		
+		Utility.LOG.trace("UserService.getCommentsByUser called.");		
+		
 		UserEntity entity = this.findById(id);
-
 		List<CommentEntity> authorComments = entity.getCommentAuthor();
 	
 		if (specification != null) {
@@ -100,6 +111,8 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		}
 
 		Page<CommentEntity> page = new PageImpl<CommentEntity>(authorComments, pageable, authorComments.size());
+		
+		EventConsumer.sendEvent("UserService.getCommentsByUser", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -109,8 +122,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	public Page<UserGroupEntity> getUserGroupsForUser(long id, EntitySpecification<UserGroupEntity> specification,
 			Pageable pageable) {
 		
+		Utility.LOG.trace("UserService.getUserGroupsForUser called.");				
+		
 		UserEntity entity = this.findById(id);
-
 		List<UserGroupEntity> userGroups = entity.getUserGroups();
 	
 		if (specification != null) {
@@ -124,6 +138,8 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		}
 
 		Page<UserGroupEntity> page = new PageImpl<UserGroupEntity>(userGroups, pageable, userGroups.size());
+		
+		EventConsumer.sendEvent("UserService.getUserGroupsForUser", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -133,8 +149,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	public Page<NotificationEntity> getNotificationsSendByUser(long id, EntitySpecification<NotificationEntity> specification,
 			Pageable pageable) {
 		
+		Utility.LOG.trace("UserService.getNotificationsSendByUser called.");	
+		
 		UserEntity entity = this.findById(id);
-
 		List<NotificationEntity> senderNotifiactions = entity.getNotificationSender();
 	
 		if (specification != null) {
@@ -148,6 +165,8 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		}
 
 		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(senderNotifiactions, pageable, senderNotifiactions.size());
+		
+		EventConsumer.sendEvent("UserService.getNotificationsSendByUser", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -157,8 +176,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	public Page<NotificationEntity> getNotificationsForUser(long id,
 			EntitySpecification<NotificationEntity> specification, Pageable pageable) {
 		
+		Utility.LOG.trace("UserService.getNotificationsForUser called.");	
+		
 		UserEntity entity = this.findById(id);
-
 		List<NotificationEntity> receiverNotifications = entity.getNotificationReceiver();
 	
 		if (specification != null) {
@@ -172,6 +192,8 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		}
 
 		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(receiverNotifications, pageable, receiverNotifications.size());
+		
+		EventConsumer.sendEvent("UserService.getNotificationsForUser", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 	}

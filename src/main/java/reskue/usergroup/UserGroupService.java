@@ -17,7 +17,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import kueres.base.BaseService;
+import kueres.event.EventType;
+import kueres.eventbus.EventConsumer;
 import kueres.query.EntitySpecification;
+import kueres.utility.Utility;
 import reskue.user.UserEntity;
 import reskue.user.UserService;
 
@@ -32,14 +35,16 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	
 	@Override
 	public void init() {
-		
+		this.identifier = UserGroupController.ROUTE;
+		this.routingKey = UserGroupController.ROUTE;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public Page<UserEntity> getAllUsers(long id, EntitySpecification<UserEntity> specification, Pageable pageable) {
+		
+		Utility.LOG.trace("UserGroupService.getAllUsers called.");
 
 		UserGroupEntity entity = this.findById(id);
-
 		List<UserEntity> users = entity.getUsers();
 		
 		if (specification != null) {
@@ -53,12 +58,16 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 		}
 
 		Page<UserEntity> page = new PageImpl<UserEntity>(users, pageable, users.size());
+		
+		EventConsumer.sendEvent("UserGroupService.getAllUsers", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
 	}
 
 	public UserGroupEntity addUser(long id, long userId) {
+		
+		Utility.LOG.trace("UserGroupService.addUser called.");
 		
 		UserGroupEntity entity = this.findById(id);
 		UserEntity user = userService.findById(userId);
@@ -74,11 +83,16 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 		}
 		
 		final UserGroupEntity updatedEntity = repository.save(entity);
+		
+		EventConsumer.sendEvent("UserGroupService.addUser", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
+		
 		return updatedEntity;
 		
 	}
 
 	public UserGroupEntity removeUser(long id, long userId) {
+		
+		Utility.LOG.trace("UserGroupService.removeUser called.");
 		
 		UserGroupEntity entity = this.findById(id);
 		UserEntity user = userService.findById(userId);
@@ -94,6 +108,9 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 		}
 		
 		final UserGroupEntity updatedEntity = repository.save(entity);
+		
+		EventConsumer.sendEvent("UserGroupService.removeUser", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
+		
 		return updatedEntity;
 	
 	}

@@ -4,16 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -39,30 +34,29 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	
 //	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
 //	@JoinColumn(name = "comments")
-	@Column(name = "reskueEntityJSON", nullable = false)
+	@Column(name = "reskueEntityJSON", nullable = false, columnDefinition="TEXT")
 	private String reskueEntityJSON = "";
 	public static final String RESKUE_ENTITY = "reskueEntityJSON";
 	public String getReskueEntityJSON() { return this.reskueEntityJSON; }
 	public void setReskueEntityJSON(String reskueEntityJSON) { this.reskueEntityJSON = reskueEntityJSON; }
 	
-	@Column(name = "text", nullable = false)
+	@Column(name = "text", nullable = false, columnDefinition="TEXT")
 	private String text = "";
 	public static final String TEXT = "text";
 	public String getText() { return this.text; }
 	public void setText(String text) { this.text = text; }
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "media_entity_id")
+	@OneToMany
+	@JoinColumn(name = "comment_id", referencedColumnName = "id")
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";
 	@JsonIgnore
 	public List<MediaEntity> getMedia() { return this.media; }
 	public void setMedia(List<MediaEntity> media) { this.media = media; }
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
-	@JoinColumn(name = "commentAuthor")
-	private UserEntity author;
+	@ManyToOne
+	@JoinColumn(name = "comment_author_id", referencedColumnName = "id")
+	private UserEntity author = null;
 	public static final String AUTHOR = "author";
 	public UserEntity getAuthor() { return this.author; }
 	public void setAuthor(UserEntity author) { this.author = author; }

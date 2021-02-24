@@ -2,12 +2,9 @@ package reskue.task;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -31,28 +28,28 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	public int getState() { return this.state; }
 	public void setState(int state) { this.state = state; }
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
-	@JoinColumn(name = "tasks")
-	private CulturalAssetEntity culturalAsset;
+	@ManyToOne
+	@JoinColumn(name = "cultural_asset_id", referencedColumnName = "id")
+	private CulturalAssetEntity culturalAsset = null;
 	public static final String CULTURAL_ASSET = "culturalAsset";
 	public CulturalAssetEntity getCulturalAsset() { return this.culturalAsset; }
 	public void setCulturalAsset(CulturalAssetEntity culturalAsset) { this.culturalAsset = culturalAsset; }
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "task")
 	private List<SubtaskEntity> subtasks = new ArrayList<SubtaskEntity>();
 	public static final String SUBTASKS = "subtasks";
 	@JsonIgnore
 	public List<SubtaskEntity> getSubtasks() { return this.subtasks; }
 	public void setSubtasks(List<SubtaskEntity> subtasks) { this.subtasks = subtasks; }
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
-	@JoinColumn(name = "taskContact")
-	private UserEntity contactUser;
+	@ManyToOne
+	@JoinColumn(name = "task_contact_id", referencedColumnName = "id")
+	private UserEntity contactUser = null;
 	public static final String CONTACT_USER = "contactUser";
 	public UserEntity getContactUser() { return this.contactUser; }
 	public void setContactUser(UserEntity contactUser) { this.contactUser = contactUser; }
 	
-	@ManyToMany(mappedBy = "taskHelper", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "taskHelper")
 	private List<UserEntity> helperUsers = new ArrayList<UserEntity>();
 	public static final String HELPER_USERS = "helperUsers";
 	@JsonIgnore
@@ -60,7 +57,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	public void setHelperUsers(List<UserEntity> helperUsers) { this.helperUsers = helperUsers; }
 	
 	@Column(name = "recommendedHelperUsers", nullable = false)
-	private int recommendedHelperUsers = 0;
+	private int recommendedHelperUsers = 1;
 	public static final String RECOMMENDED_HELPER_USERS = "recommendedHelperUsers";
 	public int getRecommendedHelperUsers() { return this.recommendedHelperUsers; }
 	public void setRecommendedHelperUsers(int recommendedHelperUsers) { this.recommendedHelperUsers = recommendedHelperUsers; }
@@ -70,7 +67,11 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 		
 		String name = details.getName();
 		String description = details.getDescription();
-		Set<String> tags = details.getTags();
+		
+//		Set<String> tags = details.getTags();
+		int priority = details.getPriority();
+		int isEndangered = details.getIsEndangered();
+		
 		List<CommentEntity> comments = details.getComments();
 		List<MediaEntity> media = details.getMedia();	
 		
@@ -87,9 +88,14 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 		if (description != null) {
 			this.setDescription(description);
 		}
-		if (tags != null) {
-			this.setTags(tags);
-		}
+		
+//		if (tags != null) {
+//			this.setTags(tags);
+//		}
+		this.setPriority(priority);
+		this.setIsEndangered(isEndangered);
+		
+		
 		if (comments != null) {
 			this.setComments(comments);
 		}
