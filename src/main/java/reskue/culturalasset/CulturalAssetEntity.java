@@ -3,10 +3,8 @@ package reskue.culturalasset;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -40,7 +38,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public Double getLatitude() { return this.latitude; }
 	public void setLatitude(Double latitude) { this.latitude = latitude; }
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "culturalAsset")
 	private List<TaskEntity> tasks = new ArrayList<TaskEntity>();
 	public static final String TASKS = "tasks";
 	@JsonIgnore
@@ -76,21 +74,22 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public String getLocationId() { return this.locationId; }
 	public void setLocationId(String locationId) { this.locationId = locationId; }
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "culturalAssetParent")
+	@ManyToOne
+	@JoinColumn(name = "parent_id", referencedColumnName = "id")
 	private CulturalAssetEntity culturalAssetParent;
 	public static final String CULTURAL_ASSET_PARENT = "culturalAssetParent";
 	public CulturalAssetEntity getCulturalAssetParent() { return this.culturalAssetParent; }
 	public void setCulturalAssetParent(CulturalAssetEntity culturalAssetParent) { this.culturalAssetParent = culturalAssetParent; }
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany
+	@JoinColumn(name = "child_parent_id", referencedColumnName = "id")
 	private List<CulturalAssetEntity> culturalAssetChildren = new ArrayList<CulturalAssetEntity>();
 	public static final String CULTURAL_ASSET_CHILDREN = "culturalAssetChildren";	
 	@JsonIgnore
 	public List<CulturalAssetEntity> getCulturalAssetChildren() { return this.culturalAssetChildren; }
 	public void setCulturalAssetChildren(List<CulturalAssetEntity> culturalAssetChildren) { this.culturalAssetChildren = culturalAssetChildren; }
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "entity")
 	private List<NotificationEntity> notifications = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATIONS = "notifications";	
 	@JsonIgnore

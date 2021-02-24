@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
@@ -40,14 +39,19 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public int getType() { return this.type; }
 	public void setType(int type) { this.type = type; }
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
-	@JoinColumn(name = "notificationSender")
+	@ManyToOne
+	@JoinColumn(name = "notification_sender_id", referencedColumnName = "id")
 	private UserEntity sender = null;
 	public static final String SENDER = "sender";
 	public UserEntity getSender() { return this.sender; }
 	public void setSender(UserEntity sender) { this.sender = sender; }
-
-	@ManyToMany(mappedBy = "notificationReceiver", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	
+	@ManyToMany
+	@JoinTable(
+			name = "notification_receivers",
+			joinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "notification_id", referencedColumnName = "id")
+	)
 	private List<UserEntity> receivers = new ArrayList<UserEntity>();
 	public static final String RECEIVERS = "receivers";
 	@JsonIgnore
@@ -66,8 +70,8 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public Long getEntityId() { return this.entityId; }
 	public void setEntityId(Long entityId) { this.entityId = entityId; }
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
-	@JoinColumn(name = "notifications")
+	@ManyToOne
+	@JoinColumn(name = "notification_entity_id", referencedColumnName = "id")
 	private CulturalAssetEntity entity = null;
 	public static final String ENTITY = "entity";
 	public CulturalAssetEntity getEntity() { return this.entity; }
