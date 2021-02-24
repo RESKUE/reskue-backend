@@ -17,6 +17,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import kueres.event.EventType;
+import kueres.eventbus.EventConsumer;
 import kueres.query.EntitySpecification;
 import kueres.utility.Utility;
 import reskue.ReskueService;
@@ -59,6 +61,8 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		}
 
 		Page<SubtaskEntity> page = new PageImpl<SubtaskEntity>(subtasks, pageable, subtasks.size());
+		
+		EventConsumer.sendEvent("TaskService.getAllSubtasks", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -83,6 +87,8 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		}
 
 		Page<UserEntity> page = new PageImpl<UserEntity>(helpers, pageable, helpers.size());
+		
+		EventConsumer.sendEvent("TaskService.getAllHelpers", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -97,6 +103,9 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		entity.setState(state);
 		
 		final TaskEntity updatedEntity = repository.save(entity);
+		
+		EventConsumer.sendEvent("TaskService.changeState", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
+		
 		return updatedEntity;
 		
 	}
@@ -118,6 +127,9 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		}
 		
 		final TaskEntity updatedEntity = repository.save(entity);
+		
+		EventConsumer.sendEvent("TaskService.addHelper", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
+		
 		return updatedEntity;
 		
 	}
@@ -139,6 +151,9 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		}
 		
 		final TaskEntity updatedEntity = repository.save(entity);
+		
+		EventConsumer.sendEvent("TaskService.removeHelper", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
+		
 		return updatedEntity;
 		
 	}

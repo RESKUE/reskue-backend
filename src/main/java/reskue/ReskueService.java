@@ -15,6 +15,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import kueres.base.BaseService;
+import kueres.event.EventType;
+import kueres.eventbus.EventConsumer;
 import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
 import reskue.comment.CommentEntity;
@@ -44,6 +46,8 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 		}
 
 		Page<CommentEntity> page = new PageImpl<CommentEntity>(comments, pageable, comments.size());
+		
+		EventConsumer.sendEvent("ReskueService.getAllComments", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -67,6 +71,8 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 		}
 
 		Page<MediaEntity> page = new PageImpl<MediaEntity>(media, pageable, media.size());
+		
+		EventConsumer.sendEvent("ReskueService.getAllMedia", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		

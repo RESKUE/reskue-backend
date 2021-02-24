@@ -23,7 +23,7 @@ import reskue.user.UserEntity;
 public class NotificationEntity extends BaseEntity<NotificationEntity> {
 
 	@Column(name = "title", nullable = false)
-	private String title = "";
+	private String title = "Title";
 	public static final String TITLE = "title";
 	public String getTitle() { return this.title; }
 	public void setTitle(String title) { this.title = title; }
@@ -42,7 +42,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "notificationSender")
-	private UserEntity sender;
+	private UserEntity sender = null;
 	public static final String SENDER = "sender";
 	public UserEntity getSender() { return this.sender; }
 	public void setSender(UserEntity sender) { this.sender = sender; }
@@ -60,15 +60,15 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public Date getSendAt() { return this.sendAt; }
 	public void setSendAt(Date sendAt) { this.sendAt = sendAt; }
 	
-	@Column(name = "entityId", nullable = false)
-	private long entityId = 0;
+	@Column(name = "entityId", nullable = true)
+	private Long entityId = null;
 	public static final String ENTITY_ID = "entityId";
-	public long getEntityId() { return this.entityId; }
-	public void setEntityId(long entityId) { this.entityId = entityId; }
+	public Long getEntityId() { return this.entityId; }
+	public void setEntityId(Long entityId) { this.entityId = entityId; }
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "notifications")
-	private CulturalAssetEntity entity;
+	private CulturalAssetEntity entity = null;
 	public static final String ENTITY = "entity";
 	public CulturalAssetEntity getEntity() { return this.entity; }
 	public void setEntity(CulturalAssetEntity entity) { this.entity = entity; }

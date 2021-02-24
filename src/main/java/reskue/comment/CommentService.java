@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import kueres.base.BaseService;
+import kueres.event.EventType;
+import kueres.eventbus.EventConsumer;
 import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
 import kueres.utility.Utility;
@@ -52,6 +54,8 @@ public class CommentService extends BaseService<CommentEntity, CommentRepository
 		}
 
 		Page<MediaEntity> page = new PageImpl<MediaEntity>(media, pageable, media.size());
+		
+		EventConsumer.sendEvent("CommentService.getAllMedia", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));		
 
 		return page;
 		

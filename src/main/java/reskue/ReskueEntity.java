@@ -20,7 +20,7 @@ import reskue.comment.CommentEntity;
 public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity<E>{
 	
 	@Column(name = "name", nullable = false)
-	private String name = "";
+	private String name = "unnamed";
 	public static final String NAME = "name";
 	public String getName() { return this.name; }
 	public void setName(String name) { this.name = name; }
@@ -39,11 +39,11 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	public void setPriority(int priority) { this.priority = priority; }
 	
 	// use 1 for true and 0 for false
-	@Column(name = "isRequired", nullable = false)
-	private int isRequired = 0;
-	public static final String IS_REQUIRED = "isRequired";
-	public int getIsRequired() { return this.isRequired; }
-	public void setIsRequired(int isRequired) { this.isRequired = isRequired; }
+	@Column(name = "isEndangered", nullable = false)
+	private int isEndangered = 0;
+	public static final String IS_ENDANGERED = "isEndangered";
+	public int getIsEndangered() { return this.isEndangered; }
+	public void setIsEndangered(int isEndangered) { this.isEndangered = isEndangered; }
 	
 //	@ElementCollection(targetClass = String.class)
 //	@Column(name = "tags", nullable = false)

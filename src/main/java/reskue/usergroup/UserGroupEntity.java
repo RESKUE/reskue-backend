@@ -18,7 +18,7 @@ import reskue.user.UserEntity;
 public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	
 	@Column(name = "name", nullable = false)
-	private String name = "";
+	private String name = "unnamed";
 	public static final String NAME = "name";
 	public String getName() { return this.name; }
 	public void setName(String name) { this.name = name; }

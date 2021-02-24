@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import kueres.base.BaseService;
+import kueres.event.EventType;
+import kueres.eventbus.EventConsumer;
 import kueres.query.EntitySpecification;
 import kueres.utility.Utility;
 import reskue.user.UserEntity;
@@ -55,6 +57,8 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 		}
 
 		Page<UserEntity> page = new PageImpl<UserEntity>(users, pageable, users.size());
+		
+		EventConsumer.sendEvent("UserGroupService.getAllUsers", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -78,6 +82,9 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 		}
 		
 		final UserGroupEntity updatedEntity = repository.save(entity);
+		
+		EventConsumer.sendEvent("UserGroupService.addUser", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
+		
 		return updatedEntity;
 		
 	}
@@ -100,6 +107,9 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 		}
 		
 		final UserGroupEntity updatedEntity = repository.save(entity);
+		
+		EventConsumer.sendEvent("UserGroupService.removeUser", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
+		
 		return updatedEntity;
 	
 	}

@@ -50,7 +50,7 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 	}
 	
 	@PutMapping("/{" + UserGroupEntity.ID + "}/addUser/{" + UserEntity.ID + "}")
-	@RolesAllowed({ "administrator", "helper" })
+	@RolesAllowed({ "administrator" })
 	public ResponseEntity<UserGroupEntity> addUser(
 			@PathVariable(value = UserGroupEntity.ID) long id,
 			@PathVariable(value = UserEntity.ID) long userId) {
@@ -63,7 +63,7 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 	}
 	
 	@PutMapping("/{" + UserGroupEntity.ID + "}/removeUser/{" + UserEntity.ID + "}")
-	@RolesAllowed({ "administrator", "helper" })
+	@RolesAllowed({ "administrator" })
 	public ResponseEntity<UserGroupEntity> removeUser(
 			@PathVariable(value = UserGroupEntity.ID) long id,
 			@PathVariable(value = UserEntity.ID) long userId) {

@@ -136,7 +136,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 	}	
 	
 	@PutMapping("/{" + CulturalAssetEntity.ID + "}/addChild/{" + CulturalAssetEntity.CULTURAL_ASSET_CHILDREN + "}")
-	@RolesAllowed("administrator")
+	@RolesAllowed( "administrator" )
 	public ResponseEntity<CulturalAssetEntity> addCulturalAssetChild(
 			@PathVariable(value = CulturalAssetEntity.ID) long id,
 			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_CHILDREN) long childId) {
@@ -149,7 +149,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 	}
 	
 	@PutMapping("/{" + CulturalAssetEntity.ID + "}/removeChild/{" + CulturalAssetEntity.CULTURAL_ASSET_CHILDREN + "}")
-	@RolesAllowed("administrator")
+	@RolesAllowed( "administrator" )
 	public ResponseEntity<CulturalAssetEntity> removeCulturalAssetChild(
 			@PathVariable(value = CulturalAssetEntity.ID) long id,
 			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_CHILDREN) long childId) {
@@ -162,7 +162,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 	}
 	
 	@PutMapping("/{" + CulturalAssetEntity.ID + "}/setParent/{" + CulturalAssetEntity.CULTURAL_ASSET_PARENT + "}")
-	@RolesAllowed("administrator")
+	@RolesAllowed( "administrator" )
 	public ResponseEntity<CulturalAssetEntity> setCulturalAssetParent(
 			@PathVariable(value = CulturalAssetEntity.ID) long id,
 			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_PARENT) long parentId) {
@@ -175,7 +175,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 	}
 	
 	@PutMapping("/{" + CulturalAssetEntity.ID + "}/removeParent")
-	@RolesAllowed("administrator")
+	@RolesAllowed( "administrator" )
 	public ResponseEntity<CulturalAssetEntity> removeCulturalAssetParent(
 			@PathVariable(value = CulturalAssetEntity.ID) long id) {
 		

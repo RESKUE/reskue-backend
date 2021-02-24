@@ -96,7 +96,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		
 //		Set<String> tags = details.getTags();
 		int priority = details.getPriority();
-		int isRequired = details.getIsRequired();
+		int isEndangered = details.getIsEndangered();
 		
 		List<CommentEntity> comments = details.getComments();
 		List<MediaEntity> media = details.getMedia();	
@@ -123,7 +123,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 //			this.setTags(tags);
 //		}
 		this.setPriority(priority);
-		this.setIsRequired(isRequired);
+		this.setIsEndangered(isEndangered);
 		
 		if (comments != null) {
 			this.setComments(comments);

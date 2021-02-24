@@ -67,6 +67,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		
 		CulturalAssetEntity savedEntity = repository.save(entity);
 		
+		EventConsumer.sendEvent("CulturalAssetService.create", EventType.CREATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(savedEntity));
+		
 		return savedEntity;
 		
 	}
@@ -103,7 +105,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 			
 		}
 		
-		CulturalAssetEntity savedEntity = repository.save(entity);
+		final CulturalAssetEntity savedEntity = repository.save(entity);
+		
+		EventConsumer.sendEvent("CulturalAssetService.update", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(savedEntity));
 		
 		return savedEntity;
 		
@@ -120,6 +124,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		if (entity.getLocationId() != null) {
 			locationService.removePOI(entity.getLocationId());
 		}
+		
+		EventConsumer.sendEvent("CulturalAssetService.delete", EventType.DELETE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(entity));
 		
 		return entity;
 		
@@ -145,6 +151,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		}
 
 		Page<CulturalAssetEntity> page = new PageImpl<CulturalAssetEntity>(entities, pageable, entities.size());
+		
+		EventConsumer.sendEvent("CulturalAssetService.findInRadius", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -169,6 +177,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		}
 
 		Page<TaskEntity> page = new PageImpl<TaskEntity>(tasks, pageable, tasks.size());
+		
+		EventConsumer.sendEvent("CulturalAssetService.getAllTasks", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -194,6 +204,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		}
 
 		Page<CulturalAssetEntity> page = new PageImpl<CulturalAssetEntity>(children, pageable, children.size());
+		
+		EventConsumer.sendEvent("CulturalAssetService.getAllChildren", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -219,6 +231,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		}
 
 		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(notifications, pageable, notifications.size());
+		
+		EventConsumer.sendEvent("CulturalAssetService.getAllNotifications", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -232,7 +246,11 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		
 		double[] entityLocation = new double[] {entity.getLongitude(), entity.getLatitude()};
 		
-		return locationService.calculateDistance(entityLocation, new double[] {longitude, latitude});
+		double distance = locationService.calculateDistance(entityLocation, new double[] {longitude, latitude});
+		
+		EventConsumer.sendEvent("CulturalAssetService.getDistance", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(distance));
+		
+		return distance;
 		
 	}
 
@@ -253,6 +271,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		}
 		
 		final CulturalAssetEntity updatedEntity = repository.save(entity);
+		
+		EventConsumer.sendEvent("CulturalAssetService.addCulturalAssetChild", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
+		
 		return updatedEntity;
 		
 	}
@@ -274,6 +295,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		}
 		
 		final CulturalAssetEntity updatedEntity = repository.save(entity);
+		
+		EventConsumer.sendEvent("CulturalAssetService.removeCulturalAssetChild", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
+		
 		return updatedEntity;
 		
 	}
@@ -288,6 +312,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		entity.setCulturalAssetParent(parent);
 		
 		final CulturalAssetEntity updatedEntity = repository.save(entity);
+		
+		EventConsumer.sendEvent("CulturalAssetService.setCulturalAssetParent", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
+		
 		return updatedEntity;
 		
 	}
@@ -300,6 +327,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		entity.setCulturalAssetParent(null);
 		
 		final CulturalAssetEntity updatedEntity = repository.save(entity);
+		
+		EventConsumer.sendEvent("CulturalAssetService.removeCulturalAssetParent", EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));
+		
 		return updatedEntity;
 		
 	}

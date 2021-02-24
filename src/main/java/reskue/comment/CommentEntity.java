@@ -62,7 +62,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "commentAuthor")
-	private UserEntity author;
+	private UserEntity author = null;
 	public static final String AUTHOR = "author";
 	public UserEntity getAuthor() { return this.author; }
 	public void setAuthor(UserEntity author) { this.author = author; }

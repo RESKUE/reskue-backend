@@ -32,7 +32,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "tasks")
-	private CulturalAssetEntity culturalAsset;
+	private CulturalAssetEntity culturalAsset = null;
 	public static final String CULTURAL_ASSET = "culturalAsset";
 	public CulturalAssetEntity getCulturalAsset() { return this.culturalAsset; }
 	public void setCulturalAsset(CulturalAssetEntity culturalAsset) { this.culturalAsset = culturalAsset; }
@@ -46,7 +46,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "taskContact")
-	private UserEntity contactUser;
+	private UserEntity contactUser = null;
 	public static final String CONTACT_USER = "contactUser";
 	public UserEntity getContactUser() { return this.contactUser; }
 	public void setContactUser(UserEntity contactUser) { this.contactUser = contactUser; }
@@ -59,7 +59,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	public void setHelperUsers(List<UserEntity> helperUsers) { this.helperUsers = helperUsers; }
 	
 	@Column(name = "recommendedHelperUsers", nullable = false)
-	private int recommendedHelperUsers = 0;
+	private int recommendedHelperUsers = 1;
 	public static final String RECOMMENDED_HELPER_USERS = "recommendedHelperUsers";
 	public int getRecommendedHelperUsers() { return this.recommendedHelperUsers; }
 	public void setRecommendedHelperUsers(int recommendedHelperUsers) { this.recommendedHelperUsers = recommendedHelperUsers; }
@@ -72,7 +72,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 		
 //		Set<String> tags = details.getTags();
 		int priority = details.getPriority();
-		int isRequired = details.getIsRequired();
+		int isEndangered = details.getIsEndangered();
 		
 		List<CommentEntity> comments = details.getComments();
 		List<MediaEntity> media = details.getMedia();	
@@ -95,7 +95,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 //			this.setTags(tags);
 //		}
 		this.setPriority(priority);
-		this.setIsRequired(isRequired);
+		this.setIsEndangered(isEndangered);
 		
 		
 		if (comments != null) {

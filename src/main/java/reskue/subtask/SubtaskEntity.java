@@ -15,7 +15,7 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "subtasks")
-	private TaskEntity task;
+	private TaskEntity task = null;
 	public static final String TASK = "task";
 	public TaskEntity getTask() { return this.task; }
 	public void setTask(TaskEntity task) { this.task = task; }

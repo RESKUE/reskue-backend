@@ -88,7 +88,7 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	}
 	
 	@PutMapping("/{" + TaskEntity.ID + "}/assignHelper/{" + TaskEntity.HELPER_USERS + "}")
-	@RolesAllowed({ "administrator", "helper" })
+	@RolesAllowed({ "administrator" })
 	public ResponseEntity<TaskEntity> addHelper(
 			@PathVariable(value = TaskEntity.ID) long id,
 			@PathVariable(value = TaskEntity.HELPER_USERS) long helperId) {
@@ -101,7 +101,7 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	}
 	
 	@PutMapping("/{" + TaskEntity.ID + "}/removeHelper/{" + TaskEntity.HELPER_USERS + "}")
-	@RolesAllowed({ "administrator", "helper" })
+	@RolesAllowed({ "administrator" })
 	public ResponseEntity<TaskEntity> removeHelper(
 			@PathVariable(value = TaskEntity.ID) long id,
 			@PathVariable(value = TaskEntity.HELPER_USERS) long helperId) {

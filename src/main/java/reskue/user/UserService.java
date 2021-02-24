@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import kueres.base.BaseService;
+import kueres.event.EventType;
+import kueres.eventbus.EventConsumer;
 import kueres.query.EntitySpecification;
 import kueres.utility.Utility;
 import reskue.comment.CommentEntity;
@@ -54,6 +56,8 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		}
 
 		Page<TaskEntity> page = new PageImpl<TaskEntity>(contactTasks, pageable, contactTasks.size());
+		
+		EventConsumer.sendEvent("UserService.getTasksWhereUserIsContact", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -79,6 +83,8 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		}
 
 		Page<TaskEntity> page = new PageImpl<TaskEntity>(helperTasks, pageable, helperTasks.size());
+		
+		EventConsumer.sendEvent("UserService.getTasksWhereUserIsHelper", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -104,6 +110,8 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		}
 
 		Page<CommentEntity> page = new PageImpl<CommentEntity>(authorComments, pageable, authorComments.size());
+		
+		EventConsumer.sendEvent("UserService.getCommentsByUser", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -129,6 +137,8 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		}
 
 		Page<UserGroupEntity> page = new PageImpl<UserGroupEntity>(userGroups, pageable, userGroups.size());
+		
+		EventConsumer.sendEvent("UserService.getUserGroupsForUser", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -154,6 +164,8 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		}
 
 		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(senderNotifiactions, pageable, senderNotifiactions.size());
+		
+		EventConsumer.sendEvent("UserService.getNotificationsSendByUser", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 		
@@ -179,6 +191,8 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		}
 
 		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(receiverNotifications, pageable, receiverNotifications.size());
+		
+		EventConsumer.sendEvent("UserService.getNotificationsForUser", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
 
 		return page;
 	}
