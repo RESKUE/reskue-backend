@@ -3,17 +3,12 @@ package reskue.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -38,48 +33,52 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	public String getKeycloakId() { return this.keycloakId; }
 	public void setKeycloakId(String keycloakId) { this.keycloakId = keycloakId; }
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "contactUser")
 	private List<TaskEntity> taskContact = new ArrayList<TaskEntity>();
 	public static final String TASK_CONTACT = "taskContact";
 	@JsonIgnore
 	public List<TaskEntity> getTaskContact() { return this.taskContact; }
 	public void setTaskContact(List<TaskEntity> taskContact) { this.taskContact = taskContact; }
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "helperUsers", joinColumns = @JoinColumn(name = "task_entity_id"), inverseJoinColumns = @JoinColumn(name = "user_entity_id"))
+	@ManyToMany
+	@JoinTable(
+			name = "task_helpers",
+			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "helper_id", referencedColumnName = "id")
+	)
 	private List<TaskEntity> taskHelper = new ArrayList<TaskEntity>();
 	public static final String TASK_HELPER = "taskHelper";
 	@JsonIgnore
 	public List<TaskEntity> getTaskHelper() { return this.taskHelper; }
 	public void setTaskHelper(List<TaskEntity> taskHelper) { this.taskHelper = taskHelper; }
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "author")
 	private List<CommentEntity> commentAuthor = new ArrayList<CommentEntity>();
 	public static final String COMMENT_AUTHOR = "commentAuthor";
 	@JsonIgnore
 	public List<CommentEntity> getCommentAuthor() { return this.commentAuthor; }
 	public void setCommentAuthor(List<CommentEntity> commentAuthor) { this.commentAuthor = commentAuthor; }
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "users", joinColumns = @JoinColumn(name = "user_group_entity_id"), inverseJoinColumns = @JoinColumn(name = "user_entity_id"))
+	@ManyToMany
+	@JoinTable(
+			name = "user_usergroups",
+			joinColumns = @JoinColumn(name = "usergroup_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
+	)
 	private List<UserGroupEntity> userGroups = new ArrayList<UserGroupEntity>();
 	public static final String USER_GROUPS = "userGroups";
 	@JsonIgnore
 	public List<UserGroupEntity> getUserGroups() { return this.userGroups; }
 	public void setUserGroups(List<UserGroupEntity> userGroups) { this.userGroups = userGroups; }
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "sender")
 	private List<NotificationEntity> notificationSender = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATION_SENDER = "notificationSender";
 	@JsonIgnore
 	public List<NotificationEntity> getNotificationSender() { return this.notificationSender; }
 	public void setNotificationSender(List<NotificationEntity> notificationSender) { this.notificationSender = notificationSender; }
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "receivers", joinColumns = @JoinColumn(name = "notification_entity_id"), inverseJoinColumns = @JoinColumn(name = "user_entity_id"))
+	@ManyToMany(mappedBy = "receivers")
 	private List<NotificationEntity> notificationReceiver = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATION_RECEIVER = "notificationReceiver";
 	@JsonIgnore

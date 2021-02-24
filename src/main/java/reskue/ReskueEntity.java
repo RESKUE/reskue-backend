@@ -3,10 +3,8 @@ package reskue;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 
@@ -52,16 +50,16 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 //	public Set<String> getTags() { return this.tags; }
 //	public void setTags(Set<String> tags) { this.tags = tags; }
 	
-	@ElementCollection(targetClass = MediaEntity.class)
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany
+	@JoinColumn(name = "entity_id", referencedColumnName = "id")
 	private List<CommentEntity> comments = new ArrayList<CommentEntity>();
 	public static final String COMMENTS = "comments";
 	@JsonIgnore
 	public List<CommentEntity> getComments() { return this.comments; }
 	public void setComments(List<CommentEntity> comments) { this.comments = comments; }
 	
-	@ElementCollection(targetClass = MediaEntity.class)
-	@Column(name = "media", nullable = false)
+	@OneToMany
+	@JoinColumn(name = "entity_id", referencedColumnName = "id")
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";
 	@JsonIgnore

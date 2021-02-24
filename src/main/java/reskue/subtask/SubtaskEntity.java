@@ -1,9 +1,7 @@
 package reskue.subtask;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -13,8 +11,8 @@ import reskue.task.TaskEntity;
 @Entity
 public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
-	@JoinColumn(name = "subtasks")
+	@ManyToOne
+	@JoinColumn(name = "subtask_id", referencedColumnName = "id")
 	private TaskEntity task = null;
 	public static final String TASK = "task";
 	public TaskEntity getTask() { return this.task; }

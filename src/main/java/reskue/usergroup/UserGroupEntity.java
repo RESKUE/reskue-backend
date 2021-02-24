@@ -3,10 +3,8 @@ package reskue.usergroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,7 +21,7 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	public String getName() { return this.name; }
 	public void setName(String name) { this.name = name; }
 	
-	@ManyToMany(mappedBy = "userGroups", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "userGroups")
 	private List<UserEntity> users = new ArrayList<UserEntity>();
 	public static final String NOTIFICATION_RECEIVER = "users";
 	@JsonIgnore

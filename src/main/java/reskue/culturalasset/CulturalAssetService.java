@@ -41,7 +41,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	@Override
 	@PostConstruct
 	public void init() {
-
+		this.identifier = CulturalAssetController.ROUTE;
+		this.routingKey = CulturalAssetController.ROUTE;
 	}
 	
 	@Override
