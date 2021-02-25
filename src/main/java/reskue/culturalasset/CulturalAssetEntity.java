@@ -66,7 +66,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of tasks associated with the cultural asset.
 	 */
-	@OneToMany(mappedBy = "culturalAsset")
+	@OneToMany(mappedBy = "culturalAsset", cascade = CascadeType.PERSIST)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<TaskEntity> tasks = new ArrayList<TaskEntity>();
 	public static final String TASKS = "tasks";
@@ -107,7 +107,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The parent of the cultural asset.
 	 */
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "parent_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity culturalAssetParent;
@@ -129,7 +129,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of notifications associated with the cultural asset.
 	 */
-	@OneToMany(mappedBy = "entity")
+	@OneToMany(mappedBy = "entity", cascade = CascadeType.PERSIST)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notifications = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATIONS = "notifications";	

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -68,7 +69,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	/**
 	 * The user that send the notification.
 	 */
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "notification_sender_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private UserEntity sender = null;
@@ -79,7 +80,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	/**
 	 * The list of user groups that should receive the notification.
 	 */
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable(
 			name = "notification_receivers",
 			joinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = "id"),
@@ -104,7 +105,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	 * The cultural asset that the notification refers to.
 	 * This potentially marks the cultural asset as endangered.
 	 */
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "notification_entity_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity entity = null;

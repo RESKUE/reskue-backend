@@ -52,7 +52,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The cultural asset the task belongs to.
 	 */
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "cultural_asset_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity culturalAsset = null;
@@ -74,7 +74,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The user that is the contact of the task.
 	 */
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "task_contact_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private UserEntity contactUser = null;

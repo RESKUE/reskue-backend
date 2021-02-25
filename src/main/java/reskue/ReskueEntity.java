@@ -3,6 +3,7 @@ package reskue;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
@@ -76,7 +77,7 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	/**
 	 * The list of comments associated with the entity.
 	 */
-	@OneToMany
+	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "entity_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<CommentEntity> comments = new ArrayList<CommentEntity>();
@@ -87,7 +88,7 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	/**
 	 * The list of media associated with the entity.
 	 */
-	@OneToMany
+	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "entity_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
