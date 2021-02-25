@@ -77,22 +77,17 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 		Utility.LOG.trace("UserGroupService.getNotifications called.");
 
 		List<NotificationEntity> receivedNotifications = new ArrayList<NotificationEntity>();
+		
+		
+		for (int i = 0; i < ids.length; i++) {
 
-//		for (int i = 0; i < ids.length; i++) {
-//
-//			UserGroupEntity userGroup = this.findById(ids[i]);
-//
-//			List<NotificationEntity> userGroupNotifications = userGroup.getNotificationReceiver();
-//
-//			userGroupNotifications.forEach((NotificationEntity userGroupNotification) -> {
-//
-//				if (!receivedNotifications.contains(userGroupNotification)) {
-//					receivedNotifications.add(userGroupNotification);
-//				}
-//
-//			});
-//
-//		}
+			UserGroupEntity userGroup = this.findById(ids[i]);
+
+			receivedNotifications.addAll(userGroup.getNotificationReceiver());
+
+		}
+		
+		receivedNotifications = receivedNotifications.stream().distinct().collect(Collectors.toList());
 
 		if (specification != null) {
 			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
