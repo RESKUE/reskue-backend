@@ -24,7 +24,7 @@ import reskue.usergroup.UserGroupEntity;
  * The NotificationEntity is a representation of notifications send by users.
  * The NotificationEntity works similar to the EventEntity in kueres.event
  *
- * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *
@@ -95,7 +95,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public void setSendAt(Date sendAt) { this.sendAt = sendAt; }
 	
 	/**
-	 * Unfinished
+	 * Id of the related entity for faster querys
 	 */
 	@Column(name = "entityId", nullable = true)
 	private Long entityId = null;

@@ -20,7 +20,7 @@ import reskue.user.UserEntity;
  * 
  * The CommentEntity is a representation of comments made by users.
  *
- * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *
@@ -99,30 +99,25 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	public Date getUpdatedAt() { return this.updatedAt; }
 	public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }
 
+	/**
+	 * Doesnt allow changes to:
+	 *  - author
+	 *  - createdAt
+	 *  - updatedAt
+	 */
 	@Override
 	public void applyPatch(CommentEntity details) {
 		
 		String text = details.getText();
 		List<MediaEntity> media = details.getMedia();
-		UserEntity author = details.getAuthor();
-		Date createdAt = details.getCreatedAt();
-		Date updatedAt = details.getUpdatedAt();
 		
-		if (text != null) {
+		if (text != "" || this.getText() != "") {
 			this.setText(text);
 		}
 		if (media != null) {
 			this.setMedia(media);
 		}
-		if (author != null) {		
-			this.setAuthor(author);	
-		}
-		if (createdAt != null) {
-			this.setCreatedAt(createdAt);
-		}
-		if (updatedAt != null) {
-			this.setUpdatedAt(updatedAt);
-		}
+		this.setUpdatedAt(new Date());
 		
 	}
 

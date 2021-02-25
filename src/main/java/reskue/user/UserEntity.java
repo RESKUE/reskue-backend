@@ -22,7 +22,7 @@ import reskue.usergroup.UserGroupEntity;
  * 
  * The UserEntity is a representation of a user.
  *
- * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *
@@ -41,7 +41,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	public void setName(String name) { this.name = name; }
 	
 	/**
-	 * Unfinished
+	 * The identifier used by keycloak for the user.
 	 */
 	@JsonIgnore
 	@Column(name = "keycloakId", nullable = true)
@@ -121,7 +121,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 		List<UserGroupEntity> userGroups = details.getUserGroups();
 		List<NotificationEntity> notificationSender = details.getNotificationSender();
 		
-		if (name != null) {
+		if (name != "unnamed" || this.getName() != "unnamed") {
 			this.setName(name);
 		}
 		if (keycloakId != null) {
