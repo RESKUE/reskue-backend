@@ -21,13 +21,49 @@ import reskue.notification.NotificationEntity;
 import reskue.task.TaskEntity;
 import reskue.usergroup.UserGroupEntity;
 
+/**
+ * 
+ * The UserController provides API functions for UserEntities.
+ * These functions are:
+ *  - all functions of the BaseController in kueres.base
+ *  - finding all tasks a user is a contact of
+ *  - finding all tasks a user is a helper of
+ *  - finding all comments a user is an author of
+ *  - finding all user groups a user is a part of
+ *  - finding all notifications a user has send
+ *  - finding all notifications a user should receive
+ *
+ * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
 
 @RestController
 @RequestMapping(BaseController.API_ENDPOINT + UserController.ROUTE)
 public class UserController extends BaseController<UserEntity, UserRepository, UserService>{
 	
+	/**
+	 * The API route for UserEntities.
+	 */
 	public static final String ROUTE = "/user";
-
+	
+	/**
+	 * Find all tasks that the user is a contact of.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * <p>
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * <p>
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
 	@GetMapping("/{" + UserEntity.ID + "}/contactTasks")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<TaskEntity> getTasksWhereUserIsContact(
@@ -51,6 +87,22 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 			
 	}
 	
+	/**
+	 * Find all tasks that the user is a helper of.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * <p>
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * <p>
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
 	@GetMapping("/{" + UserEntity.ID + "}/helperTasks")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<TaskEntity> getTasksWhereUserIsHelper(
@@ -74,6 +126,22 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 			
 	}
 	
+	/**
+	 * Find all comments that the user is an author of.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * <p>
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * <p>
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
 	@GetMapping("/{" + UserEntity.ID + "}/userComments")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<CommentEntity> getCommentsByUser(
@@ -97,6 +165,22 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 			
 	}
 	
+	/**
+	 * Find all user groups that the user is a part of.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * <p>
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * <p>
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
 	@GetMapping("/{" + UserEntity.ID + "}/userGroups")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<UserGroupEntity> getUserGroupsForUser(
@@ -120,6 +204,22 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 			
 	}
 	
+	/**
+	 * Find all notifications that the user has send.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * <p>
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * <p>
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
 	@GetMapping("/{" + UserEntity.ID + "}/sendNotifications")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<NotificationEntity> getNotificationsSendByUser(
@@ -143,6 +243,22 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 		
 	}
 	
+	/**
+	 * Find all notifications that the user should receive.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * <p>
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * <p>
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
 	@GetMapping("/{" + UserEntity.ID + "}/receivedNotifications")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<NotificationEntity> getNotificationsForUser(

@@ -22,12 +22,55 @@ import reskue.ReskueController;
 import reskue.notification.NotificationEntity;
 import reskue.task.TaskEntity;
 
+/**
+ * 
+ * The TaskController provides API functions for TaskEntities.
+ * These functions are:
+ *  - all functions of the BaseController in kueres.base
+ *  - all functions of the ReskueController in reskue
+ *  - finding all cultural assets in a radius around a given point
+ *  - finding all tasks of a cultural asset
+ *  - finding all children of a cultural asset
+ *  - finding all notifications of a cultural asset
+ *  - calculating the distance from a point to a cultural asset
+ *  - adding a child to a cultural asset
+ *  - removing a child from a cultural asset
+ *  - setting the parent of a cultural asset
+ *  - removing the parent from a cultural asset
+ *
+ * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
 @RestController
 @RequestMapping(BaseController.API_ENDPOINT + CulturalAssetController.ROUTE)
 public class CulturalAssetController extends ReskueController<CulturalAssetEntity, CulturalAssetRepository, CulturalAssetService>{
 	
+	/**
+	 * The API route for CulturalAssetEntities.
+	 */
 	public static final String ROUTE = "/culturalAsset";
 	
+	/**
+	 * Find all cultural assets in a radius around a given middle point.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * <p>
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * <p>
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param radius - the radius of the search.
+	 * @param longitude - the longitude of the middle of the search.
+	 * @param latitude - the latitude of the middle of the search.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
 	@GetMapping("/radius")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<CulturalAssetEntity> findInRadius(
@@ -53,6 +96,22 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		
 	}
 	
+	/**
+	 * Find all tasks of the cultural asset.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * <p>
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * <p>
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
 	@GetMapping("/{" + CulturalAssetEntity.ID + "}/tasks")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<TaskEntity> getAllTasks(
@@ -76,6 +135,22 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		
 	}
 	
+	/**
+	 * Find all children of the cultural asset.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * <p>
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * <p>
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
 	@GetMapping("/{" + CulturalAssetEntity.ID + "}/children")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<CulturalAssetEntity> getAllChildren(
@@ -99,6 +174,22 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		
 	}
 	
+	/**
+	 * Find all notifications of the cultural asset.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * <p>
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * <p>
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
 	@GetMapping("/{" + CulturalAssetEntity.ID + "}/notifications")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<NotificationEntity> getAllNotifications(
@@ -122,6 +213,14 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		
 	}
 	
+	/**
+	 * Calculate the distance between a given point and the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param longitude - the longitude of the given point
+	 * @param latitude - the latitude of the given point
+	 * @return The result in meters as a double
+	 */
 	@GetMapping("/{" + CulturalAssetEntity.ID + "}/distance")
 	@RolesAllowed({ "administrator", "helper" })
 	public double getDistance(
@@ -135,6 +234,13 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		
 	}	
 	
+	/**
+	 * Adds a child to the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param childId - the childs's identifier.
+	 * @return The cultural asset after the child was added.
+	 */
 	@PutMapping("/{" + CulturalAssetEntity.ID + "}/addChild/{" + CulturalAssetEntity.CULTURAL_ASSET_CHILDREN + "}")
 	@RolesAllowed( "administrator" )
 	public ResponseEntity<CulturalAssetEntity> addCulturalAssetChild(
@@ -148,6 +254,13 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		
 	}
 	
+	/**
+	 * Removes a child from the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param childId - the childs's identifier.
+	 * @return The cultural asset after the child was removed.
+	 */
 	@PutMapping("/{" + CulturalAssetEntity.ID + "}/removeChild/{" + CulturalAssetEntity.CULTURAL_ASSET_CHILDREN + "}")
 	@RolesAllowed( "administrator" )
 	public ResponseEntity<CulturalAssetEntity> removeCulturalAssetChild(
@@ -161,6 +274,13 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		
 	}
 	
+	/**
+	 * Sets the parent of the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param parentId - the childs's identifier.
+	 * @return The cultural asset after the parent was set.
+	 */
 	@PutMapping("/{" + CulturalAssetEntity.ID + "}/setParent/{" + CulturalAssetEntity.CULTURAL_ASSET_PARENT + "}")
 	@RolesAllowed( "administrator" )
 	public ResponseEntity<CulturalAssetEntity> setCulturalAssetParent(
@@ -174,6 +294,12 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		
 	}
 	
+	/**
+	 * Removes the parent of the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @return The cultural asset after the parent was removed.
+	 */
 	@PutMapping("/{" + CulturalAssetEntity.ID + "}/removeParent")
 	@RolesAllowed( "administrator" )
 	public ResponseEntity<CulturalAssetEntity> removeCulturalAssetParent(
@@ -184,31 +310,6 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		CulturalAssetEntity updatedEntity = service.removeCulturalAssetParent(id);
 		return ResponseEntity.ok().body(updatedEntity);
 		
-	}
-	
-	@GetMapping("/test")
-	@RolesAllowed( "administrator" )
-	public void test() {
-		
-		CulturalAssetEntity testEntity1 = new CulturalAssetEntity();
-		CulturalAssetEntity testEntity2 = this.service.create(testEntity1);
-		CulturalAssetEntity testEntity3 = this.service.create(testEntity1);
-		CulturalAssetEntity testEntity4 = this.service.create(testEntity1);
-		CulturalAssetEntity testEntity5 = this.service.create(testEntity1);
-		
-		this.service.addCulturalAssetChild(testEntity2.getId(), testEntity3.getId());
-		this.service.addCulturalAssetChild(testEntity3.getId(), testEntity4.getId());
-		this.service.addCulturalAssetChild(testEntity4.getId(), testEntity5.getId());
-		this.service.addCulturalAssetChild(testEntity5.getId(), testEntity2.getId());
-		
-		long start = System.nanoTime();
-		
-		CulturalAssetEntity parent = testEntity2.getCulturalAssetParent();
-		for (int i = 0; i < 4; i++) {
-			parent = parent.getCulturalAssetParent();
-		}
-
-		Utility.LOG.info("time: {}", (System.nanoTime() - start));
 	}
 
 }

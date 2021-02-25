@@ -17,27 +17,49 @@ import reskue.comment.CommentEntity;
 import reskue.notification.NotificationEntity;
 import reskue.task.TaskEntity;
 
+/**
+ * 
+ * The CulturalAssetEntity is a representation of cultural assets.
+ *
+ * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
 @Entity
 public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	
+	/**
+	 * The address of the cultural asset.
+	 */
 	@Column(name = "address", nullable = true)
 	private String address = null;
 	public static final String ADDRESS = "address";
 	public String getAddress() { return this.address; }
 	public void setAddress(String address) { this.address = address; }
 	
+	/**
+	 * The longitude of the cultural asset.
+	 */
 	@Column(name = "longitude", nullable = true)
 	private Double longitude = null;
 	public static final String LONGITUDE = "longitude";
 	public Double getLongitude() { return this.longitude; }
 	public void setLongitude(Double longitude) { this.longitude = longitude; }
 	
+	/**
+	 * The latitude of the cultural asset.
+	 */
 	@Column(name = "latitude", nullable = true)
 	private Double latitude = null;
 	public static final String LATITUDE = "latitude";
 	public Double getLatitude() { return this.latitude; }
 	public void setLatitude(Double latitude) { this.latitude = latitude; }
 	
+	/**
+	 * The list of tasks associated with the cultural asset.
+	 */
 	@OneToMany(mappedBy = "culturalAsset")
 	private List<TaskEntity> tasks = new ArrayList<TaskEntity>();
 	public static final String TASKS = "tasks";
@@ -45,28 +67,31 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public List<TaskEntity> getTasks() { return this.tasks; }
 	public void setTasks(List<TaskEntity> tasks) { this.tasks = tasks; }
 	
+	/**
+	 * The label of the cultural asset.
+	 * Labels are similar to descriptions but are intended to be shorter and more important information.
+	 */
 	@Column(name = "label", nullable = true)
 	private String label = null;
 	public static final String LABEL = "label";
 	public String getLabel() { return this.label; }
 	public void setLabel(String label) { this.label = label; }
 	
+	/**
+	 * The level of the cultural asset.
+	 * A cultural asset without a parent is level 0
+	 * The hierarchy only supports 4 levels 
+	 */
 	@Column(name = "level", nullable = false)
 	private int level = 0;
 	public static final String LEVEL = "level";
 	public int getLevel() { return this.level; }
-	public void setLevel(int level) {
-		
-//		if(level >= 4) {
-//			
-//		}
-		this.level = level; 
-//		this.culturalAssetChildren.stream().forEach((CulturalAssetEntity entity) -> {
-//			entity.setLevel(level + 1);
-//		});
-//		
-	}
+	public void setLevel(int level) { this.level = level; }
 	
+	/**
+	 * The location id of the cultural asset.
+	 * This is necessary because the FROST server cannot set specific ids.
+	 */
 	@Column(name = "locationId", nullable = true)
 	private String locationId = null;
 	public static final String LOCATION_ID = "locationId";
@@ -74,6 +99,9 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public String getLocationId() { return this.locationId; }
 	public void setLocationId(String locationId) { this.locationId = locationId; }
 	
+	/**
+	 * The parent of the cultural asset.
+	 */
 	@ManyToOne
 	@JoinColumn(name = "parent_id", referencedColumnName = "id")
 	private CulturalAssetEntity culturalAssetParent;
@@ -81,6 +109,9 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public CulturalAssetEntity getCulturalAssetParent() { return this.culturalAssetParent; }
 	public void setCulturalAssetParent(CulturalAssetEntity culturalAssetParent) { this.culturalAssetParent = culturalAssetParent; }
 	
+	/**
+	 * The list of children associated with the cultural asset.
+	 */
 	@OneToMany
 	@JoinColumn(name = "child_parent_id", referencedColumnName = "id")
 	private List<CulturalAssetEntity> culturalAssetChildren = new ArrayList<CulturalAssetEntity>();
@@ -89,6 +120,9 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public List<CulturalAssetEntity> getCulturalAssetChildren() { return this.culturalAssetChildren; }
 	public void setCulturalAssetChildren(List<CulturalAssetEntity> culturalAssetChildren) { this.culturalAssetChildren = culturalAssetChildren; }
 	
+	/**
+	 * The list of notifications associated with the cultural asset.
+	 */
 	@OneToMany(mappedBy = "entity")
 	private List<NotificationEntity> notifications = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATIONS = "notifications";	

@@ -21,6 +21,16 @@ import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
 import reskue.comment.CommentEntity;
 
+/**
+ * 
+ * The main class for RESKUE.
+ *
+ * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
 public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueRepository<E>>
 		extends BaseService<E, R> {
 

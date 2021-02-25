@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import kueres.media.MediaEntity;
 import reskue.ReskueEntity;
@@ -20,15 +21,31 @@ import reskue.culturalasset.CulturalAssetEntity;
 import reskue.subtask.SubtaskEntity;
 import reskue.user.UserEntity;
 
+/**
+ * 
+ * The TaskEntity is a representation of a task.
+ *
+ * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
 @Entity
 public class TaskEntity extends ReskueEntity<TaskEntity>{
 	
+	/**
+	 * The state of the task.
+	 */
 	@Column(name = "state", nullable = false)
 	private int state = 0;
 	public static final String STATE = "state";
 	public int getState() { return this.state; }
 	public void setState(int state) { this.state = state; }
 	
+	/**
+	 * The cultural asset the task belongs to.
+	 */
 	@ManyToOne
 	@JoinColumn(name = "cultural_asset_id", referencedColumnName = "id")
 	private CulturalAssetEntity culturalAsset = null;
@@ -36,6 +53,10 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	public CulturalAssetEntity getCulturalAsset() { return this.culturalAsset; }
 	public void setCulturalAsset(CulturalAssetEntity culturalAsset) { this.culturalAsset = culturalAsset; }
 	
+	/**
+	 * The list of subtasks associated with the task.
+	 */
+	@JsonManagedReference
 	@OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
 	private List<SubtaskEntity> subtasks = new ArrayList<SubtaskEntity>();
 	public static final String SUBTASKS = "subtasks";
@@ -43,6 +64,9 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	public List<SubtaskEntity> getSubtasks() { return this.subtasks; }
 	public void setSubtasks(List<SubtaskEntity> subtasks) { this.subtasks = subtasks; }
 	
+	/**
+	 * The user that is the contact of the task.
+	 */
 	@ManyToOne
 	@JoinColumn(name = "task_contact_id", referencedColumnName = "id")
 	private UserEntity contactUser = null;
@@ -50,6 +74,9 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	public UserEntity getContactUser() { return this.contactUser; }
 	public void setContactUser(UserEntity contactUser) { this.contactUser = contactUser; }
 	
+	/**
+	 * The list of users that help completing the task.
+	 */
 	@ManyToMany(mappedBy = "taskHelper")
 	private List<UserEntity> helperUsers = new ArrayList<UserEntity>();
 	public static final String HELPER_USERS = "helperUsers";
@@ -57,6 +84,9 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	public List<UserEntity> getHelperUsers() { return this.helperUsers; }
 	public void setHelperUsers(List<UserEntity> helperUsers) { this.helperUsers = helperUsers; }
 	
+	/**
+	 * The recommended number of helpers that are needed to complete the task.
+	 */
 	@Column(name = "recommendedHelperUsers", nullable = false)
 	private int recommendedHelperUsers = 1;
 	public static final String RECOMMENDED_HELPER_USERS = "recommendedHelperUsers";
