@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 
 import kueres.base.BaseEntity;
 import kueres.media.MediaEntity;
@@ -78,9 +78,9 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	 */
 	@OneToMany
 	@JoinColumn(name = "entity_id", referencedColumnName = "id")
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<CommentEntity> comments = new ArrayList<CommentEntity>();
 	public static final String COMMENTS = "comments";
-	@JsonIgnore
 	public List<CommentEntity> getComments() { return this.comments; }
 	public void setComments(List<CommentEntity> comments) { this.comments = comments; }
 	
@@ -89,9 +89,9 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	 */
 	@OneToMany
 	@JoinColumn(name = "entity_id", referencedColumnName = "id")
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";
-	@JsonIgnore
 	public List<MediaEntity> getMedia() { return this.media; }
 	public void setMedia(List<MediaEntity> media) { this.media = media; }
 	

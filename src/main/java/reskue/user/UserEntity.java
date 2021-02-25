@@ -3,6 +3,7 @@ package reskue.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -10,7 +11,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import kueres.base.BaseEntity;
 import reskue.comment.CommentEntity;
@@ -29,6 +33,9 @@ import reskue.usergroup.UserGroupEntity;
  */
 
 @Entity
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id")
 public class UserEntity extends BaseEntity<UserEntity>{
 	
 	/**
@@ -54,24 +61,19 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	 * The list of tasks that the user is a contact of.
 	 */
 	@OneToMany(mappedBy = "contactUser")
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<TaskEntity> taskContact = new ArrayList<TaskEntity>();
 	public static final String TASK_CONTACT = "taskContact";
-	@JsonIgnore
 	public List<TaskEntity> getTaskContact() { return this.taskContact; }
 	public void setTaskContact(List<TaskEntity> taskContact) { this.taskContact = taskContact; }
 	
 	/**
 	 * The list of tasks that the user is a helper of.
 	 */
-	@ManyToMany
-	@JoinTable(
-			name = "task_helpers",
-			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "helper_id", referencedColumnName = "id")
-	)
+	@ManyToMany(mappedBy = "helperUsers", cascade = CascadeType.PERSIST)
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<TaskEntity> taskHelper = new ArrayList<TaskEntity>();
 	public static final String TASK_HELPER = "taskHelper";
-	@JsonIgnore
 	public List<TaskEntity> getTaskHelper() { return this.taskHelper; }
 	public void setTaskHelper(List<TaskEntity> taskHelper) { this.taskHelper = taskHelper; }
 	
@@ -79,9 +81,9 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	 * The list of comments that the user is an author of.
 	 */
 	@OneToMany(mappedBy = "author")
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<CommentEntity> commentAuthor = new ArrayList<CommentEntity>();
 	public static final String COMMENT_AUTHOR = "commentAuthor";
-	@JsonIgnore
 	public List<CommentEntity> getCommentAuthor() { return this.commentAuthor; }
 	public void setCommentAuthor(List<CommentEntity> commentAuthor) { this.commentAuthor = commentAuthor; }
 	
@@ -94,9 +96,9 @@ public class UserEntity extends BaseEntity<UserEntity>{
 			joinColumns = @JoinColumn(name = "usergroup_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
 	)
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<UserGroupEntity> userGroups = new ArrayList<UserGroupEntity>();
 	public static final String USER_GROUPS = "userGroups";
-	@JsonIgnore
 	public List<UserGroupEntity> getUserGroups() { return this.userGroups; }
 	public void setUserGroups(List<UserGroupEntity> userGroups) { this.userGroups = userGroups; }
 	
@@ -104,9 +106,9 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	 * The list of notifications that the user has send.
 	 */
 	@OneToMany(mappedBy = "sender")
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notificationSender = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATION_SENDER = "notificationSender";
-	@JsonIgnore
 	public List<NotificationEntity> getNotificationSender() { return this.notificationSender; }
 	public void setNotificationSender(List<NotificationEntity> notificationSender) { this.notificationSender = notificationSender; }
 	

@@ -7,6 +7,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import kueres.base.BaseEntity;
 import reskue.task.TaskEntity;
@@ -23,6 +26,9 @@ import reskue.task.TaskEntity;
  */
 
 @Entity
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id")
 public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	
 	/**
@@ -31,6 +37,7 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	@JsonBackReference
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "task_id", referencedColumnName = "id")
+	@JsonIdentityReference(alwaysAsId = true)
 	private TaskEntity task = null;
 	public static final String TASK = "task";
 	public TaskEntity getTask() { return this.task; }

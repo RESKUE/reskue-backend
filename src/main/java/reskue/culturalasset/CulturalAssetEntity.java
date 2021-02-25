@@ -3,13 +3,16 @@ package reskue.culturalasset;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import kueres.media.MediaEntity;
 import reskue.ReskueEntity;
@@ -28,6 +31,9 @@ import reskue.task.TaskEntity;
  */
 
 @Entity
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id")
 public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	
 	/**
@@ -61,9 +67,9 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	 * The list of tasks associated with the cultural asset.
 	 */
 	@OneToMany(mappedBy = "culturalAsset")
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<TaskEntity> tasks = new ArrayList<TaskEntity>();
 	public static final String TASKS = "tasks";
-	@JsonIgnore
 	public List<TaskEntity> getTasks() { return this.tasks; }
 	public void setTasks(List<TaskEntity> tasks) { this.tasks = tasks; }
 	
@@ -95,7 +101,6 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	@Column(name = "locationId", nullable = true)
 	private String locationId = null;
 	public static final String LOCATION_ID = "locationId";
-	@JsonIgnore
 	public String getLocationId() { return this.locationId; }
 	public void setLocationId(String locationId) { this.locationId = locationId; }
 	
@@ -104,6 +109,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	 */
 	@ManyToOne
 	@JoinColumn(name = "parent_id", referencedColumnName = "id")
+	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity culturalAssetParent;
 	public static final String CULTURAL_ASSET_PARENT = "culturalAssetParent";
 	public CulturalAssetEntity getCulturalAssetParent() { return this.culturalAssetParent; }
@@ -112,11 +118,11 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of children associated with the cultural asset.
 	 */
-	@OneToMany
+	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "child_parent_id", referencedColumnName = "id")
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<CulturalAssetEntity> culturalAssetChildren = new ArrayList<CulturalAssetEntity>();
 	public static final String CULTURAL_ASSET_CHILDREN = "culturalAssetChildren";	
-	@JsonIgnore
 	public List<CulturalAssetEntity> getCulturalAssetChildren() { return this.culturalAssetChildren; }
 	public void setCulturalAssetChildren(List<CulturalAssetEntity> culturalAssetChildren) { this.culturalAssetChildren = culturalAssetChildren; }
 	
@@ -124,9 +130,9 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	 * The list of notifications associated with the cultural asset.
 	 */
 	@OneToMany(mappedBy = "entity")
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notifications = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATIONS = "notifications";	
-	@JsonIgnore
 	public List<NotificationEntity> getNotifications() { return this.notifications; }
 	public void setNotifications(List<NotificationEntity> notifications) { this.notifications = notifications; }
 	
