@@ -44,7 +44,7 @@ public class NotificationController
 	@Autowired
 	private UserService userService;
 	
-	@PostMapping("/setSender")
+	@PostMapping("/autoSender")
 	@RolesAllowed("administrator")
 	public ResponseEntity<NotificationEntity> create(
 			@Valid @RequestBody NotificationEntity entity,

@@ -94,7 +94,7 @@ public class CommentController extends BaseController<CommentEntity, CommentRepo
 		
 	}
 	
-	@PostMapping("/setSender")
+	@PostMapping("/autoAuthor")
 	@RolesAllowed("administrator")
 	public ResponseEntity<CommentEntity> create(
 			@Valid @RequestBody CommentEntity entity,
