@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import kueres.media.MediaEntity;
@@ -53,6 +54,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	 */
 	@ManyToOne
 	@JoinColumn(name = "cultural_asset_id", referencedColumnName = "id")
+	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity culturalAsset = null;
 	public static final String CULTURAL_ASSET = "culturalAsset";
 	public CulturalAssetEntity getCulturalAsset() { return this.culturalAsset; }
@@ -61,7 +63,9 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The list of subtasks associated with the task.
 	 */
+	@JsonManagedReference
 	@OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<SubtaskEntity> subtasks = new ArrayList<SubtaskEntity>();
 	public static final String SUBTASKS = "subtasks";
 	public List<SubtaskEntity> getSubtasks() { return this.subtasks; }
@@ -72,6 +76,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	 */
 	@ManyToOne
 	@JoinColumn(name = "task_contact_id", referencedColumnName = "id")
+	@JsonIdentityReference(alwaysAsId = true)
 	private UserEntity contactUser = null;
 	public static final String CONTACT_USER = "contactUser";
 	public UserEntity getContactUser() { return this.contactUser; }

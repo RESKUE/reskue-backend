@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import kueres.base.BaseEntity;
@@ -71,6 +70,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "notification_sender_id", referencedColumnName = "id")
+	@JsonIdentityReference(alwaysAsId = true)
 	private UserEntity sender = null;
 	public static final String SENDER = "sender";
 	public UserEntity getSender() { return this.sender; }
@@ -88,7 +88,6 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<UserGroupEntity> receivers = new ArrayList<UserGroupEntity>();
 	public static final String RECEIVERS = "receivers";
-	@JsonIgnore
 	public List<UserGroupEntity> getReceivers() { return this.receivers; }
 	public void setReceivers(List<UserGroupEntity> receivers) { this.receivers = receivers; }
 	
@@ -107,6 +106,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "notification_entity_id", referencedColumnName = "id")
+	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity entity = null;
 	public static final String ENTITY = "entity";
 	public CulturalAssetEntity getEntity() { return this.entity; }

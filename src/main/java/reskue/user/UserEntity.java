@@ -61,9 +61,9 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	 * The list of tasks that the user is a contact of.
 	 */
 	@OneToMany(mappedBy = "contactUser")
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<TaskEntity> taskContact = new ArrayList<TaskEntity>();
 	public static final String TASK_CONTACT = "taskContact";
-	@JsonIgnore
 	public List<TaskEntity> getTaskContact() { return this.taskContact; }
 	public void setTaskContact(List<TaskEntity> taskContact) { this.taskContact = taskContact; }
 	
@@ -81,9 +81,9 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	 * The list of comments that the user is an author of.
 	 */
 	@OneToMany(mappedBy = "author")
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<CommentEntity> commentAuthor = new ArrayList<CommentEntity>();
 	public static final String COMMENT_AUTHOR = "commentAuthor";
-	@JsonIgnore
 	public List<CommentEntity> getCommentAuthor() { return this.commentAuthor; }
 	public void setCommentAuthor(List<CommentEntity> commentAuthor) { this.commentAuthor = commentAuthor; }
 	
@@ -99,7 +99,6 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<UserGroupEntity> userGroups = new ArrayList<UserGroupEntity>();
 	public static final String USER_GROUPS = "userGroups";
-	@JsonIgnore
 	public List<UserGroupEntity> getUserGroups() { return this.userGroups; }
 	public void setUserGroups(List<UserGroupEntity> userGroups) { this.userGroups = userGroups; }
 	
@@ -107,9 +106,9 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	 * The list of notifications that the user has send.
 	 */
 	@OneToMany(mappedBy = "sender")
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notificationSender = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATION_SENDER = "notificationSender";
-	@JsonIgnore
 	public List<NotificationEntity> getNotificationSender() { return this.notificationSender; }
 	public void setNotificationSender(List<NotificationEntity> notificationSender) { this.notificationSender = notificationSender; }
 	
