@@ -14,7 +14,7 @@ import reskue.task.TaskEntity;
  * The SubtaskEntity is a representation a subtask.
  * A subtask is a step of a bigger task.
  *
- * @author Jan Straßburg, jan.strassburg@student.kit.edu
+ * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *

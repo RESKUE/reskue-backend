@@ -38,7 +38,7 @@ import reskue.task.TaskEntity;
  *  - setting the parent of a cultural asset
  *  - removing the parent from a cultural asset
  *
- * @author Jan Straßburg, jan.strassburg@student.kit.edu
+ * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *

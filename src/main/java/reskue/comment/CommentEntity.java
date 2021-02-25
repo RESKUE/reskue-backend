@@ -20,7 +20,7 @@ import reskue.user.UserEntity;
  * 
  * The CommentEntity is a representation of comments made by users.
  *
- * @author Jan Straßburg, jan.strassburg@student.kit.edu
+ * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *

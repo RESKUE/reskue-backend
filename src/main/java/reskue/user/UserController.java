@@ -33,7 +33,7 @@ import reskue.usergroup.UserGroupEntity;
  *  - finding all notifications a user has send
  *  - finding all notifications a user should receive
  *
- * @author Jan Straﬂburg, jan.strassburg@student.kit.edu
+ * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *

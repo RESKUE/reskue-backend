@@ -23,7 +23,7 @@ import reskue.user.UserEntity;
  * The NotificationEntity is a representation of notifications send by users.
  * The NotificationEntity works similar to the EventEntity in kueres.event
  *
- * @author Jan Straﬂburg, jan.strassburg@student.kit.edu
+ * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *
