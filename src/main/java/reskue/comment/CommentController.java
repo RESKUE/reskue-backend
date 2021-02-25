@@ -107,8 +107,8 @@ public class CommentController extends BaseController<CommentEntity, CommentRepo
 		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();
 		
 		String subject = token.getSubject();
-		UserEntity sender = userService.me(subject);
-		entity.setAuthor(sender);
+		UserEntity author = userService.me(subject);
+		entity.setAuthor(author);
 		
 		CommentEntity createdEntity = service.create(entity);
 		return ResponseEntity.ok().body(createdEntity);
