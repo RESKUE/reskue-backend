@@ -11,7 +11,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import kueres.base.BaseEntity;
 import kueres.utility.Utility;
@@ -31,6 +34,9 @@ import reskue.usergroup.UserGroupEntity;
  */
 
 @Entity
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id")
 public class NotificationEntity extends BaseEntity<NotificationEntity> {
 
 	/**
@@ -79,6 +85,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 			joinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "notification_id", referencedColumnName = "id")
 	)
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<UserGroupEntity> receivers = new ArrayList<UserGroupEntity>();
 	public static final String RECEIVERS = "receivers";
 	@JsonIgnore

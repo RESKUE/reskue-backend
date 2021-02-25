@@ -3,6 +3,7 @@ package reskue.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -10,7 +11,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import kueres.base.BaseEntity;
 import reskue.comment.CommentEntity;
@@ -29,6 +33,9 @@ import reskue.usergroup.UserGroupEntity;
  */
 
 @Entity
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id")
 public class UserEntity extends BaseEntity<UserEntity>{
 	
 	/**
@@ -63,15 +70,10 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	/**
 	 * The list of tasks that the user is a helper of.
 	 */
-	@ManyToMany
-	@JoinTable(
-			name = "task_helpers",
-			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "helper_id", referencedColumnName = "id")
-	)
+	@ManyToMany(mappedBy = "helperUsers", cascade = CascadeType.PERSIST)
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<TaskEntity> taskHelper = new ArrayList<TaskEntity>();
 	public static final String TASK_HELPER = "taskHelper";
-	@JsonIgnore
 	public List<TaskEntity> getTaskHelper() { return this.taskHelper; }
 	public void setTaskHelper(List<TaskEntity> taskHelper) { this.taskHelper = taskHelper; }
 	
@@ -94,6 +96,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 			joinColumns = @JoinColumn(name = "usergroup_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
 	)
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<UserGroupEntity> userGroups = new ArrayList<UserGroupEntity>();
 	public static final String USER_GROUPS = "userGroups";
 	@JsonIgnore

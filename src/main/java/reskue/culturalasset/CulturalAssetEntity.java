@@ -2,14 +2,17 @@ package reskue.culturalasset;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import kueres.media.MediaEntity;
 import reskue.ReskueEntity;
@@ -28,6 +31,9 @@ import reskue.task.TaskEntity;
  */
 
 @Entity
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id")
 public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	
 	/**
@@ -112,11 +118,12 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of children associated with the cultural asset.
 	 */
-	@OneToMany
+	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "child_parent_id", referencedColumnName = "id")
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<CulturalAssetEntity> culturalAssetChildren = new ArrayList<CulturalAssetEntity>();
 	public static final String CULTURAL_ASSET_CHILDREN = "culturalAssetChildren";	
-	@JsonIgnore
+	//@JsonIgnore
 	public List<CulturalAssetEntity> getCulturalAssetChildren() { return this.culturalAssetChildren; }
 	public void setCulturalAssetChildren(List<CulturalAssetEntity> culturalAssetChildren) { this.culturalAssetChildren = culturalAssetChildren; }
 	

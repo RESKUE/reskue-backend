@@ -7,12 +7,14 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import kueres.media.MediaEntity;
 import reskue.ReskueEntity;
@@ -32,6 +34,9 @@ import reskue.user.UserEntity;
  */
 
 @Entity
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id")
 public class TaskEntity extends ReskueEntity<TaskEntity>{
 	
 	/**
@@ -56,11 +61,9 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The list of subtasks associated with the task.
 	 */
-	@JsonManagedReference
 	@OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
 	private List<SubtaskEntity> subtasks = new ArrayList<SubtaskEntity>();
 	public static final String SUBTASKS = "subtasks";
-	//@JsonIgnore
 	public List<SubtaskEntity> getSubtasks() { return this.subtasks; }
 	public void setSubtasks(List<SubtaskEntity> subtasks) { this.subtasks = subtasks; }
 	
@@ -77,10 +80,15 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The list of users that help completing the task.
 	 */
-	@ManyToMany(mappedBy = "taskHelper")
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(
+			name = "task_helpers",
+			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "helper_id", referencedColumnName = "id")
+	)
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<UserEntity> helperUsers = new ArrayList<UserEntity>();
 	public static final String HELPER_USERS = "helperUsers";
-	@JsonIgnore
 	public List<UserEntity> getHelperUsers() { return this.helperUsers; }
 	public void setHelperUsers(List<UserEntity> helperUsers) { this.helperUsers = helperUsers; }
 	
