@@ -18,21 +18,40 @@ import reskue.notification.NotificationEntity;
 import reskue.task.TaskEntity;
 import reskue.usergroup.UserGroupEntity;
 
+/**
+ * 
+ * The UserEntity is a representation of a user.
+ *
+ * @author Jan Straﬂburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
 @Entity
 public class UserEntity extends BaseEntity<UserEntity>{
 	
+	/**
+	 * The name of the user.
+	 */
 	@Column(name = "name", nullable = false)
 	private String name = "unnamed";
 	public static final String NAME = "name";
 	public String getName() { return this.name; }
 	public void setName(String name) { this.name = name; }
 	
+	/**
+	 * Unfinished
+	 */
 	@Column(name = "keycloakId", nullable = true)
 	private String keycloakId = null;
 	public static final String KEYCLOAK_ID = "keycloakId";
 	public String getKeycloakId() { return this.keycloakId; }
 	public void setKeycloakId(String keycloakId) { this.keycloakId = keycloakId; }
-
+	
+	/**
+	 * The list of tasks that the user is a contact of.
+	 */
 	@OneToMany(mappedBy = "contactUser")
 	private List<TaskEntity> taskContact = new ArrayList<TaskEntity>();
 	public static final String TASK_CONTACT = "taskContact";
@@ -40,6 +59,9 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	public List<TaskEntity> getTaskContact() { return this.taskContact; }
 	public void setTaskContact(List<TaskEntity> taskContact) { this.taskContact = taskContact; }
 	
+	/**
+	 * The list of tasks that the user is a helper of.
+	 */
 	@ManyToMany
 	@JoinTable(
 			name = "task_helpers",
@@ -52,6 +74,9 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	public List<TaskEntity> getTaskHelper() { return this.taskHelper; }
 	public void setTaskHelper(List<TaskEntity> taskHelper) { this.taskHelper = taskHelper; }
 	
+	/**
+	 * The list of comments that the user is an author of.
+	 */
 	@OneToMany(mappedBy = "author")
 	private List<CommentEntity> commentAuthor = new ArrayList<CommentEntity>();
 	public static final String COMMENT_AUTHOR = "commentAuthor";
@@ -59,6 +84,9 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	public List<CommentEntity> getCommentAuthor() { return this.commentAuthor; }
 	public void setCommentAuthor(List<CommentEntity> commentAuthor) { this.commentAuthor = commentAuthor; }
 	
+	/**
+	 * The list of user groups that the user is a part of.
+	 */
 	@ManyToMany
 	@JoinTable(
 			name = "user_usergroups",
@@ -71,6 +99,9 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	public List<UserGroupEntity> getUserGroups() { return this.userGroups; }
 	public void setUserGroups(List<UserGroupEntity> userGroups) { this.userGroups = userGroups; }
 	
+	/**
+	 * The list of notifications that the user has send.
+	 */
 	@OneToMany(mappedBy = "sender")
 	private List<NotificationEntity> notificationSender = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATION_SENDER = "notificationSender";
@@ -78,6 +109,9 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	public List<NotificationEntity> getNotificationSender() { return this.notificationSender; }
 	public void setNotificationSender(List<NotificationEntity> notificationSender) { this.notificationSender = notificationSender; }
 	
+	/**
+	 * The list of notifications that the user should receive.
+	 */
 	@ManyToMany(mappedBy = "receivers")
 	private List<NotificationEntity> notificationReceiver = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATION_RECEIVER = "notificationReceiver";

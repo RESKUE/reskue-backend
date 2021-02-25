@@ -20,12 +20,46 @@ import kueres.query.SortBuilder;
 import kueres.utility.Utility;
 import reskue.user.UserEntity;
 
+/**
+ * 
+ * The UserGroupController provides API functions for UserGroupEntities.
+ * These functions are:
+ *  - all functions of the BaseController in kueres.base
+ *  - finding all users of a user group
+ *  - adding a user to a user group
+ *  - removing a user from a user group
+ *
+ * @author Jan Straﬂburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
 @RestController
 @RequestMapping(BaseController.API_ENDPOINT + UserGroupController.ROUTE)
 public class UserGroupController extends BaseController<UserGroupEntity, UserGroupRepository, UserGroupService>{
 	
+	/**
+	 * The API route for UserGroupEntites.
+	 */
 	public static final String ROUTE = "/userGroup";
 	
+	/**
+	 * Find all users that are part of the user group.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * <p>
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * <p>
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the user groups's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
 	@GetMapping("/{" + UserGroupEntity.ID + "}/users")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<UserEntity> getAllUsers(
@@ -49,6 +83,13 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 			
 	}
 	
+	/**
+	 * Adds a user to the user group.
+	 * 
+	 * @param id - the user groups's identifier.
+	 * @param userId - the user's identifier.
+	 * @return The user group after the user was added.
+	 */
 	@PutMapping("/{" + UserGroupEntity.ID + "}/addUser/{" + UserEntity.ID + "}")
 	@RolesAllowed({ "administrator" })
 	public ResponseEntity<UserGroupEntity> addUser(
@@ -62,6 +103,13 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 		
 	}
 	
+	/**
+	 * Removes a user from the user group.
+	 * 
+	 * @param id - the user groups's identifier.
+	 * @param userId - the user's identifier.
+	 * @return The user group after the user was removed.
+	 */
 	@PutMapping("/{" + UserGroupEntity.ID + "}/removeUser/{" + UserEntity.ID + "}")
 	@RolesAllowed({ "administrator" })
 	public ResponseEntity<UserGroupEntity> removeUser(

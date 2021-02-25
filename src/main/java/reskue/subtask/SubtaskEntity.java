@@ -9,9 +9,23 @@ import javax.persistence.ManyToOne;
 import kueres.base.BaseEntity;
 import reskue.task.TaskEntity;
 
+/**
+ * 
+ * The SubtaskEntity is a representation a subtask.
+ * A subtask is a step of a bigger task.
+ *
+ * @author Jan Straﬂburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
 @Entity
 public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	
+	/**
+	 * The task the subtask belongs to.
+	 */
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "subtask_id", referencedColumnName = "id")
 	private TaskEntity task = null;
@@ -19,18 +33,27 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	public TaskEntity getTask() { return this.task; }
 	public void setTask(TaskEntity task) { this.task = task; }
 	
+	/**
+	 * The state of the subtask.
+	 */
 	@Column(name = "state", nullable = false)
 	private int state = 0;
 	public static final String STATE = "state";
 	public int getState() { return this.state; }
 	public void setState(int state) { this.state = state; }
 	
+	/**
+	 * The text of the subtask.
+	 */
 	@Column(name = "text", nullable = false, columnDefinition="TEXT")
 	private String text = "";
 	public static final String TEXT = "text";
 	public String getText() { return this.text; }
 	public void setText(String text) { this.text = text; }
 	
+	/**
+	 * If the subtask is required to complete the task.
+	 */
 	@Column(name = "isRequired", nullable = false)
 	private boolean isRequired = false;
 	public static final String IS_REQUIRED = "isRequired";
