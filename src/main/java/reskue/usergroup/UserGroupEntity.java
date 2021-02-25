@@ -3,6 +3,7 @@ package reskue.usergroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -43,7 +44,7 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	/**
 	 * The list of users that are part of the user group.
 	 */
-	@ManyToMany(mappedBy = "userGroups")
+	@ManyToMany(mappedBy = "userGroups", cascade = CascadeType.PERSIST)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<UserEntity> users = new ArrayList<UserEntity>();
 	public static final String USERS = "users";
@@ -53,7 +54,7 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	/**
 	 * The list of notifications that every user of the user group should receive.
 	 */
-	@ManyToMany(mappedBy = "receivers")
+	@ManyToMany(mappedBy = "receivers", cascade = CascadeType.PERSIST)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notificationReceiver = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATION_RECEIVER = "notificationReceiver";

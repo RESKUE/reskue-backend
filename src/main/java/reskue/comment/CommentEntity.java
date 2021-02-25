@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -68,7 +69,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	/**
 	 * The list of media associated with the comment.
 	 */
-	@OneToMany
+	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "comment_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
@@ -79,7 +80,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	/**
 	 * The author of the comment.
 	 */
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "comment_author_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private UserEntity author = null;
