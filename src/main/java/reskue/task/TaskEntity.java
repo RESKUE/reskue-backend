@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import kueres.media.MediaEntity;
 import reskue.ReskueEntity;
@@ -55,6 +56,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The list of subtasks associated with the task.
 	 */
+	@JsonManagedReference
 	@OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
 	private List<SubtaskEntity> subtasks = new ArrayList<SubtaskEntity>();
 	public static final String SUBTASKS = "subtasks";

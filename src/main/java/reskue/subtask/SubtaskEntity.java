@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import kueres.base.BaseEntity;
 import reskue.task.TaskEntity;
 
@@ -26,8 +28,9 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	/**
 	 * The task the subtask belongs to.
 	 */
+	@JsonBackReference
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "subtask_id", referencedColumnName = "id")
+	@JoinColumn(name = "task_id", referencedColumnName = "id")
 	private TaskEntity task = null;
 	public static final String TASK = "task";
 	public TaskEntity getTask() { return this.task; }
