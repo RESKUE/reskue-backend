@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -34,6 +35,7 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	protected UserService userService;
 	
 	@Override
+	@PostConstruct
 	public void init() {
 		this.identifier = UserGroupController.ROUTE;
 		this.routingKey = UserGroupController.ROUTE;

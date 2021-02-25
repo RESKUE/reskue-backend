@@ -12,7 +12,8 @@ public class NotificationService extends BaseService<NotificationEntity, Notific
 	@Override
 	@PostConstruct
 	public void init() {
-		
+		this.identifier = NotificationController.ROUTE;
+		this.routingKey = NotificationController.ROUTE;
 	}
 
 }
