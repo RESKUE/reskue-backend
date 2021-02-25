@@ -43,6 +43,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	/**
 	 * Unfinished
 	 */
+	@JsonIgnore
 	@Column(name = "keycloakId", nullable = true)
 	private String keycloakId = null;
 	public static final String KEYCLOAK_ID = "keycloakId";

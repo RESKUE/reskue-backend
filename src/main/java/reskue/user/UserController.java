@@ -3,9 +3,14 @@ package reskue.user;
 import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.keycloak.representations.AccessToken;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -279,6 +284,21 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
 		
 		return service.getNotificationsForUser(id, specification, pageable);
+		
+	}
+	
+	@GetMapping("/me")
+	@RolesAllowed({"administrator", "helper"})
+	public ResponseEntity<UserEntity> me(HttpServletRequest request, HttpServletResponse response) {
+		
+		KeycloakAuthenticationToken authToken = (KeycloakAuthenticationToken) request.getUserPrincipal();
+		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();
+		
+		String subject = token.getSubject();
+		
+		UserEntity userEntity = this.service.me(subject);
+		
+		return ResponseEntity.ok().body(userEntity);
 		
 	}
 

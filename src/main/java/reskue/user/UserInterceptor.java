@@ -8,13 +8,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import kueres.base.BaseController;
+import kueres.query.EntitySpecification;
+import kueres.query.SearchCriteria;
 import kueres.utility.Utility;
 
+@Component
 public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 	
 	@Autowired
@@ -29,6 +33,8 @@ public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 	  HttpServletResponse response, 
 	  Object handler) throws Exception {
 		
+		
+		
 		if (!request.getRequestURL().toString().contains(BaseController.API_ENDPOINT)) {
 			return true;
 		}
@@ -41,9 +47,9 @@ public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 		
 		boolean exists = false;
 
-//		EntitySpecification<UserEntity> specification = new EntitySpecification<UserEntity>();
-//		specification.add(new SearchCriteria("keycloakId~" + subject));
-		List<UserEntity> userEntities = this.repository.findAll();
+		EntitySpecification<UserEntity> specification = new EntitySpecification<UserEntity>();
+		specification.add(new SearchCriteria("keycloakId~" + subject));
+		List<UserEntity> userEntities = this.repository.findAll(specification);
 		
 		Utility.LOG.info("{} exists: {}", username, exists);
 		

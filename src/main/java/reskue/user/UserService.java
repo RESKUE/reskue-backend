@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,6 +20,7 @@ import kueres.base.BaseService;
 import kueres.event.EventType;
 import kueres.eventbus.EventConsumer;
 import kueres.query.EntitySpecification;
+import kueres.query.SearchCriteria;
 import kueres.utility.Utility;
 import reskue.comment.CommentEntity;
 import reskue.notification.NotificationEntity;
@@ -32,11 +34,28 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	private EntityManager em;
 	
 	@Override
+	@PostConstruct
 	public void init() {
 		this.identifier = UserController.ROUTE;
 		this.routingKey = UserController.ROUTE;
 	}
 
+	public UserEntity me(String keycloakId) {
+		
+		EntitySpecification<UserEntity> specification = new EntitySpecification<UserEntity>();
+		specification.add(new SearchCriteria("keycloakId~" + keycloakId));
+		List<UserEntity> userEntities = this.repository.findAll(specification);
+		
+		for (UserEntity userEntity : userEntities) {
+			if (userEntity.getKeycloakId().equals(keycloakId)) {
+				return userEntity;
+			}
+		}
+		
+		return null;
+		
+	}
+	
 	@SuppressWarnings("unchecked")
 	public Page<TaskEntity> getTasksWhereUserIsContact(long id, EntitySpecification<TaskEntity> specification,
 			Pageable pageable) {
