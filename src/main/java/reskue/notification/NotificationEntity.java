@@ -95,15 +95,6 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public void setSentAt(Date sentAt) { this.sentAt = sentAt; }
 	
 	/**
-	 * Id of the related entity for faster querys
-	 */
-	@Column(name = "entityId", nullable = true)
-	private Long entityId = null;
-	public static final String ENTITY_ID = "entityId";
-	public Long getEntityId() { return this.entityId; }
-	public void setEntityId(Long entityId) { this.entityId = entityId; }
-	
-	/**
 	 * The cultural asset that the notification refers to.
 	 * This potentially marks the cultural asset as endangered.
 	 */

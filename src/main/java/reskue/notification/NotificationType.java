@@ -26,7 +26,12 @@ public enum NotificationType {
 	/**
 	 * The notification is an alarm.
 	 */
-	ALARM(2);
+	ALARM(2),
+	
+	/**
+	 * The notification signals that an alarm is over.
+	 */
+	ALARM_OVER(3);
 	
 	public final int type;
 	
