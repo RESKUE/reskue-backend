@@ -88,11 +88,11 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	/**
 	 * The time when the notification was created.
 	 */
-	@Column(name = "sendAt", nullable = false)
-	private Date sendAt = new Date();
-	public static final String SEND_AT = "sendAt";
-	public Date getSendAt() { return this.sendAt; }
-	public void setSendAt(Date sendAt) { this.sendAt = sendAt; }
+	@Column(name = "sentAt", nullable = false)
+	private Date sentAt = new Date();
+	public static final String SENT_AT = "sentAt";
+	public Date getSentAt() { return this.sentAt; }
+	public void setSentAt(Date sentAt) { this.sentAt = sentAt; }
 	
 	/**
 	 * Id of the related entity for faster querys

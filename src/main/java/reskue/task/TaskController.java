@@ -27,7 +27,6 @@ import kueres.query.EntitySpecification;
 import kueres.query.SortBuilder;
 import kueres.utility.Utility;
 import reskue.ReskueController;
-import reskue.comment.CommentEntity;
 import reskue.subtask.SubtaskEntity;
 import reskue.user.UserEntity;
 import reskue.user.UserService;
