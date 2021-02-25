@@ -20,7 +20,7 @@ import reskue.user.UserEntity;
  * 
  * The UserGroupEntity is a representation of a group of users.
  *
- * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *
@@ -68,12 +68,16 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 		
 		String name = details.getName();
 		List<UserEntity> users = details.getUsers();
+		List<NotificationEntity> notifications = details.getNotificationReceiver();
 		
-		if (name != null) {
+		if (name != "unnamed" || this.getName() != "unnamed") {
 			this.setName(name);
 		}
 		if (users != null) {
 			this.setUsers(users);
+		}
+		if (notifications != null) {
+			this.setNotificationReceiver(notifications);
 		}
 		
 	}

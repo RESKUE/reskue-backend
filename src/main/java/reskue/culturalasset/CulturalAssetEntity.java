@@ -24,7 +24,7 @@ import reskue.task.TaskEntity;
  * 
  * The CulturalAssetEntity is a representation of cultural assets.
  *
- * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *
@@ -137,17 +137,19 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public List<NotificationEntity> getNotifications() { return this.notifications; }
 	public void setNotifications(List<NotificationEntity> notifications) { this.notifications = notifications; }
 	
-	// needs overhaul
+	/**
+	 * Doesnt allow changes to:
+	 *  - culturalAssetChildren
+	 *  - culturalAssetParent
+	 *  - level
+	 */
 	@Override
 	public void applyPatch(CulturalAssetEntity details) {
 		
 		String name = details.getName();
 		String description = details.getDescription();
-		
-//		Set<String> tags = details.getTags();
 		int priority = details.getPriority();
-		int isEndangered = details.getIsEndangered();
-		
+		int isEndangered = details.getIsEndangered();	
 		List<CommentEntity> comments = details.getComments();
 		List<MediaEntity> media = details.getMedia();	
 		
@@ -157,24 +159,20 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		double latitude = details.getLatitude();
 		List<TaskEntity> tasks = details.getTasks();
 		String label = details.getLabel();
-		int level = details.getLevel();
-		CulturalAssetEntity culturalAssetParent = details.getCulturalAssetParent();
-		List<CulturalAssetEntity> culturalAssetChildren = details.getCulturalAssetChildren();
 		List<NotificationEntity> notifications = details.getNotifications();
 
-		if (name != null) {
+		if (name != "unnamed" || this.getName() != "unnamed") {
 			this.setName(name);
 		}
-		if (description != null) {
+		if (description != "" || this.getDescription() != "") {
 			this.setDescription(description);
 		}
-		
-//		if (tags != null) {
-//			this.setTags(tags);
-//		}
-		this.setPriority(priority);
-		this.setIsEndangered(isEndangered);
-		
+		if (priority != 0 || this.getPriority() != 0) {
+			this.setPriority(priority);
+		}
+		if (isEndangered != 0 || this.getIsEndangered() != 0) {
+			this.setIsEndangered(isEndangered);	
+		}
 		if (comments != null) {
 			this.setComments(comments);
 		}
@@ -182,26 +180,13 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 			this.setMedia(media);
 		}
 
-		
-		
-		if (address != null) {
-			this.setAddress(address);
-		}
-		this.setLocationId(locationId);
+		this.setAddress(address);
 		this.setLongitude(longitude);
 		this.setLatitude(latitude);
+		this.setLabel(label);
+		this.setLocationId(locationId);	
 		if (tasks != null) {
 			this.setTasks(tasks);
-		}
-		if (label != null) {
-			this.setLabel(label);
-		}
-		this.setLevel(level);
-		if (culturalAssetParent != null) {
-			this.setCulturalAssetParent(culturalAssetParent);
-		}
-		if (culturalAssetChildren != null) {
-			this.setCulturalAssetChildren(culturalAssetChildren);
 		}
 		if (notifications != null) {
 			this.setNotifications(notifications);

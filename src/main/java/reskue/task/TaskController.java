@@ -27,7 +27,6 @@ import kueres.query.EntitySpecification;
 import kueres.query.SortBuilder;
 import kueres.utility.Utility;
 import reskue.ReskueController;
-import reskue.comment.CommentEntity;
 import reskue.subtask.SubtaskEntity;
 import reskue.user.UserEntity;
 import reskue.user.UserService;
@@ -44,7 +43,7 @@ import reskue.user.UserService;
  *  - adding a user to the helpers of a task
  *  - removing a user from the helpers of a task
  *
- * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *

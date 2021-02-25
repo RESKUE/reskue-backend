@@ -27,7 +27,7 @@ import reskue.usergroup.UserGroupEntity;
  * The NotificationEntity is a representation of notifications send by users.
  * The NotificationEntity works similar to the EventEntity in kueres.event
  *
- * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *
@@ -95,20 +95,11 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	/**
 	 * The time when the notification was created.
 	 */
-	@Column(name = "sendAt", nullable = false)
-	private Date sendAt = new Date();
-	public static final String SEND_AT = "sendAt";
-	public Date getSendAt() { return this.sendAt; }
-	public void setSendAt(Date sendAt) { this.sendAt = sendAt; }
-	
-	/**
-	 * Unfinished
-	 */
-	@Column(name = "entityId", nullable = true)
-	private Long entityId = null;
-	public static final String ENTITY_ID = "entityId";
-	public Long getEntityId() { return this.entityId; }
-	public void setEntityId(Long entityId) { this.entityId = entityId; }
+	@Column(name = "sentAt", nullable = false)
+	private Date sentAt = new Date();
+	public static final String SENT_AT = "sentAt";
+	public Date getSentAt() { return this.sentAt; }
+	public void setSentAt(Date sentAt) { this.sentAt = sentAt; }
 	
 	/**
 	 * The cultural asset that the notification refers to.

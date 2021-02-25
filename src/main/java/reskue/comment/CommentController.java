@@ -37,7 +37,7 @@ import reskue.user.UserService;
  *  - all functions of the BaseController in kueres.base
  *  - finding all media of a comment
  *
- * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *

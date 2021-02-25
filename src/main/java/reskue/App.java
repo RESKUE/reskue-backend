@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
  * 
  * The main class for RESKUE.
  *
- * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *

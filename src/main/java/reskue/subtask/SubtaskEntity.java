@@ -18,7 +18,7 @@ import reskue.task.TaskEntity;
  * The SubtaskEntity is a representation a subtask.
  * A subtask is a step of a bigger task.
  *
- * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *
@@ -79,12 +79,14 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 		if (task != null) {
 			this.setTask(task);
 		}
-		this.setState(state);
-		if (text != null) {
+		if (state != 0 || this.getState() != 0) {
+			this.setState(state);
+		}
+		if (text != "" || this.getText() != "") {
 			this.setText(text);
 		}
 		this.setIsRequired(isRequired);
-		
+
 	}
 
 }
