@@ -10,6 +10,7 @@ import javax.persistence.ManyToMany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import kueres.base.BaseEntity;
+import reskue.notification.NotificationEntity;
 import reskue.user.UserEntity;
 
 /**
@@ -39,10 +40,20 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	 */
 	@ManyToMany(mappedBy = "userGroups")
 	private List<UserEntity> users = new ArrayList<UserEntity>();
-	public static final String NOTIFICATION_RECEIVER = "users";
+	public static final String USERS = "users";
 	@JsonIgnore
 	public List<UserEntity> getUsers() { return this.users; }
 	public void setUsers(List<UserEntity> users) { this.users = users; }
+	
+	/**
+	 * The list of notifications that every user of the user group should receive.
+	 */
+	@ManyToMany(mappedBy = "receivers")
+	private List<NotificationEntity> notificationReceiver = new ArrayList<NotificationEntity>();
+	public static final String NOTIFICATION_RECEIVER = "notificationReceiver";
+	@JsonIgnore
+	public List<NotificationEntity> getNotificationReceiver() { return this.notificationReceiver; }
+	public void setNotificationReceiver(List<NotificationEntity> notificationReceiver) { this.notificationReceiver = notificationReceiver; }
 
 	@Override
 	public void applyPatch(UserGroupEntity details) {

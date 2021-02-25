@@ -248,45 +248,6 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 		
 	}
 	
-	/**
-	 * Find all notifications that the user should receive.
-	 * 
-	 * The result can filtered, sorted and paged.
-	 * <p>
-	 * See kueres.query.SearchCriteria for filter syntax.
-	 * <p>
-	 * See kueres.query.SortBuilder for sort syntax.
-	 * 
-	 * @param id - the user's identifier.
-	 * @param filter - the filter options.
-	 * @param sort - the sort options.
-	 * @param page - the number of the page used for pagination.
-	 * @param size - the size of the page used for pagination.
-	 * @return The result as a page.
-	 */
-	@GetMapping("/{" + UserEntity.ID + "}/receivedNotifications")
-	@RolesAllowed({ "administrator", "helper" })
-	public Page<NotificationEntity> getNotificationsForUser(
-			@PathVariable(value = UserEntity.ID) long id,
-			@RequestParam Optional<String[]> filter,
-			@RequestParam Optional<String[]> sort,
-			@RequestParam Optional<Integer> page,
-			@RequestParam Optional<Integer> size
-			) {
-		
-		Utility.LOG.trace("UserController.getNotificationsForUser called.");
-		
-		EntitySpecification<NotificationEntity> specification = null;
-		if (filter.isPresent()) {
-			specification = new EntitySpecification<NotificationEntity>(filter.get());
-		}
-		
-		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
-		
-		return service.getNotificationsForUser(id, specification, pageable);
-		
-	}
-	
 	@GetMapping("/me")
 	@RolesAllowed({"administrator", "helper"})
 	public ResponseEntity<UserEntity> me(HttpServletRequest request, HttpServletResponse response) {

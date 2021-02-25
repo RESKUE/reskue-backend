@@ -17,6 +17,7 @@ import kueres.base.BaseEntity;
 import kueres.utility.Utility;
 import reskue.culturalasset.CulturalAssetEntity;
 import reskue.user.UserEntity;
+import reskue.usergroup.UserGroupEntity;
 
 /**
  * 
@@ -51,8 +52,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public void setMessage(String message) { this.message = message; }
 
 	/**
-	 * The type of the notification.
-	 * It is advised to use the types from kueres.event.EventType for consistency.
+	 * The type of the notification. See reskue.notification.NotificationType for all types.
 	 */
 	@Column(name = "type", nullable = false)
 	private int type = 0;
@@ -71,7 +71,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public void setSender(UserEntity sender) { this.sender = sender; }
 	
 	/**
-	 * The list of users that should receive the notification.
+	 * The list of user groups that should receive the notification.
 	 */
 	@ManyToMany
 	@JoinTable(
@@ -79,11 +79,11 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 			joinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "notification_id", referencedColumnName = "id")
 	)
-	private List<UserEntity> receivers = new ArrayList<UserEntity>();
+	private List<UserGroupEntity> receivers = new ArrayList<UserGroupEntity>();
 	public static final String RECEIVERS = "receivers";
 	@JsonIgnore
-	public List<UserEntity> getReceivers() { return this.receivers; }
-	public void setReceivers(List<UserEntity> receivers) { this.receivers = receivers; }
+	public List<UserGroupEntity> getReceivers() { return this.receivers; }
+	public void setReceivers(List<UserGroupEntity> receivers) { this.receivers = receivers; }
 	
 	/**
 	 * The time when the notification was created.

@@ -110,16 +110,6 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	public List<NotificationEntity> getNotificationSender() { return this.notificationSender; }
 	public void setNotificationSender(List<NotificationEntity> notificationSender) { this.notificationSender = notificationSender; }
 	
-	/**
-	 * The list of notifications that the user should receive.
-	 */
-	@ManyToMany(mappedBy = "receivers")
-	private List<NotificationEntity> notificationReceiver = new ArrayList<NotificationEntity>();
-	public static final String NOTIFICATION_RECEIVER = "notificationReceiver";
-	@JsonIgnore
-	public List<NotificationEntity> getNotificationReceiver() { return this.notificationReceiver; }
-	public void setNotificationReceiver(List<NotificationEntity> notificationReceiver) { this.notificationReceiver = notificationReceiver; }
-	
 	@Override
 	public void applyPatch(UserEntity details) {
 		
@@ -130,7 +120,6 @@ public class UserEntity extends BaseEntity<UserEntity>{
 		List<CommentEntity> commentAuthor = details.getCommentAuthor();
 		List<UserGroupEntity> userGroups = details.getUserGroups();
 		List<NotificationEntity> notificationSender = details.getNotificationSender();
-		List<NotificationEntity> notificationReceiver = details.getNotificationReceiver();
 		
 		if (name != null) {
 			this.setName(name);
@@ -152,9 +141,6 @@ public class UserEntity extends BaseEntity<UserEntity>{
 		}
 		if (notificationSender != null) {
 			this.setNotificationSender(notificationSender);
-		}
-		if (notificationReceiver != null) {
-			this.setNotificationReceiver(notificationReceiver);
 		}
 		
 	}
