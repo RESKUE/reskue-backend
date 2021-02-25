@@ -17,13 +17,14 @@ import kueres.base.BaseEntity;
 import kueres.utility.Utility;
 import reskue.culturalasset.CulturalAssetEntity;
 import reskue.user.UserEntity;
+import reskue.usergroup.UserGroupEntity;
 
 /**
  * 
  * The NotificationEntity is a representation of notifications send by users.
  * The NotificationEntity works similar to the EventEntity in kueres.event
  *
- * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *
@@ -51,8 +52,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public void setMessage(String message) { this.message = message; }
 
 	/**
-	 * The type of the notification.
-	 * It is advised to use the types from kueres.event.EventType for consistency.
+	 * The type of the notification. See reskue.notification.NotificationType for all types.
 	 */
 	@Column(name = "type", nullable = false)
 	private int type = 0;
@@ -71,7 +71,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public void setSender(UserEntity sender) { this.sender = sender; }
 	
 	/**
-	 * The list of users that should receive the notification.
+	 * The list of user groups that should receive the notification.
 	 */
 	@ManyToMany
 	@JoinTable(
@@ -79,29 +79,20 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 			joinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "notification_id", referencedColumnName = "id")
 	)
-	private List<UserEntity> receivers = new ArrayList<UserEntity>();
+	private List<UserGroupEntity> receivers = new ArrayList<UserGroupEntity>();
 	public static final String RECEIVERS = "receivers";
 	@JsonIgnore
-	public List<UserEntity> getReceivers() { return this.receivers; }
-	public void setReceivers(List<UserEntity> receivers) { this.receivers = receivers; }
+	public List<UserGroupEntity> getReceivers() { return this.receivers; }
+	public void setReceivers(List<UserGroupEntity> receivers) { this.receivers = receivers; }
 	
 	/**
 	 * The time when the notification was created.
 	 */
-	@Column(name = "sendAt", nullable = false)
-	private Date sendAt = new Date();
-	public static final String SEND_AT = "sendAt";
-	public Date getSendAt() { return this.sendAt; }
-	public void setSendAt(Date sendAt) { this.sendAt = sendAt; }
-	
-	/**
-	 * Unfinished
-	 */
-	@Column(name = "entityId", nullable = true)
-	private Long entityId = null;
-	public static final String ENTITY_ID = "entityId";
-	public Long getEntityId() { return this.entityId; }
-	public void setEntityId(Long entityId) { this.entityId = entityId; }
+	@Column(name = "sentAt", nullable = false)
+	private Date sentAt = new Date();
+	public static final String SENT_AT = "sentAt";
+	public Date getSentAt() { return this.sentAt; }
+	public void setSentAt(Date sentAt) { this.sentAt = sentAt; }
 	
 	/**
 	 * The cultural asset that the notification refers to.

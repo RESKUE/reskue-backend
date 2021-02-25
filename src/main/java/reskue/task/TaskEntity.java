@@ -25,7 +25,7 @@ import reskue.user.UserEntity;
  * 
  * The TaskEntity is a representation of a task.
  *
- * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *
@@ -98,11 +98,8 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 		
 		String name = details.getName();
 		String description = details.getDescription();
-		
-//		Set<String> tags = details.getTags();
 		int priority = details.getPriority();
-		int isEndangered = details.getIsEndangered();
-		
+		int isEndangered = details.getIsEndangered();		
 		List<CommentEntity> comments = details.getComments();
 		List<MediaEntity> media = details.getMedia();	
 		
@@ -113,30 +110,28 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 		List<UserEntity> helperUsers = details.getHelperUsers();
 		int recommendedHelperUsers = details.getRecommendedHelperUsers();
 		
-		if (name != null) {
+		if (name != "unnamed" || this.getName() != "unnamed") {
 			this.setName(name);
 		}
-		if (description != null) {
+		if (description != "" || this.getDescription() != "") {
 			this.setDescription(description);
 		}
-		
-//		if (tags != null) {
-//			this.setTags(tags);
-//		}
-		this.setPriority(priority);
-		this.setIsEndangered(isEndangered);
-		
-		
+		if (priority != 0 || this.getPriority() != 0) {
+			this.setPriority(priority);
+		}
+		if (isEndangered != 0 || this.getIsEndangered() != 0) {
+			this.setIsEndangered(isEndangered);	
+		}
 		if (comments != null) {
 			this.setComments(comments);
 		}
 		if (media != null) {
 			this.setMedia(media);
+		}	
+		
+		if (state != 0 || this.getState() != 0) {
+			this.setState(state);
 		}
-		
-		
-		
-		this.setState(state);
 		if (culturalAsset != null) {
 			this.setCulturalAsset(culturalAsset);
 		}
@@ -149,7 +144,9 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 		if (helperUsers != null) {
 			this.setHelperUsers(helperUsers);
 		}
-		this.setRecommendedHelperUsers(recommendedHelperUsers);
+		if (recommendedHelperUsers != 1 || this.getRecommendedHelperUsers() != 1) {
+			this.setRecommendedHelperUsers(recommendedHelperUsers);
+		}
 		
 	}
 

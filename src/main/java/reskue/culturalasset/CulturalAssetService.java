@@ -283,7 +283,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		
 		if (this.testLoopError(child) || this.testHeightError(child)) {
 
-			// throw error
+			this.removeConnection(child, parent);
 
 		} else {
 			
@@ -331,7 +331,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 		if (this.testLoopError(child) || this.testHeightError(child)) {
 
-			// throw error
+			this.removeConnection(child, parent);
 
 		} else {
 			
@@ -454,8 +454,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		}
 
 	}
-
-	private void updateIsEndangered(CulturalAssetEntity entity, int state) {
+	
+	public void updateIsEndangered(CulturalAssetEntity entity, int state) {
 
 		entity.setIsEndangered(state);
 		repository.save(entity);

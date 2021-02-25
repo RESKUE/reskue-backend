@@ -18,6 +18,7 @@ import kueres.base.BaseController;
 import kueres.query.EntitySpecification;
 import kueres.query.SortBuilder;
 import kueres.utility.Utility;
+import reskue.notification.NotificationEntity;
 import reskue.user.UserEntity;
 
 /**
@@ -29,7 +30,7 @@ import reskue.user.UserEntity;
  *  - adding a user to a user group
  *  - removing a user from a user group
  *
- * @author Jan Stra&szlig;burg, jan.strassburg@student.kit.edu
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
  * @since Feb 25, 2021
  *
@@ -81,6 +82,49 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 		
 		return service.getAllUsers(id, specification, pageable);
 			
+	}
+	
+	/**
+	 * Find all notifications that the users of the user groups should receive.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * <p>
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * <p>
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param ids - the identifiers of all the user group that are being searched.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
+	@GetMapping("/notifications")
+	@RolesAllowed({ "administrator", "helper" })
+	public Page<NotificationEntity> getNotifications(
+			@RequestParam Optional<long[]> ids,
+			@RequestParam Optional<String[]> filter,
+			@RequestParam Optional<String[]> sort,
+			@RequestParam Optional<Integer> page,
+			@RequestParam Optional<Integer> size
+			) {
+		
+		Utility.LOG.trace("UserGroupController.getNotifications called.");
+		
+		EntitySpecification<NotificationEntity> specification = null;
+		if (filter.isPresent()) {
+			specification = new EntitySpecification<NotificationEntity>(filter.get());
+		}
+		
+		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
+		
+		if (ids.isPresent()) {
+			return service.getNotifications(ids.get(), specification, pageable);
+		}
+		
+		return null;
+		
 	}
 	
 	/**

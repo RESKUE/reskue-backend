@@ -191,30 +191,4 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		
 	}
 
-	@SuppressWarnings("unchecked")
-	public Page<NotificationEntity> getNotificationsForUser(long id,
-			EntitySpecification<NotificationEntity> specification, Pageable pageable) {
-		
-		Utility.LOG.trace("UserService.getNotificationsForUser called.");	
-		
-		UserEntity entity = this.findById(id);
-		List<NotificationEntity> receiverNotifications = entity.getNotificationReceiver();
-	
-		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<NotificationEntity> criteriaQuery = criteriaBuilder.createQuery(NotificationEntity.class);
-			Root<NotificationEntity> root = criteriaQuery.from(NotificationEntity.class);
-
-			receiverNotifications = receiverNotifications.stream().filter(
-					(Predicate<? super NotificationEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
-		}
-
-		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(receiverNotifications, pageable, receiverNotifications.size());
-		
-		EventConsumer.sendEvent("UserService.getNotificationsForUser", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
-
-		return page;
-	}
-
 }
