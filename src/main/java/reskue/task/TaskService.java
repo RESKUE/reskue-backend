@@ -26,22 +26,49 @@ import reskue.subtask.SubtaskEntity;
 import reskue.user.UserEntity;
 import reskue.user.UserService;
 
+/**
+ * 
+ * The TaskService provides services needed by the TaskController.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
 @Service
 public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	
+	/**
+	 * The UserService needed to add users as helpers to the task.
+	 */
+	@Autowired
+	protected UserService userService;
+	
+	/**
+	 * The EntityManager needed to create a CriteriaBuilder.
+	 */
 	@PersistenceContext
 	private EntityManager em;
 	
-	@Autowired
-	protected UserService userService;
-
+	/**
+	 * Set this EventSubscribers identifier and routing.
+	 */
 	@Override
 	@PostConstruct
 	public void init() {
 		this.identifier = TaskController.ROUTE;
 		this.routingKey = TaskController.ROUTE;
 	}
-
+	
+	/**
+	 * Get all subtasks of the task.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<SubtaskEntity> getAllSubtasks(long id, EntitySpecification<SubtaskEntity> specification,
 			Pageable pageable) {	
@@ -68,7 +95,15 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		return page;
 		
 	}
-
+	
+	/**
+	 * Get all helper users of the task.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<UserEntity> getAllHelpers(long id, EntitySpecification<UserEntity> specification, Pageable pageable) {
 		
@@ -94,7 +129,14 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		return page;
 		
 	}
-
+	
+	/**
+	 * Changes the state of a task.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param state - the new state of the task.
+	 * @return The task after the state was changed.
+	 */
 	public TaskEntity changeState(long id, int state) {
 		
 		Utility.LOG.trace("TaskService.changeState called.");
@@ -110,7 +152,14 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		return updatedEntity;
 		
 	}
-
+	
+	/**
+	 * Adds a helper user to the task.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param helperId - the helper user's identifier.
+	 * @return The task after the helper user was added.
+	 */
 	public TaskEntity addHelper(long id, long helperId) {
 		
 		Utility.LOG.trace("TaskService.addHelper called.");
@@ -121,10 +170,10 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		
 		//if the helper is already a helper
 		if(newHelpers.contains(helper)) {
+			return entity;
+		} else {
 			newHelpers.add(helper);
 			entity.setHelperUsers(newHelpers);
-		} else {
-			return entity;
 		}
 		
 		final TaskEntity updatedEntity = repository.save(entity);
@@ -134,7 +183,14 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		return updatedEntity;
 		
 	}
-
+	
+	/**
+	 * Removes a helper user from the task.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param helperId - the helper user's identifier.
+	 * @return The task after the helper user was removed.
+	 */
 	public TaskEntity removeHelper(long id, long helperId) {
 		
 		Utility.LOG.trace("TaskService.removeHelper called.");

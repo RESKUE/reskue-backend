@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -44,7 +46,12 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	/**
 	 * The list of users that are part of the user group.
 	 */
-	@ManyToMany(mappedBy = "userGroups", cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(
+			name = "usergroup_users",
+			joinColumns = @JoinColumn(name = "usergroup_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
+	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<UserEntity> users = new ArrayList<UserEntity>();
 	public static final String USERS = "users";
@@ -54,7 +61,12 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	/**
 	 * The list of notifications that every user of the user group should receive.
 	 */
-	@ManyToMany(mappedBy = "receivers", cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(
+			name = "notification_receivers",
+			joinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "notification_id", referencedColumnName = "id")
+	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notificationReceiver = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATION_RECEIVER = "notificationReceiver";

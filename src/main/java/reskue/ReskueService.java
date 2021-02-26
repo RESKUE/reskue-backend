@@ -23,7 +23,7 @@ import reskue.comment.CommentEntity;
 
 /**
  * 
- * The main class for RESKUE.
+ * The ReskueService provides services needed by the ReskueController.
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
@@ -33,10 +33,21 @@ import reskue.comment.CommentEntity;
 
 public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueRepository<E>>
 		extends BaseService<E, R> {
-
+	
+	/**
+	 * The EntityManager needed to create a CriteriaBuilder.
+	 */
 	@PersistenceContext
 	private EntityManager em;
-
+	
+	/**
+	 * Get all comments of the services ReskueEntity-type.
+	 * 
+	 * @param id - the entity's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<CommentEntity> getAllComments(long id, EntitySpecification<CommentEntity> specification,
 			Pageable pageable) {
@@ -63,6 +74,14 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 		
 	}
 	
+	/**
+	 * Get all media of the services ReskueEntity-type.
+	 * 
+	 * @param id - the entity's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<MediaEntity> getAllMedia(long id, EntitySpecification<MediaEntity> specification, Pageable pageable) {
 

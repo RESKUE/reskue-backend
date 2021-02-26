@@ -27,19 +27,41 @@ import reskue.notification.NotificationEntity;
 import reskue.task.TaskEntity;
 import reskue.usergroup.UserGroupEntity;
 
+/**
+ * 
+ * The UserService provides services needed by the UserController.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
 @Service
 public class UserService extends BaseService<UserEntity, UserRepository>{
-
+	
+	/**
+	 * The EntityManager needed to create a CriteriaBuilder.
+	 */
 	@PersistenceContext
 	private EntityManager em;
 	
+	/**
+	 * Set this EventSubscribers identifier and routing.
+	 */	
 	@Override
 	@PostConstruct
 	public void init() {
 		this.identifier = UserController.ROUTE;
 		this.routingKey = UserController.ROUTE;
 	}
-
+	
+	/**
+	 * Finds a user based on a given keycloakId.
+	 * 
+	 * @param keycloakId - the keycloakId of the user.
+	 * @return The user based on the given keycloakId.
+	 */
 	public UserEntity me(String keycloakId) {
 		
 		EntitySpecification<UserEntity> specification = new EntitySpecification<UserEntity>();
@@ -56,6 +78,14 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		
 	}
 	
+	/**
+	 * Get all tasks where the user is a contact.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<TaskEntity> getTasksWhereUserIsContact(long id, EntitySpecification<TaskEntity> specification,
 			Pageable pageable) {
@@ -82,7 +112,15 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		return page;
 		
 	}
-
+	
+	/**
+	 * Get all tasks where the user is a helper.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<TaskEntity> getTasksWhereUserIsHelper(long id, EntitySpecification<TaskEntity> specification,
 			Pageable pageable) {
@@ -109,7 +147,15 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		return page;
 		
 	}
-
+	
+	/**
+	 * Get all comments where the user is the author.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<CommentEntity> getCommentsByUser(long id, EntitySpecification<CommentEntity> specification,
 			Pageable pageable) {
@@ -136,7 +182,15 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		return page;
 		
 	}
-
+	
+	/**
+	 * Get all user groups where the user is a member.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<UserGroupEntity> getUserGroupsForUser(long id, EntitySpecification<UserGroupEntity> specification,
 			Pageable pageable) {
@@ -164,6 +218,14 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		
 	}
 	
+	/**
+	 * Get all notifications where the user is the sender.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<NotificationEntity> getNotificationsSendByUser(long id, EntitySpecification<NotificationEntity> specification,
 			Pageable pageable) {

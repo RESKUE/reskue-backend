@@ -8,7 +8,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
@@ -80,12 +79,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	/**
 	 * The list of user groups that should receive the notification.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(
-			name = "notification_receivers",
-			joinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "notification_id", referencedColumnName = "id")
-	)
+	@ManyToMany(mappedBy = "notificationReceiver", cascade = CascadeType.PERSIST)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<UserGroupEntity> receivers = new ArrayList<UserGroupEntity>();
 	public static final String RECEIVERS = "receivers";
