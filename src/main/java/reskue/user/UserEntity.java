@@ -6,8 +6,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
@@ -90,12 +88,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	/**
 	 * The list of user groups that the user is a part of.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(
-			name = "user_usergroups",
-			joinColumns = @JoinColumn(name = "usergroup_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
-	)
+	@ManyToMany(mappedBy = "users", cascade = CascadeType.PERSIST)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<UserGroupEntity> userGroups = new ArrayList<UserGroupEntity>();
 	public static final String USER_GROUPS = "userGroups";
