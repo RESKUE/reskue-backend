@@ -20,7 +20,6 @@ import kueres.base.BaseService;
 import kueres.event.EventType;
 import kueres.eventbus.EventConsumer;
 import kueres.query.EntitySpecification;
-import kueres.query.SearchCriteria;
 import kueres.utility.Utility;
 import reskue.comment.CommentEntity;
 import reskue.notification.NotificationEntity;
@@ -64,7 +63,7 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	 */
 	public UserEntity me(String keycloakId) {
 		
-		List<UserEntity> userEntities = this.repository.findAll(specification);
+		List<UserEntity> userEntities = this.repository.findAll();
 		
 		for (UserEntity userEntity : userEntities) {
 			if (userEntity.getKeycloakId().equals(keycloakId)) {
