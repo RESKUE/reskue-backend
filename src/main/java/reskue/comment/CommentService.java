@@ -23,19 +23,43 @@ import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
 import kueres.utility.Utility;
 
+/**
+ * 
+ * The CommentService provides services needed by the CommentController.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
 @Service
 public class CommentService extends BaseService<CommentEntity, CommentRepository>{
 	
+	/**
+	 * The EntityManager needed to create a CriteriaBuilder.
+	 */
 	@PersistenceContext
 	private EntityManager em;
-
+	
+	/**
+	 * Set this EventSubscribers identifier and routing.
+	 */
 	@Override
 	@PostConstruct
 	public void init() {
 		this.identifier = CommentController.ROUTE;
 		this.routingKey = CommentController.ROUTE;
 	}
-
+	
+	/**
+	 * Get all media of the comment.
+	 * 
+	 * @param id - the entity's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<MediaEntity> getAllMedia(long id, EntitySpecification<MediaEntity> specification, Pageable pageable) {
 		

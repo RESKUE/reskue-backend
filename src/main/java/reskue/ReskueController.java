@@ -35,7 +35,7 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 		extends BaseController<E, R, S> {
 
 	/**
-	 * Find all comments of the controllers ReskueEntity-type that is specified by the identifier.
+	 * Find all comments of the controllers ReskueEntity-type.
 	 * 
 	 * The result can filtered, sorted and paged.
 	 * <p>
@@ -73,7 +73,7 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 	}
 	
 	/**
-	 * Find all media of the controllers ReskueEntity-type that is specified by the identifier.
+	 * Find all media of the controllers ReskueEntity-type.
 	 * 
 	 * The result can filtered, sorted and paged.
 	 * <p>

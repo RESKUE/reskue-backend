@@ -27,22 +27,49 @@ import reskue.notification.NotificationEntity;
 import reskue.user.UserEntity;
 import reskue.user.UserService;
 
+/**
+ * 
+ * The UserGroupService provides services needed by the UserGroupController.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
 @Service
 public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepository> {
-
-	@PersistenceContext
-	private EntityManager em;
-
+	
+	/**
+	 * The UserService needed to add users as members of a group.
+	 */
 	@Autowired
 	protected UserService userService;
-
+	
+	/**
+	 * The EntityManager needed to create a CriteriaBuilder.
+	 */
+	@PersistenceContext
+	private EntityManager em;
+	
+	/**
+	 * Set this EventSubscribers identifier and routing.
+	 */
 	@Override
 	@PostConstruct
 	public void init() {
 		this.identifier = UserGroupController.ROUTE;
 		this.routingKey = UserGroupController.ROUTE;
 	}
-
+	
+	/**
+	 * Get all users that are members of the user group.
+	 * 
+	 * @param id - the user group's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<UserEntity> getAllUsers(long id, EntitySpecification<UserEntity> specification, Pageable pageable) {
 
@@ -70,6 +97,14 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 
 	}
 	
+	/**
+	 * Get all notifications for the user group.
+	 * 
+	 * @param id - the user group's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<NotificationEntity> getNotifications(long[] ids, EntitySpecification<NotificationEntity> specification,
 			Pageable pageable) {
@@ -109,7 +144,14 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 		return page;
 
 	}
-
+	
+	/**
+	 * Adds a user as a member to the user group.
+	 * 
+	 * @param id - the user group's identifier.
+	 * @param userId - the user's identifier.
+	 * @return The user group after the user was added.
+	 */
 	public UserGroupEntity addUser(long id, long userId) {
 
 		Utility.LOG.trace("UserGroupService.addUser called.");
@@ -121,10 +163,10 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 
 		// if the user is already a user
 		if (newUsers.contains(user)) {
+			return entity;
+		} else {
 			newUsers.add(user);
 			entity.setUsers(newUsers);
-		} else {
-			return entity;
 		}
 
 		final UserGroupEntity updatedEntity = repository.save(entity);
@@ -135,7 +177,14 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 		return updatedEntity;
 
 	}
-
+	
+	/**
+	 * Removes a user as a member to the user group.
+	 * 
+	 * @param id - the user group's identifier.
+	 * @param userId - the user's identifier.
+	 * @return The user group after the user was removed.
+	 */
 	public UserGroupEntity removeUser(long id, long userId) {
 
 		Utility.LOG.trace("UserGroupService.removeUser called.");

@@ -9,9 +9,22 @@ import kueres.event.EventType;
 import kueres.eventbus.EventConsumer;
 import kueres.utility.Utility;
 
+/**
+ * 
+ * The SubtaskService provides services needed by the SubtaskController.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
 @Service
 public class SubtaskService extends BaseService<SubtaskEntity, SubtaskRepository>{
-
+	
+	/**
+	 * Set this EventSubscribers identifier and routing.
+	 */
 	@Override
 	@PostConstruct
 	public void init() {
@@ -19,6 +32,13 @@ public class SubtaskService extends BaseService<SubtaskEntity, SubtaskRepository
 		this.routingKey = SubtaskController.ROUTE;
 	}
 	
+	/**
+	 * Changes the state of a subtask.
+	 * 
+	 * @param id - the subtask's identifier.
+	 * @param state - the new state of the subtask.
+	 * @return The subtask after the state was changed.
+	 */
 	public SubtaskEntity changeState(long id, int state) {
 		
 		Utility.LOG.trace("SubtaskService.changeState called.");

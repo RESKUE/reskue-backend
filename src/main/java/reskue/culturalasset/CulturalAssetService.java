@@ -30,25 +30,53 @@ import reskue.notification.NotificationEntity;
 import reskue.task.TaskEntity;
 import reskue.task.TaskRepository;
 
+/**
+ * 
+ * The CulturalAssetService provides services needed by the CulturalAssetController.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
 @Service
 public class CulturalAssetService extends ReskueService<CulturalAssetEntity, CulturalAssetRepository> {
-
+	
+	/**
+	 * The LocationService needed to save cultural assets in the FROST server.
+	 */
 	@Autowired
 	protected LocationService locationService;
-
+	
+	/**
+	 * The TaskRepository of the TaskEntity needed to save TaskEntitys after updating them.
+	 */
 	@Autowired
 	protected TaskRepository taskRepository;
-
+	
+	/**
+	 * The EntityManager needed to create a CriteriaBuilder.
+	 */
 	@PersistenceContext
 	private EntityManager em;
-
+	
+	/**
+	 * Set this EventSubscribers identifier and routing.
+	 */
 	@Override
 	@PostConstruct
 	public void init() {
 		this.identifier = CulturalAssetController.ROUTE;
 		this.routingKey = CulturalAssetController.ROUTE;
 	}
-
+	
+	/**
+	 * Create a CulturalAssetEntity.
+	 * 
+	 * @param entity - the cultural asset that should be created. This cultural asset can not have an identifier.
+	 * @return The created cultural asset. This contains the cultural asset's identifier.
+	 */
 	@Override
 	public CulturalAssetEntity create(CulturalAssetEntity entity) {
 
@@ -81,6 +109,15 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 	}
 
+	/**
+	 * Update a cultural asset.
+	 * Fields that are not populated in the updated data will not be changed.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param details - the updated data.
+	 * @return The updated cultural asset.
+	 * @throws ResourceNotFoundException if there is no cultural asset with the specified identifier.
+	 */
 	@Override
 	public CulturalAssetEntity update(long id, CulturalAssetEntity details) throws ResourceNotFoundException {
 
@@ -125,6 +162,13 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 	}
 
+	/**
+	 * Delete a cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @return The cultural asset that was deleted.
+	 * @throws ResourceNotFoundException if there is no cultural asset with the specified identifier.
+	 */
 	@Override
 	public CulturalAssetEntity delete(long id) throws ResourceNotFoundException {
 
@@ -144,7 +188,17 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		return entity;
 
 	}
-
+	
+	/**
+	 * Get all cultural assets in a radius around a given middle point.
+	 * 
+	 * @param radius - the radius of the search.
+	 * @param longitude - the longitude of the middle of the search.
+	 * @param latitude - the latitude of the middle of the search.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<CulturalAssetEntity> findInRadius(double radius, double longitude, double latitude,
 			EntitySpecification<CulturalAssetEntity> specification, Pageable pageable) {
@@ -172,7 +226,15 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		return page;
 
 	}
-
+	
+	/**
+	 * Get all tasks of the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<TaskEntity> getAllTasks(long id, EntitySpecification<TaskEntity> specification, Pageable pageable) {
 
@@ -199,7 +261,15 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		return page;
 
 	}
-
+	
+	/**
+	 * Get all children of the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<CulturalAssetEntity> getAllChildren(long id, EntitySpecification<CulturalAssetEntity> specification,
 			Pageable pageable) {
@@ -226,7 +296,15 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		return page;
 
 	}
-
+	
+	/**
+	 * Get all children of the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
 	@SuppressWarnings("unchecked")
 	public Page<NotificationEntity> getAllNotifications(long id, EntitySpecification<NotificationEntity> specification,
 			Pageable pageable) {
@@ -253,7 +331,15 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		return page;
 
 	}
-
+	
+	/**
+	 * Get the distance between a point and the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param longitude - the longitude of the point.
+	 * @param latitude - the latitude of the point.
+	 * @return The result as a double.
+	 */
 	public double getDistance(long id, double longitude, double latitude) {
 
 		Utility.LOG.trace("CulturalAssetService.getDistance called.");
@@ -270,7 +356,14 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		return distance;
 
 	}
-
+	
+	/**
+	 * Adds a child to the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param childId - the child's identifier.
+	 * @return The cultural asset after the child was added.
+	 */
 	public CulturalAssetEntity addCulturalAssetChild(long id, long childId) {
 
 		Utility.LOG.trace("CulturalAssetService.addCulturalAssetChild called.");
@@ -298,7 +391,14 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		return updatedEntity;
 
 	}
-
+	
+	/**
+	 * Removes a child to the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param childId - the child's identifier.
+	 * @return The cultural asset after the child was removed.
+	 */
 	public CulturalAssetEntity removeCulturalAssetChild(long id, long childId) {
 
 		Utility.LOG.trace("CulturalAssetService.removeCulturalAssetChild called.");
@@ -318,7 +418,14 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		return updatedEntity;
 
 	}
-
+	
+	/**
+	 * Sets the parent of the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param parentId - the parent's identifier.
+	 * @return The cultural asset after the parent was set.
+	 */
 	public CulturalAssetEntity setCulturalAssetParent(long id, long parentId) {
 
 		Utility.LOG.trace("CulturalAssetService.setCulturalAssetParent called.");
@@ -346,7 +453,13 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		return updatedEntity;
 
 	}
-
+	
+	/**
+	 * Removes the parent of the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @return The cultural asset after the parent was removed.
+	 */
 	public CulturalAssetEntity removeCulturalAssetParent(long id) {
 
 		Utility.LOG.trace("CulturalAssetService.removeCulturalAssetParent called.");
@@ -366,7 +479,13 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		return updatedEntity;
 
 	}
-
+	
+	/**
+	 * Adds a connection between a parent and a child in the hierarchy of cultural assets.
+	 * 
+	 * @param child - the child.
+	 * @param parent - the parent.
+	 */
 	private void addConnection(CulturalAssetEntity child, CulturalAssetEntity parent) {
 
 		Utility.LOG.trace("CulturalAssetService.addConnection called.");
@@ -382,7 +501,13 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		}
 
 	}
-
+	
+	/**
+	 * Removes a connection between a parent and a child in the hierarchy of cultural assets.
+	 * 
+	 * @param child - the child.
+	 * @param parent - the parent.
+	 */
 	private void removeConnection(CulturalAssetEntity child, CulturalAssetEntity parent) {
 
 		Utility.LOG.trace("CulturalAssetService.removeConnection called.");
@@ -398,7 +523,13 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		}
 
 	}
-
+	
+	/**
+	 * Checks if a cultural asset is part of a loop in the hierarchy of cultural assets.
+	 * 
+	 * @param entity - the cultural asset.
+	 * @return If there is an error, true if yes and false if no.
+	 */
 	private boolean testLoopError(CulturalAssetEntity entity) {
 
 		CulturalAssetEntity parent = entity.getCulturalAssetParent();
@@ -416,7 +547,13 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		return true;
 
 	}
-
+	
+	/**
+	 * Checks if a cultural asset violates the max height of the hierarchy of cultural assets.
+	 * 
+	 * @param entity - the cultural asset.
+	 * @return If there is an error, true if yes and false if no.
+	 */
 	private boolean testHeightError(CulturalAssetEntity entity) {
 		
 		if (entity.getLevel() >= 4) {
@@ -439,7 +576,14 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		return false;
 
 	}
-
+	
+	/**
+	 * Updates the level of the cultural asset.
+	 * This also updates all children below the cultural asset in the hierarchy of cultural assets.
+	 * 
+	 * @param entity - the cultural asset.
+	 * @param level - the new level of the cultural asset.
+	 */
 	private void updateLevels(CulturalAssetEntity entity, int level) {
 
 		entity.setLevel(level);
@@ -455,6 +599,14 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 	}
 	
+	/**
+	 * Updates the endangered state of the cultural asset.
+	 * This also updates the endangered state of all children below the cultural asset in the hierarchy of cultural assets.
+	 * This also updates the endangered state of all connected tasks.
+	 * 
+	 * @param entity - the cultural asset.
+	 * @param state - the new endangered state of the cultural asset.
+	 */
 	public void updateIsEndangered(CulturalAssetEntity entity, int state) {
 
 		entity.setIsEndangered(state);
