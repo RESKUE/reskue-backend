@@ -14,8 +14,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import kueres.base.BaseController;
-import kueres.query.EntitySpecification;
-import kueres.query.SearchCriteria;
 import kueres.utility.Utility;
 
 @Component
@@ -33,8 +31,6 @@ public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 	  HttpServletResponse response, 
 	  Object handler) throws Exception {
 		
-		
-		
 		if (!request.getRequestURL().toString().contains(BaseController.API_ENDPOINT)) {
 			return true;
 		}
@@ -47,11 +43,7 @@ public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 		
 		boolean exists = false;
 
-		EntitySpecification<UserEntity> specification = new EntitySpecification<UserEntity>();
-		specification.add(new SearchCriteria("keycloakId~" + subject));
-		List<UserEntity> userEntities = this.repository.findAll(specification);
-		
-		Utility.LOG.info("{} exists: {}", username, exists);
+		List<UserEntity> userEntities = this.repository.findAll();
 		
 		for (UserEntity userEntity : userEntities) {
 			if (userEntity.getKeycloakId().equals(subject)) {
@@ -59,6 +51,8 @@ public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 				break;
 			}
 		}
+		
+		Utility.LOG.info("{} exists: {}", username, exists);
 		
 		if (!exists) {
 			
