@@ -64,8 +64,6 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	 */
 	public UserEntity me(String keycloakId) {
 		
-		EntitySpecification<UserEntity> specification = new EntitySpecification<UserEntity>();
-		specification.add(new SearchCriteria("keycloakId~" + keycloakId));
 		List<UserEntity> userEntities = this.repository.findAll(specification);
 		
 		for (UserEntity userEntity : userEntities) {
