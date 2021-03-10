@@ -22,6 +22,7 @@ import kueres.eventbus.EventConsumer;
 import kueres.query.EntitySpecification;
 import kueres.utility.Utility;
 import reskue.ReskueService;
+import reskue.comment.CommentEntity;
 import reskue.subtask.SubtaskEntity;
 import reskue.user.UserEntity;
 import reskue.user.UserService;
@@ -59,6 +60,40 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	public void init() {
 		this.identifier = TaskController.ROUTE;
 		this.routingKey = TaskController.ROUTE;
+	}
+	
+	/**
+	 * Get all comments of the task.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
+	@SuppressWarnings("unchecked")
+	public Page<CommentEntity> getAllComments(long id, EntitySpecification<CommentEntity> specification,
+			Pageable pageable) {
+
+		TaskEntity entity = this.findById(id);
+
+		List<CommentEntity> comments = entity.getComments();
+
+		if (specification != null) {
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<CommentEntity> criteriaQuery = criteriaBuilder.createQuery(CommentEntity.class);
+			Root<CommentEntity> root = criteriaQuery.from(CommentEntity.class);		
+			
+			comments = comments.stream().filter(
+					(Predicate<? super CommentEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+					.collect(Collectors.toList());
+		}
+
+		Page<CommentEntity> page = new PageImpl<CommentEntity>(comments, pageable, comments.size());
+		
+		EventConsumer.sendEvent("TaskService.getAllComments", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
+
+		return page;
+		
 	}
 	
 	/**

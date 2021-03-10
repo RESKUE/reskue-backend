@@ -17,6 +17,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import kueres.base.BaseEntity;
 import kueres.media.MediaEntity;
+import reskue.culturalasset.CulturalAssetEntity;
+import reskue.task.TaskEntity;
 import reskue.user.UserEntity;
 
 /**
@@ -35,27 +37,27 @@ import reskue.user.UserEntity;
 		property = "id")
 public class CommentEntity extends BaseEntity<CommentEntity>{
 	
-	
-//	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
-//	@JoinColumn(name = "comments")
-//	private ReskueEntity reskueEntity;
-//	public static final String RESKUE_ENTITY = "reskueEntity";
-//	public ReskueEntity getReskueEntity() { return this.reskueEntity; }
-//	public void setReskueEntity(ReskueEntity reskueEntity) { this.reskueEntity = reskueEntity; }
-	
-	
-	// currently no relation
-	
-//	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
-//	@JoinColumn(name = "comments")
 	/**
-	 * Unfinished
+	 * The cultural asset the comment belongs to if it belongs to a cultural asset.
 	 */
-	@Column(name = "reskueEntityJSON", nullable = false, columnDefinition="TEXT")
-	private String reskueEntityJSON = "";
-	public static final String RESKUE_ENTITY = "reskueEntityJSON";
-	public String getReskueEntityJSON() { return this.reskueEntityJSON; }
-	public void setReskueEntityJSON(String reskueEntityJSON) { this.reskueEntityJSON = reskueEntityJSON; }
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "comment_cultural_asset_id", referencedColumnName = "id")
+	@JsonIdentityReference(alwaysAsId = true)
+	private CulturalAssetEntity commentCulturalAsset = null;
+	public static final String COMMENT_CULTURAL_ASSET = "commentCulturalAsset";
+	public CulturalAssetEntity getCommentCulturalAsset() { return this.commentCulturalAsset; }
+	public void setCommentCulturalAsset(CulturalAssetEntity commentCulturalAsset) { this.commentCulturalAsset = commentCulturalAsset; }
+	
+	/**
+	 * The task the comment belongs to if it belongs to a task.
+	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "comment_task_id", referencedColumnName = "id")
+	@JsonIdentityReference(alwaysAsId = true)
+	private TaskEntity commentTask = null;
+	public static final String COMMENT_TASK = "commentTask";
+	public TaskEntity getCommentTask() { return this.commentTask; }
+	public void setCommentTask(TaskEntity commentTask) { this.commentTask = commentTask; }
 	
 	/**
 	 * The text of the comment.
@@ -111,13 +113,24 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	 *  - author
 	 *  - createdAt
 	 *  - updatedAt
+	 *  If both a task and a cultural asset are given the related entity is not changed
 	 */
 	@Override
 	public void applyPatch(CommentEntity details) {
 		
+		CulturalAssetEntity commentCulturalAsset = details.getCommentCulturalAsset();
+		TaskEntity commentTask = details.getCommentTask();
 		String text = details.getText();
 		List<MediaEntity> media = details.getMedia();
 		
+		if (commentCulturalAsset != null && commentTask == null) {
+			this.setCommentCulturalAsset(commentCulturalAsset);
+			this.setCommentTask(null);
+		}
+		if (commentTask != null && commentCulturalAsset == null) {
+			this.setCommentCulturalAsset(null);
+			this.setCommentTask(commentTask);
+		}
 		if (text != "" || this.getText() != "") {
 			this.setText(text);
 		}

@@ -74,6 +74,16 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public void setTasks(List<TaskEntity> tasks) { this.tasks = tasks; }
 	
 	/**
+	 * The list of comments associated with the cultural asset.
+	 */
+	@OneToMany(mappedBy = "commentCulturalAsset", cascade = CascadeType.PERSIST)
+	@JsonIdentityReference(alwaysAsId = true)
+	private List<CommentEntity> comments = new ArrayList<CommentEntity>();
+	public static final String COMMENTS = "comments";
+	public List<CommentEntity> getComments() { return this.comments; }
+	public void setComments(List<CommentEntity> comments) { this.comments = comments; }
+	
+	/**
 	 * The label of the cultural asset.
 	 * Labels are similar to descriptions but are intended to be shorter and more important information.
 	 */

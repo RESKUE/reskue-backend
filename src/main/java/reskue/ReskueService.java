@@ -19,7 +19,6 @@ import kueres.event.EventType;
 import kueres.eventbus.EventConsumer;
 import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
-import reskue.comment.CommentEntity;
 
 /**
  * 
@@ -39,40 +38,6 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 	 */
 	@PersistenceContext
 	private EntityManager em;
-	
-	/**
-	 * Get all comments of the services ReskueEntity-type.
-	 * 
-	 * @param id - the entity's identifier.
-	 * @param specification - filter for the result.
-	 * @param pageable - sort and pagination for the result.
-	 * @return The result as a page.
-	 */
-	@SuppressWarnings("unchecked")
-	public Page<CommentEntity> getAllComments(long id, EntitySpecification<CommentEntity> specification,
-			Pageable pageable) {
-
-		E entity = this.findById(id);
-
-		List<CommentEntity> comments = entity.getComments();
-
-		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<CommentEntity> criteriaQuery = criteriaBuilder.createQuery(CommentEntity.class);
-			Root<CommentEntity> root = criteriaQuery.from(CommentEntity.class);		
-			
-			comments = comments.stream().filter(
-					(Predicate<? super CommentEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
-		}
-
-		Page<CommentEntity> page = new PageImpl<CommentEntity>(comments, pageable, comments.size());
-		
-		EventConsumer.sendEvent("ReskueService.getAllComments", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
-
-		return page;
-		
-	}
 	
 	/**
 	 * Get all media of the services ReskueEntity-type.
@@ -107,30 +72,4 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 		
 	}
 	
-//	public E addTag(long id, String tag) {
-//		
-//		E entity = this.findById(id);
-//
-//		Set<String> newTags = entity.getTags();
-//		newTags.add(tag);
-//		entity.setTags(newTags);
-//
-//		final E updatedEntity = repository.save(entity);
-//		return updatedEntity;
-//
-//	}
-
-//	public E removeTag(long id, String tag) {
-//		
-//		E entity = this.findById(id);
-//		
-//		Set<String> newTags = entity.getTags();
-//		newTags.remove(tag);
-//		entity.setTags(newTags);
-//
-//		final E updatedEntity = repository.save(entity);
-//		return updatedEntity;
-//		
-//	}
-
 }

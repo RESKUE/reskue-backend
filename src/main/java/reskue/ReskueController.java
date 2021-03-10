@@ -15,7 +15,6 @@ import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
 import kueres.query.SortBuilder;
 import kueres.utility.Utility;
-import reskue.comment.CommentEntity;
 
 /**
  * 
@@ -33,44 +32,6 @@ import reskue.comment.CommentEntity;
 
 public abstract class ReskueController<E extends ReskueEntity<E>, R extends ReskueRepository<E>, S extends ReskueService<E, R>>
 		extends BaseController<E, R, S> {
-
-	/**
-	 * Find all comments of the controllers ReskueEntity-type.
-	 * 
-	 * The result can filtered, sorted and paged.
-	 * <p>
-	 * See kueres.query.SearchCriteria for filter syntax.
-	 * <p>
-	 * See kueres.query.SortBuilder for sort syntax.
-	 * 
-	 * @param id - the entity's identifier.
-	 * @param filter - the filter options.
-	 * @param sort - the sort options.
-	 * @param page - the number of the page used for pagination.
-	 * @param size - the size of the page used for pagination.
-	 * @return The result as a page.
-	 */
-	@GetMapping("/{" + ReskueEntity.ID + "}/comments")
-	@RolesAllowed({ "administrator", "helper" })
-	public Page<CommentEntity> getAllComments(
-			@PathVariable(value = ReskueEntity.ID) long id,
-			@RequestParam Optional<String[]> filter, 
-			@RequestParam Optional<String[]> sort,
-			@RequestParam Optional<Integer> page, 
-			@RequestParam Optional<Integer> size) {
-
-		Utility.LOG.trace("ReskueController.getAllComments called.");
-		
-		EntitySpecification<CommentEntity> specification = null;
-		if (filter.isPresent()) {
-			specification = new EntitySpecification<CommentEntity>(filter.get());
-		}
-		
-		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
-
-		return service.getAllComments(id, specification, pageable);
-		
-	}
 	
 	/**
 	 * Find all media of the controllers ReskueEntity-type.
@@ -109,28 +70,5 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 		return service.getAllMedia(id, specification, pageable);
 		
 	}
-	
-	
-//	@PutMapping("/{" + ReskueEntity.ID + "}/addTag/{" + ReskueEntity.TAGS + "}")
-//	@RolesAllowed("administrator")
-//	public ResponseEntity<E> addTag(
-//			@PathVariable(value = ReskueEntity.ID) long id,
-//			@PathVariable(value = ReskueEntity.TAGS) String tag) {
-//
-//		E updatedEntity = service.addTag(id, tag);
-//		return ResponseEntity.ok().body(updatedEntity);
-//		
-//	}
-
-//	@PutMapping("/{" + ReskueEntity.ID + "}/removeTag/{" + ReskueEntity.TAGS + "}")
-//	@RolesAllowed("administrator")
-//	public ResponseEntity<E> removeTag(
-//			@PathVariable(value = ReskueEntity.ID) long id,
-//			@PathVariable(value = ReskueEntity.TAGS) String tag) {
-//
-//		E updatedEntity = service.removeTag(id, tag);
-//		return ResponseEntity.ok().body(updatedEntity);
-//		
-//	}
 	
 }

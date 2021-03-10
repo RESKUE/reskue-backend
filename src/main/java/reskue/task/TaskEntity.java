@@ -61,6 +61,16 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	public void setCulturalAsset(CulturalAssetEntity culturalAsset) { this.culturalAsset = culturalAsset; }
 	
 	/**
+	 * The list of comments associated with the task.
+	 */
+	@OneToMany(mappedBy = "commentTask", cascade = CascadeType.PERSIST)
+	@JsonIdentityReference(alwaysAsId = true)
+	private List<CommentEntity> comments = new ArrayList<CommentEntity>();
+	public static final String COMMENTS = "comments";
+	public List<CommentEntity> getComments() { return this.comments; }
+	public void setComments(List<CommentEntity> comments) { this.comments = comments; }
+	
+	/**
 	 * The list of subtasks associated with the task.
 	 */
 	@JsonManagedReference

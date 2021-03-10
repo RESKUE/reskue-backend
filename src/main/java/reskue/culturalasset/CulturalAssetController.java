@@ -19,6 +19,7 @@ import kueres.query.EntitySpecification;
 import kueres.query.SortBuilder;
 import kueres.utility.Utility;
 import reskue.ReskueController;
+import reskue.comment.CommentEntity;
 import reskue.notification.NotificationEntity;
 import reskue.task.TaskEntity;
 
@@ -132,6 +133,44 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
 		
 		return service.getAllTasks(id, specification, pageable);
+		
+	}
+	
+	/**
+	 * Find all comments of the cultural asset.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * <p>
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * <p>
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
+	@GetMapping("/{" + CulturalAssetEntity.ID + "}/comments")
+	@RolesAllowed({ "administrator", "helper" })
+	public Page<CommentEntity> getAllComments(
+			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@RequestParam Optional<String[]> filter, 
+			@RequestParam Optional<String[]> sort,
+			@RequestParam Optional<Integer> page, 
+			@RequestParam Optional<Integer> size) {
+
+		Utility.LOG.trace("ReskueController.getAllComments called.");
+		
+		EntitySpecification<CommentEntity> specification = null;
+		if (filter.isPresent()) {
+			specification = new EntitySpecification<CommentEntity>(filter.get());
+		}
+		
+		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
+
+		return service.getAllComments(id, specification, pageable);
 		
 	}
 	
