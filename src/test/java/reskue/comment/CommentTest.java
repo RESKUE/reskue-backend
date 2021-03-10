@@ -29,7 +29,63 @@ public class CommentTest {
 	
 	@Test
 	@WithMockUser(roles = { "administrator" })
-	public void crud() {
+	public void crudTest() {
+		
+		CommentEntity comment = new CommentEntity();
+		
+		ResponseEntity<CommentEntity> responseCreate = this.controller.create(comment);
+		assertThat(responseCreate.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(responseCreate.getBody()).isNotNull();
+	
+		//TODO: complete test
+		
+	}
+	
+	@Test
+	@WithMockUser(roles = { "administrator" })
+	public void commentMediaTest() {
+		
+		CommentEntity comment = new CommentEntity();
+		
+		ResponseEntity<CommentEntity> responseCreate = this.controller.create(comment);
+		assertThat(responseCreate.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(responseCreate.getBody()).isNotNull();
+	
+		//TODO: complete test
+		
+	}
+	
+	@Test
+	@WithMockUser(roles = { "administrator" })
+	public void entityRelationsTest() {
+		
+		CommentEntity comment = new CommentEntity();
+		
+		ResponseEntity<CommentEntity> responseCreate = this.controller.create(comment);
+		assertThat(responseCreate.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(responseCreate.getBody()).isNotNull();
+	
+		//TODO: complete test
+		
+	}
+	
+	@Test
+	@WithMockUser(roles = { "administrator" })
+	public void applyPatchTest() {
+		
+		CommentEntity comment = new CommentEntity();
+		
+		ResponseEntity<CommentEntity> responseCreate = this.controller.create(comment);
+		assertThat(responseCreate.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(responseCreate.getBody()).isNotNull();
+	
+		//TODO: complete test
+		
+	}
+	
+	@Test
+	@WithMockUser(roles = { "administrator" })
+	public void dateTest() {
 		
 		CommentEntity comment = new CommentEntity();
 		
