@@ -32,8 +32,7 @@ public class CommentTest {
 	@Test
 	@WithMockUser(roles = { "administrator" })
 	public void crudTest() {
-		
-		
+				
 	}
 	
 	@Test
