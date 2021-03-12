@@ -112,12 +112,6 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 			this.addConnection(savedEntity, parent);
 			this.repository.save(parent);
 			
-			// Sollte unneccessary sein und setzt level nicht
-//			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());
-//			List<CulturalAssetEntity> parentChildren = parent.getCulturalAssetChildren();
-//			parentChildren.add(savedEntity);
-//			parent.setCulturalAssetChildren(parentChildren);
-//			this.repository.save(parent);
 		}
 
 		// Warum gibt es hier ein oder?
@@ -130,15 +124,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 				this.addConnection(child, savedEntity);
 				this.repository.save(child);
 			});
-			
-			// Sollte unneccessary sein und setzt level nicht
-//			List<CulturalAssetEntity> children = entity.getCulturalAssetChildren().stream().map((CulturalAssetEntity child) -> {
-//				return this.findById(child.getId());
-//			}).collect(Collectors.toList());
-//			children.stream().forEach((CulturalAssetEntity child) -> {
-//				child.setCulturalAssetParent(savedEntity);
-//				this.repository.save(child);
-//			});
+
 		}
 
 		EventConsumer.sendEvent("CulturalAssetService.create", EventType.CREATE.type, this.getIdentifier(),
