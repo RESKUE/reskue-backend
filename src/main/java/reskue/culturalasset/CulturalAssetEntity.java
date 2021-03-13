@@ -66,7 +66,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of tasks associated with the cultural asset.
 	 */
-	@OneToMany(mappedBy = "culturalAsset", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "culturalAsset", cascade = CascadeType.MERGE)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<TaskEntity> tasks = new ArrayList<TaskEntity>();
 	public static final String TASKS = "tasks";
@@ -76,7 +76,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of comments associated with the cultural asset.
 	 */
-	@OneToMany(mappedBy = "commentCulturalAsset", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "commentCulturalAsset", cascade = CascadeType.MERGE)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<CommentEntity> comments = new ArrayList<CommentEntity>();
 	public static final String COMMENTS = "comments";
@@ -117,7 +117,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The parent of the cultural asset.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "parent_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity culturalAssetParent;
@@ -128,7 +128,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of children associated with the cultural asset.
 	 */
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "child_parent_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<CulturalAssetEntity> culturalAssetChildren = new ArrayList<CulturalAssetEntity>();
@@ -139,7 +139,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of notifications associated with the cultural asset.
 	 */
-	@OneToMany(mappedBy = "entity", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "entity", cascade = CascadeType.MERGE)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notifications = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATIONS = "notifications";	

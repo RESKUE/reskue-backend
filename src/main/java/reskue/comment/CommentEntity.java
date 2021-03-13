@@ -40,7 +40,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	/**
 	 * The cultural asset the comment belongs to if it belongs to a cultural asset.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "comment_cultural_asset_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity commentCulturalAsset = null;
@@ -51,7 +51,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	/**
 	 * The task the comment belongs to if it belongs to a task.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "comment_task_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private TaskEntity commentTask = null;
@@ -71,7 +71,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	/**
 	 * The list of media associated with the comment.
 	 */
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "comment_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
@@ -82,7 +82,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	/**
 	 * The author of the comment.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "comment_author_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private UserEntity author = null;

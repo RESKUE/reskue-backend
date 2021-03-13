@@ -68,7 +68,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	/**
 	 * The user that send the notification.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "notification_sender_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private UserEntity sender = null;
@@ -99,7 +99,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	 * The cultural asset that the notification refers to.
 	 * This potentially marks the cultural asset as endangered.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "notification_entity_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity entity = null;
