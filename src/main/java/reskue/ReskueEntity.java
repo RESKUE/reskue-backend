@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 
 import kueres.base.BaseEntity;
 import kueres.media.MediaEntity;
-import reskue.comment.CommentEntity;
 
 /**
  * 
@@ -66,24 +65,6 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	public static final String IS_ENDANGERED = "isEndangered";
 	public int getIsEndangered() { return this.isEndangered; }
 	public void setIsEndangered(int isEndangered) { this.isEndangered = isEndangered; }
-	
-//	@ElementCollection(targetClass = String.class)
-//	@Column(name = "tags", nullable = false)
-//	private Set<String> tags = new HashSet<String>();
-//	public static final String TAGS = "tags";
-//	public Set<String> getTags() { return this.tags; }
-//	public void setTags(Set<String> tags) { this.tags = tags; }
-	
-	/**
-	 * The list of comments associated with the entity.
-	 */
-	@OneToMany(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "entity_id", referencedColumnName = "id")
-	@JsonIdentityReference(alwaysAsId = true)
-	private List<CommentEntity> comments = new ArrayList<CommentEntity>();
-	public static final String COMMENTS = "comments";
-	public List<CommentEntity> getComments() { return this.comments; }
-	public void setComments(List<CommentEntity> comments) { this.comments = comments; }
 	
 	/**
 	 * The list of media associated with the entity.

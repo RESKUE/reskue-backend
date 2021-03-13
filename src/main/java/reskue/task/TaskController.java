@@ -27,6 +27,7 @@ import kueres.query.EntitySpecification;
 import kueres.query.SortBuilder;
 import kueres.utility.Utility;
 import reskue.ReskueController;
+import reskue.comment.CommentEntity;
 import reskue.subtask.SubtaskEntity;
 import reskue.user.UserEntity;
 import reskue.user.UserService;
@@ -60,6 +61,44 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	
 	@Autowired
 	private UserService userService;
+	
+	/**
+	 * Find all comments of the task.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * <p>
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * <p>
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
+	@GetMapping("/{" + TaskEntity.ID + "}/comments")
+	@RolesAllowed({ "administrator", "helper" })
+	public Page<CommentEntity> getAllComments(
+			@PathVariable(value = TaskEntity.ID) long id,
+			@RequestParam Optional<String[]> filter, 
+			@RequestParam Optional<String[]> sort,
+			@RequestParam Optional<Integer> page, 
+			@RequestParam Optional<Integer> size) {
+
+		Utility.LOG.trace("ReskueController.getAllComments called.");
+		
+		EntitySpecification<CommentEntity> specification = null;
+		if (filter.isPresent()) {
+			specification = new EntitySpecification<CommentEntity>(filter.get());
+		}
+		
+		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
+
+		return service.getAllComments(id, specification, pageable);
+		
+	}
 	
 	/**
 	 * Find all subtasks of the task.

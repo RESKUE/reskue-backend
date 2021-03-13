@@ -26,6 +26,7 @@ import kueres.location.LocationService;
 import kueres.query.EntitySpecification;
 import kueres.utility.Utility;
 import reskue.ReskueService;
+import reskue.comment.CommentEntity;
 import reskue.notification.NotificationEntity;
 import reskue.task.TaskEntity;
 import reskue.task.TaskRepository;
@@ -111,12 +112,6 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 			this.addConnection(savedEntity, parent);
 			this.repository.save(parent);
 			
-			// Sollte unneccessary sein und setzt level nicht
-//			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());
-//			List<CulturalAssetEntity> parentChildren = parent.getCulturalAssetChildren();
-//			parentChildren.add(savedEntity);
-//			parent.setCulturalAssetChildren(parentChildren);
-//			this.repository.save(parent);
 		}
 
 		// Warum gibt es hier ein oder?
@@ -129,15 +124,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 				this.addConnection(child, savedEntity);
 				this.repository.save(child);
 			});
-			
-			// Sollte unneccessary sein und setzt level nicht
-//			List<CulturalAssetEntity> children = entity.getCulturalAssetChildren().stream().map((CulturalAssetEntity child) -> {
-//				return this.findById(child.getId());
-//			}).collect(Collectors.toList());
-//			children.stream().forEach((CulturalAssetEntity child) -> {
-//				child.setCulturalAssetParent(savedEntity);
-//				this.repository.save(child);
-//			});
+
 		}
 
 		EventConsumer.sendEvent("CulturalAssetService.create", EventType.CREATE.type, this.getIdentifier(),
@@ -334,6 +321,40 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 		return page;
 
+	}
+	
+	/**
+	 * Get all comments of the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
+	@SuppressWarnings("unchecked")
+	public Page<CommentEntity> getAllComments(long id, EntitySpecification<CommentEntity> specification,
+			Pageable pageable) {
+
+		CulturalAssetEntity entity = this.findById(id);
+
+		List<CommentEntity> comments = entity.getComments();
+
+		if (specification != null) {
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<CommentEntity> criteriaQuery = criteriaBuilder.createQuery(CommentEntity.class);
+			Root<CommentEntity> root = criteriaQuery.from(CommentEntity.class);		
+			
+			comments = comments.stream().filter(
+					(Predicate<? super CommentEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
+					.collect(Collectors.toList());
+		}
+
+		Page<CommentEntity> page = new PageImpl<CommentEntity>(comments, pageable, comments.size());
+		
+		EventConsumer.sendEvent("CulturalAssetService.getAllComments", EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));
+
+		return page;
+		
 	}
 
 	/**
