@@ -34,7 +34,7 @@ public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 	  Object handler) throws Exception {
 		
 		String url = request.getRequestURL().toString();
-		if (!url.matches(this.apiBaseRegex + BaseController.API_ENDPOINT)) {
+		if (!url.matches(this.apiBaseRegex + BaseController.API_ENDPOINT + ".*")) {
 			return true;
 		}
 		
