@@ -25,13 +25,16 @@ public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 	@Autowired
 	private UserRepository repository;
 	
+	private String apiBaseRegex = ".*:([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])";
+	
 	@Override
 	public boolean preHandle(
 	  HttpServletRequest request,
 	  HttpServletResponse response, 
 	  Object handler) throws Exception {
 		
-		if (!request.getRequestURL().toString().contains(BaseController.API_ENDPOINT)) {
+		String url = request.getRequestURL().toString();
+		if (!url.matches(this.apiBaseRegex + BaseController.API_ENDPOINT)) {
 			return true;
 		}
 		
