@@ -58,7 +58,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	/**
 	 * The list of tasks that the user is a contact of.
 	 */
-	@OneToMany(mappedBy = "contactUser", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "contactUser", cascade = CascadeType.MERGE)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<TaskEntity> taskContact = new ArrayList<TaskEntity>();
 	public static final String TASK_CONTACT = "taskContact";
@@ -78,7 +78,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	/**
 	 * The list of comments that the user is an author of.
 	 */
-	@OneToMany(mappedBy = "author", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "author", cascade = CascadeType.MERGE)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<CommentEntity> commentAuthor = new ArrayList<CommentEntity>();
 	public static final String COMMENT_AUTHOR = "commentAuthor";
@@ -98,7 +98,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	/**
 	 * The list of notifications that the user has send.
 	 */
-	@OneToMany(mappedBy = "sender", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "sender", cascade = CascadeType.MERGE)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notificationSender = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATION_SENDER = "notificationSender";
