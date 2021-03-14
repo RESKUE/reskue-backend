@@ -35,7 +35,7 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	 * The task the subtask belongs to.
 	 */
 	@JsonBackReference
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "task_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private TaskEntity task = null;
