@@ -84,7 +84,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	 */
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "comment_author_id", referencedColumnName = "id")
-	@JsonIdentityReference(alwaysAsId = true)
+	//@JsonIdentityReference(alwaysAsId = true)
 	private UserEntity author = null;
 	public static final String AUTHOR = "author";
 	public UserEntity getAuthor() { return this.author; }
