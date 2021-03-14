@@ -69,7 +69,7 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	/**
 	 * The list of media associated with the entity.
 	 */
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "entity_id", referencedColumnName = "id")
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
