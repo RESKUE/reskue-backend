@@ -164,8 +164,8 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		
 		String address = details.getAddress();
 		String locationId = details.getLocationId();
-		double longitude = details.getLongitude();
-		double latitude = details.getLatitude();
+		Double longitude = details.getLongitude();
+		Double latitude = details.getLatitude();
 		List<TaskEntity> tasks = details.getTasks();
 		String label = details.getLabel();
 		List<NotificationEntity> notifications = details.getNotifications();
@@ -188,12 +188,23 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		if (media != null) {
 			this.setMedia(media);
 		}
+		
+		if (address != null) {
+			this.setAddress(address);
+		}
+		if (label != null) {
+			this.setLabel(label);
+		}
+		if (locationId != null) {
+			this.setLocationId(locationId);	
+		}
+		if (longitude != null) {
+			this.setLongitude(longitude);
+		}
+		if (latitude != null) {
+			this.setLatitude(latitude);
+		}
 
-		this.setAddress(address);
-		this.setLongitude(longitude);
-		this.setLatitude(latitude);
-		this.setLabel(label);
-		this.setLocationId(locationId);	
 		if (tasks != null) {
 			this.setTasks(tasks);
 		}
