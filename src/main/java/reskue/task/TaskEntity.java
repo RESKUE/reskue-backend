@@ -75,7 +75,6 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	 */
 	@JsonManagedReference
 	@OneToMany(mappedBy = "task", cascade = CascadeType.MERGE)
-	//@JsonIdentityReference(alwaysAsId = true)
 	private List<SubtaskEntity> subtasks = new ArrayList<SubtaskEntity>();
 	public static final String SUBTASKS = "subtasks";
 	public List<SubtaskEntity> getSubtasks() { return this.subtasks; }
@@ -95,7 +94,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The list of users that help completing the task.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(
 			name = "task_helpers",
 			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),

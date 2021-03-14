@@ -46,7 +46,7 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	/**
 	 * The list of users that are part of the user group.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(
 			name = "usergroup_users",
 			joinColumns = @JoinColumn(name = "usergroup_id", referencedColumnName = "id"),
@@ -61,13 +61,13 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	/**
 	 * The list of notifications that every user of the user group should receive.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JsonIdentityReference(alwaysAsId = true)
+	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(
 			name = "notification_receivers",
 			joinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "notification_id", referencedColumnName = "id")
 	)
-	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notificationReceiver = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATION_RECEIVER = "notificationReceiver";
 	public List<NotificationEntity> getNotificationReceiver() { return this.notificationReceiver; }
