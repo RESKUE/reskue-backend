@@ -26,7 +26,7 @@ import kueres.media.MediaEntity;
  */
 
 @MappedSuperclass
-public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity<E>{
+public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity<E> {
 	
 	/**
 	 * The name of the entity.

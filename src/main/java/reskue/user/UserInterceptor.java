@@ -55,8 +55,6 @@ public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 			}
 		}
 		
-		Utility.LOG.info("{} exists: {}", username, exists);
-		
 		if (!exists) {
 			
 			UserEntity user = new UserEntity();

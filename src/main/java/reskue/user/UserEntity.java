@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
@@ -68,7 +70,12 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	/**
 	 * The list of tasks that the user is a helper of.
 	 */
-	@ManyToMany(mappedBy = "helperUsers", cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = CascadeType.MERGE)
+	@JoinTable(
+			name = "task_helpers",
+			joinColumns = @JoinColumn(name = "helper_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id")
+	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<TaskEntity> taskHelper = new ArrayList<TaskEntity>();
 	public static final String TASK_HELPER = "taskHelper";
@@ -88,7 +95,12 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	/**
 	 * The list of user groups that the user is a part of.
 	 */
-	@ManyToMany(mappedBy = "users", cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = CascadeType.MERGE)
+	@JoinTable(
+			name = "usergroup_users",
+			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "usergroup_id", referencedColumnName = "id")
+	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<UserGroupEntity> userGroups = new ArrayList<UserGroupEntity>();
 	public static final String USER_GROUPS = "userGroups";

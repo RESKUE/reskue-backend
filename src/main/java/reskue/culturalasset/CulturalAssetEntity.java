@@ -169,7 +169,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		List<TaskEntity> tasks = details.getTasks();
 		String label = details.getLabel();
 		List<NotificationEntity> notifications = details.getNotifications();
-
+		
 		if (name != "unnamed" || this.getName() != "unnamed") {
 			this.setName(name);
 		}

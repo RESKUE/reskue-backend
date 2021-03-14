@@ -134,14 +134,14 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 	 * @param userId - the user's identifier.
 	 * @return The user group after the user was added.
 	 */
-	@PutMapping("/{" + UserGroupEntity.ID + "}/addUser/{" + UserEntity.ID + "}")
+	@PutMapping("/{" + UserGroupEntity.ID + "_user_group}/addUser/{" + UserEntity.ID + "_user}")
 	@RolesAllowed({ "administrator" })
 	public ResponseEntity<UserGroupEntity> addUser(
-			@PathVariable(value = UserGroupEntity.ID) long id,
-			@PathVariable(value = UserEntity.ID) long userId) {
+			@PathVariable(value = UserGroupEntity.ID + "_user_group") long id,
+			@PathVariable(value = UserEntity.ID + "_user") long userId) {
 		
 		Utility.LOG.trace("UserGroupController.addUser called.");
-
+		Utility.LOG.info("user group id: {}, user id: {}", id, userId);
 		UserGroupEntity updatedEntity = service.addUser(id, userId);
 		return ResponseEntity.ok().body(updatedEntity);
 		
@@ -154,11 +154,11 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 	 * @param userId - the user's identifier.
 	 * @return The user group after the user was removed.
 	 */
-	@PutMapping("/{" + UserGroupEntity.ID + "}/removeUser/{" + UserEntity.ID + "}")
+	@PutMapping("/{" + UserGroupEntity.ID + "_user_group}/removeUser/{" + UserEntity.ID + "_user}")
 	@RolesAllowed({ "administrator" })
 	public ResponseEntity<UserGroupEntity> removeUser(
-			@PathVariable(value = UserGroupEntity.ID) long id,
-			@PathVariable(value = UserEntity.ID) long userId) {
+			@PathVariable(value = UserGroupEntity.ID + "_user_group") long id,
+			@PathVariable(value = UserEntity.ID + "_user") long userId) {
 		
 		Utility.LOG.trace("UserGroupController.removeUser called.");
 
