@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -145,6 +146,21 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public static final String NOTIFICATIONS = "notifications";	
 	public List<NotificationEntity> getNotifications() { return this.notifications; }
 	public void setNotifications(List<NotificationEntity> notifications) { this.notifications = notifications; }
+	
+	/**
+	 * The list of media associated with the entity.
+	 */
+	@OneToMany(cascade = CascadeType.MERGE)
+	@JoinTable(
+			name = "cultural_asset_media",
+			joinColumns = @JoinColumn(name = "cultural_asset_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id")
+	)
+	@JsonIdentityReference(alwaysAsId = true)
+	private List<MediaEntity> media = new ArrayList<MediaEntity>();
+	public static final String MEDIA = "media";
+	public List<MediaEntity> getMedia() { return this.media; }
+	public void setMedia(List<MediaEntity> media) { this.media = media; }
 	
 	/**
 	 * Doesnt allow changes to:
