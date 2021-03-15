@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 
 import kueres.base.BaseEntity;
 import kueres.media.MediaEntity;
+import reskue.comment.CommentEntity;
 
 /**
  * 
@@ -76,5 +77,8 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	public static final String MEDIA = "media";
 	public List<MediaEntity> getMedia() { return this.media; }
 	public void setMedia(List<MediaEntity> media) { this.media = media; }
+	
+	public abstract List<CommentEntity> getComments();
+	public abstract void setComments(List<CommentEntity> comments);
 	
 }

@@ -6,7 +6,9 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -76,7 +78,12 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of comments associated with the cultural asset.
 	 */
-	@OneToMany(mappedBy = "commentCulturalAsset", cascade = CascadeType.MERGE)
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "cultural_asset_comment",
+			joinColumns = @JoinColumn(name = "cultural_asset_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id")
+	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<CommentEntity> comments = new ArrayList<CommentEntity>();
 	public static final String COMMENTS = "comments";
