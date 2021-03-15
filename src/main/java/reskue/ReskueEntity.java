@@ -1,9 +1,12 @@
 package reskue;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 import kueres.base.BaseEntity;
+import kueres.media.MediaEntity;
 
 /**
  * 
@@ -56,5 +59,8 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	public static final String IS_ENDANGERED = "isEndangered";
 	public int getIsEndangered() { return this.isEndangered; }
 	public void setIsEndangered(int isEndangered) { this.isEndangered = isEndangered; }
+	
+	public abstract List<MediaEntity> getMedia();
+	public abstract void setMedia(List<MediaEntity> media);
 	
 }
