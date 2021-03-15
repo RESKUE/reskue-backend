@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -63,7 +64,12 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The list of comments associated with the task.
 	 */
-	@OneToMany(mappedBy = "commentTask", cascade = CascadeType.MERGE)
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "task_comment",
+			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id")
+	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<CommentEntity> comments = new ArrayList<CommentEntity>();
 	public static final String COMMENTS = "comments";
