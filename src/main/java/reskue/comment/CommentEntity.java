@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -72,7 +73,11 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	 * The list of media associated with the comment.
 	 */
 	@OneToMany(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "comment_id", referencedColumnName = "id")
+	@JoinTable(
+			name = "comment_media",
+			joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id")
+	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";
