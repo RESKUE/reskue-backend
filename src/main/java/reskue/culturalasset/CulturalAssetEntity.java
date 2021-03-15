@@ -6,7 +6,9 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -14,7 +16,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import kueres.eventbus.EventConsumer;
 import kueres.media.MediaEntity;
+import kueres.utility.Utility;
 import reskue.ReskueEntity;
 import reskue.comment.CommentEntity;
 import reskue.notification.NotificationEntity;
@@ -76,7 +80,12 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of comments associated with the cultural asset.
 	 */
-	@OneToMany(mappedBy = "commentCulturalAsset", cascade = CascadeType.MERGE)
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "cultural_asset_comment",
+			joinColumns = @JoinColumn(name = "cultural_asset_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id")
+	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<CommentEntity> comments = new ArrayList<CommentEntity>();
 	public static final String COMMENTS = "comments";
@@ -147,6 +156,21 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public void setNotifications(List<NotificationEntity> notifications) { this.notifications = notifications; }
 	
 	/**
+	 * The list of media associated with the entity.
+	 */
+	@OneToMany()
+	@JoinTable(
+			name = "cultural_asset_media",
+			joinColumns = @JoinColumn(name = "cultural_asset_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id")
+	)
+	@JsonIdentityReference(alwaysAsId = true)
+	private List<MediaEntity> media = new ArrayList<MediaEntity>();
+	public static final String MEDIA = "media";
+	public List<MediaEntity> getMedia() { return this.media; }
+	public void setMedia(List<MediaEntity> media) { this.media = media; }
+	
+	/**
 	 * Doesnt allow changes to:
 	 *  - culturalAssetChildren
 	 *  - culturalAssetParent
@@ -154,7 +178,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	 */
 	@Override
 	public void applyPatch(CulturalAssetEntity details) {
-		
+		Utility.LOG.info("details: {}", EventConsumer.writeObjectAsJSON(details));
 		String name = details.getName();
 		String description = details.getDescription();
 		int priority = details.getPriority();
