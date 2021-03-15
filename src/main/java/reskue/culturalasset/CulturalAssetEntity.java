@@ -15,7 +15,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import kueres.eventbus.EventConsumer;
 import kueres.media.MediaEntity;
+import kueres.utility.Utility;
 import reskue.ReskueEntity;
 import reskue.comment.CommentEntity;
 import reskue.notification.NotificationEntity;
@@ -150,7 +152,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of media associated with the entity.
 	 */
-	@OneToMany(cascade = CascadeType.MERGE)
+	@OneToMany()
 	@JoinTable(
 			name = "cultural_asset_media",
 			joinColumns = @JoinColumn(name = "cultural_asset_id", referencedColumnName = "id"),
@@ -170,7 +172,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	 */
 	@Override
 	public void applyPatch(CulturalAssetEntity details) {
-		
+		Utility.LOG.info("details: {}", EventConsumer.writeObjectAsJSON(details));
 		String name = details.getName();
 		String description = details.getDescription();
 		int priority = details.getPriority();

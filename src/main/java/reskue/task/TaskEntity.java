@@ -118,7 +118,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The list of media associated with the entity.
 	 */
-	@OneToMany(cascade = CascadeType.MERGE)
+	@OneToMany()
 	@JoinTable(
 			name = "task_media",
 			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),

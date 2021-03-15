@@ -72,7 +72,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	/**
 	 * The list of media associated with the comment.
 	 */
-	@OneToMany(cascade = CascadeType.MERGE)
+	@OneToMany()
 	@JoinTable(
 			name = "comment_media",
 			joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"),
