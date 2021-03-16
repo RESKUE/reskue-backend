@@ -147,7 +147,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 			this.setCommentCulturalAsset(null);
 			this.setCommentTask(null);
 		}
-		if (text != "" || this.getText() != "") {
+		if (text != "") {
 			this.setText(text);
 		}
 		if (media != null) {

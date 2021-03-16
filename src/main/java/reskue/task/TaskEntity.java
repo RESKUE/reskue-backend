@@ -153,16 +153,16 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 		List<UserEntity> helperUsers = details.getHelperUsers();
 		int recommendedHelperUsers = details.getRecommendedHelperUsers();
 		
-		if (name != "unnamed" || this.getName() != "unnamed") {
+		if (name != "unnamed") {
 			this.setName(name);
 		}
-		if (description != "" || this.getDescription() != "") {
+		if (description != "") {
 			this.setDescription(description);
 		}
-		if (priority != 0 || this.getPriority() != 0) {
+		if (priority != 0) {
 			this.setPriority(priority);
 		}
-		if (isEndangered != 0 || this.getIsEndangered() != 0) {
+		if (isEndangered != 0) {
 			this.setIsEndangered(isEndangered);	
 		}
 		if (comments != null) {
@@ -172,7 +172,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 			this.setMedia(media);
 		}	
 		
-		if (state != 0 || this.getState() != 0) {
+		if (state != 0) {
 			this.setState(state);
 		}
 		if (culturalAsset != null) {
@@ -187,7 +187,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 		if (helperUsers != null) {
 			this.setHelperUsers(helperUsers);
 		}
-		if (recommendedHelperUsers != 1 || this.getRecommendedHelperUsers() != 1) {
+		if (recommendedHelperUsers != 1) {
 			this.setRecommendedHelperUsers(recommendedHelperUsers);
 		}
 		
