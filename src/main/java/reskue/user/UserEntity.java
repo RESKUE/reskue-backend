@@ -128,7 +128,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 		List<UserGroupEntity> userGroups = details.getUserGroups();
 		List<NotificationEntity> notificationSender = details.getNotificationSender();
 		
-		if (name != "unnamed" || this.getName() != "unnamed") {
+		if (name != "unnamed") {
 			this.setName(name);
 		}
 		if (keycloakId != null) {

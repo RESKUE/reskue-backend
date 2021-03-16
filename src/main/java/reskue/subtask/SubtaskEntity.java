@@ -81,10 +81,10 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 		if (task != null) {
 			this.setTask(task);
 		}
-		if (state != 0 || this.getState() != 0) {
+		if (state != 0) {
 			this.setState(state);
 		}
-		if (text != "" || this.getText() != "") {
+		if (text != "") {
 			this.setText(text);
 		}
 		this.setIsRequired(isRequired);

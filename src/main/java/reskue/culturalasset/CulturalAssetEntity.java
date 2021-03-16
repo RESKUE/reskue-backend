@@ -170,16 +170,16 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		String label = details.getLabel();
 		List<NotificationEntity> notifications = details.getNotifications();
 		
-		if (name != "unnamed" || this.getName() != "unnamed") {
+		if (name != "unnamed") {
 			this.setName(name);
 		}
-		if (description != "" || this.getDescription() != "") {
+		if (description != "") {
 			this.setDescription(description);
 		}
-		if (priority != 0 || this.getPriority() != 0) {
+		if (priority != 0) {
 			this.setPriority(priority);
 		}
-		if (isEndangered != 0 || this.getIsEndangered() != 0) {
+		if (isEndangered != 0) {
 			this.setIsEndangered(isEndangered);	
 		}
 		if (comments != null) {

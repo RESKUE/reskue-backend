@@ -80,7 +80,7 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 		List<UserEntity> users = details.getUsers();
 		List<NotificationEntity> notifications = details.getNotificationReceiver();
 		
-		if (name != "unnamed" || this.getName() != "unnamed") {
+		if (name != "unnamed") {
 			this.setName(name);
 		}
 		if (users != null) {
