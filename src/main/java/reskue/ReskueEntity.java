@@ -1,18 +1,13 @@
 package reskue;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
-
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 
 import kueres.base.BaseEntity;
 import kueres.media.MediaEntity;
+import reskue.comment.CommentEntity;
 
 /**
  * 
@@ -66,15 +61,10 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	public int getIsEndangered() { return this.isEndangered; }
 	public void setIsEndangered(int isEndangered) { this.isEndangered = isEndangered; }
 	
-	/**
-	 * The list of media associated with the entity.
-	 */
-	@OneToMany(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "entity_id", referencedColumnName = "id")
-	@JsonIdentityReference(alwaysAsId = true)
-	private List<MediaEntity> media = new ArrayList<MediaEntity>();
-	public static final String MEDIA = "media";
-	public List<MediaEntity> getMedia() { return this.media; }
-	public void setMedia(List<MediaEntity> media) { this.media = media; }
+	public abstract List<MediaEntity> getMedia();
+	public abstract void setMedia(List<MediaEntity> media);
+	
+	public abstract List<CommentEntity> getComments();
+	public abstract void setComments(List<CommentEntity> comments);
 	
 }

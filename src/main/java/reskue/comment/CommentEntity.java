@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -40,8 +41,12 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	/**
 	 * The cultural asset the comment belongs to if it belongs to a cultural asset.
 	 */
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "comment_cultural_asset_id", referencedColumnName = "id")
+	@ManyToOne
+	@JoinTable(
+			name = "cultural_asset_comment",
+			joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "cultural_asset_id", referencedColumnName = "id")
+	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity commentCulturalAsset = null;
 	public static final String COMMENT_CULTURAL_ASSET = "commentCulturalAsset";
@@ -51,8 +56,12 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	/**
 	 * The task the comment belongs to if it belongs to a task.
 	 */
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "comment_task_id", referencedColumnName = "id")
+	@ManyToOne
+	@JoinTable(
+			name = "task_comment",
+			joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id")
+	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private TaskEntity commentTask = null;
 	public static final String COMMENT_TASK = "commentTask";
@@ -71,8 +80,12 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	/**
 	 * The list of media associated with the comment.
 	 */
-	@OneToMany(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "comment_id", referencedColumnName = "id")
+	@OneToMany()
+	@JoinTable(
+			name = "comment_media",
+			joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id")
+	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";
@@ -84,7 +97,6 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	 */
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "comment_author_id", referencedColumnName = "id")
-	//@JsonIdentityReference(alwaysAsId = true)
 	private UserEntity author = null;
 	public static final String AUTHOR = "author";
 	public UserEntity getAuthor() { return this.author; }
