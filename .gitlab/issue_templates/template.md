@@ -1,24 +1,40 @@
 # Short description
 ## Expected behaviour
-What was the expected behaviour?   
+What was the expected behaviour?
+  
 
 ## Actual behaviour
 What was the actual behaviour?
 
 
-# Route
+## Route
 Please paste the route here.
 
-# Query parameters
+`<METHOD> <PATH>`
+
+## Query parameters
 Please paste the query parameters here.
 
-# Body
+`<key=value>`
+
+## Body
 Please paste the body here.
 
-# Response
+```json
+
+```
+
+## Response
 Please pasthe the response here.
 
+```json
 
-# Additional information
+```
+
+## Additional information
 - Which queries where ran before?
 - Log from the services
+
+```log
+
+```
