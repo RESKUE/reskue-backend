@@ -1,5 +1,6 @@
 package reskue.culturalasset;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +16,10 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
-import kueres.eventbus.EventConsumer;
 import kueres.media.MediaEntity;
-import kueres.utility.Utility;
 import reskue.ReskueEntity;
 import reskue.comment.CommentEntity;
 import reskue.notification.NotificationEntity;
@@ -39,6 +40,23 @@ import reskue.task.TaskEntity;
 		generator = ObjectIdGenerators.PropertyGenerator.class,
 		property = "id")
 public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
+	
+	@Override
+	public String[] getUpdateableFields() {
+		return new String[] {
+				CulturalAssetEntity.NAME,
+				CulturalAssetEntity.DESCRIPTION,
+				CulturalAssetEntity.PRIORITY,
+				CulturalAssetEntity.IS_ENDANGERED,
+				CulturalAssetEntity.ADDRESS,
+				CulturalAssetEntity.LONGITUDE,
+				CulturalAssetEntity.LATITUDE,
+				CulturalAssetEntity.TASKS,
+				CulturalAssetEntity.COMMENTS,
+				CulturalAssetEntity.MEDIA,
+				CulturalAssetEntity.NOTIFICATIONS
+		};
+	}
 	
 	/**
 	 * The address of the cultural asset.
@@ -171,69 +189,54 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	public void setMedia(List<MediaEntity> media) { this.media = media; }
 	
 	/**
-	 * Doesnt allow changes to:
+	 * Does not allow changes to:
 	 *  - culturalAssetChildren
 	 *  - culturalAssetParent
 	 *  - level
+	 *  - locationId
 	 */
 	@Override
-	public void applyPatch(CulturalAssetEntity details) {
-		Utility.LOG.info("details: {}", EventConsumer.writeObjectAsJSON(details));
-		String name = details.getName();
-		String description = details.getDescription();
-		int priority = details.getPriority();
-		int isEndangered = details.getIsEndangered();	
-		List<CommentEntity> comments = details.getComments();
-		List<MediaEntity> media = details.getMedia();	
+	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		
-		String address = details.getAddress();
-		String locationId = details.getLocationId();
-		Double longitude = details.getLongitude();
-		Double latitude = details.getLatitude();
-		List<TaskEntity> tasks = details.getTasks();
-		String label = details.getLabel();
-		List<NotificationEntity> notifications = details.getNotifications();
+		CulturalAssetEntity details = CulturalAssetEntity.createEntityFromJSON(json, this.getUpdateableFields(), CulturalAssetEntity.class);
 		
-		if (name != "unnamed") {
-			this.setName(name);
+		if (this.containsFields(json, CulturalAssetEntity.NAME)) {
+			this.setName(details.getName());
 		}
-		if (description != "") {
-			this.setDescription(description);
+		if (this.containsFields(json, CulturalAssetEntity.DESCRIPTION)) {
+			this.setDescription(details.getDescription());
 		}
-		if (priority != 0) {
-			this.setPriority(priority);
+		if (this.containsFields(json, CulturalAssetEntity.PRIORITY)) {
+			this.setPriority(details.getPriority());
 		}
-		if (isEndangered != 0) {
-			this.setIsEndangered(isEndangered);	
+		if (this.containsFields(json, CulturalAssetEntity.IS_ENDANGERED)) {
+			this.setIsEndangered(details.getIsEndangered());	
 		}
-		if (comments != null) {
-			this.setComments(comments);
+		if (this.containsFields(json, CulturalAssetEntity.COMMENTS)) {
+			this.setComments(details.getComments());
 		}
-		if (media != null) {
-			this.setMedia(media);
+		if (this.containsFields(json, CulturalAssetEntity.MEDIA)) {
+			this.setMedia(details.getMedia());
 		}
 		
-		if (address != null) {
-			this.setAddress(address);
+		if (this.containsFields(json, CulturalAssetEntity.ADDRESS)) {
+			this.setAddress(details.getAddress());
 		}
-		if (label != null) {
-			this.setLabel(label);
+		if (this.containsFields(json, CulturalAssetEntity.LABEL)) {
+			this.setLabel(details.getLabel());
 		}
-		if (locationId != null) {
-			this.setLocationId(locationId);	
+		if (this.containsFields(json, CulturalAssetEntity.LONGITUDE)) {
+			this.setLongitude(details.getLongitude());
 		}
-		if (longitude != null) {
-			this.setLongitude(longitude);
-		}
-		if (latitude != null) {
-			this.setLatitude(latitude);
+		if (this.containsFields(json, CulturalAssetEntity.LATITUDE)) {
+			this.setLatitude(details.getLatitude());
 		}
 
-		if (tasks != null) {
-			this.setTasks(tasks);
+		if (this.containsFields(json, CulturalAssetEntity.TASKS)) {
+			this.setTasks(details.getTasks());
 		}
-		if (notifications != null) {
-			this.setNotifications(notifications);
+		if (this.containsFields(json, CulturalAssetEntity.NOTIFICATIONS)) {
+			this.setNotifications(details.getNotifications());
 		}
 		
 	}

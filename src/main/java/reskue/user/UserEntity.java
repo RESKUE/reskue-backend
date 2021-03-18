@@ -1,5 +1,6 @@
 package reskue.user;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import kueres.base.BaseEntity;
 import reskue.comment.CommentEntity;
@@ -37,6 +40,14 @@ import reskue.usergroup.UserGroupEntity;
 		generator = ObjectIdGenerators.PropertyGenerator.class,
 		property = "id")
 public class UserEntity extends BaseEntity<UserEntity>{
+	
+	@Override
+	public String[] getUpdateableFields() {
+		return new String[] {
+			UserEntity.NAME,
+			UserEntity.USER_GROUPS
+		};
+	}
 	
 	/**
 	 * The name of the user.
@@ -118,36 +129,15 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	public void setNotificationSender(List<NotificationEntity> notificationSender) { this.notificationSender = notificationSender; }
 	
 	@Override
-	public void applyPatch(UserEntity details) {
+	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		
-		String name = details.getName();
-		String keycloakId = details.getName();
-		List<TaskEntity> taskContact = details.getTaskContact();
-		List<TaskEntity> taskHelper = details.getTaskHelper();
-		List<CommentEntity> commentAuthor = details.getCommentAuthor();
-		List<UserGroupEntity> userGroups = details.getUserGroups();
-		List<NotificationEntity> notificationSender = details.getNotificationSender();
+		UserEntity details = UserEntity.createEntityFromJSON(json, this.getUpdateableFields(), UserEntity.class);
 		
-		if (name != "unnamed") {
-			this.setName(name);
+		if (this.containsFields(json, UserEntity.NAME)) {
+			this.setName(details.getName());
 		}
-		if (keycloakId != null) {
-			this.setKeycloakId(keycloakId);
-		}
-		if (taskContact != null) {
-			this.setTaskContact(taskContact);
-		}
-		if (taskHelper != null) {
-			this.setTaskHelper(taskHelper);
-		}
-		if (commentAuthor != null) {
-			this.setCommentAuthor(commentAuthor);
-		}
-		if (userGroups != null) {
-			this.setUserGroups(userGroups);
-		}
-		if (notificationSender != null) {
-			this.setNotificationSender(notificationSender);
+		if (this.containsFields(json, UserEntity.USER_GROUPS)) {
+			this.setUserGroups(details.getUserGroups());
 		}
 		
 	}

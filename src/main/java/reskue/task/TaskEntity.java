@@ -1,5 +1,6 @@
 package reskue.task;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import kueres.media.MediaEntity;
 import reskue.ReskueEntity;
@@ -40,6 +43,24 @@ import reskue.user.UserEntity;
 		generator = ObjectIdGenerators.PropertyGenerator.class,
 		property = "id")
 public class TaskEntity extends ReskueEntity<TaskEntity>{
+	
+	@Override
+	public String[] getUpdateableFields() {
+		return new String[] {
+				TaskEntity.NAME,
+				TaskEntity.DESCRIPTION,
+				TaskEntity.PRIORITY,
+				TaskEntity.IS_ENDANGERED,
+				TaskEntity.STATE,
+				TaskEntity.CULTURAL_ASSET,
+				TaskEntity.COMMENTS,
+				TaskEntity.SUBTASKS,
+				TaskEntity.CONTACT_USER,
+				TaskEntity.HELPER_USERS,
+				TaskEntity.RECOMMENDED_HELPER_USERS,
+				TaskEntity.MEDIA
+		};
+	}
 	
 	/**
 	 * The state of the task.
@@ -137,58 +158,46 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	public void setMedia(List<MediaEntity> media) { this.media = media; }
 	
 	@Override
-	public void applyPatch(TaskEntity details) {
+	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		
-		String name = details.getName();
-		String description = details.getDescription();
-		int priority = details.getPriority();
-		int isEndangered = details.getIsEndangered();		
-		List<CommentEntity> comments = details.getComments();
-		List<MediaEntity> media = details.getMedia();	
+		TaskEntity details = TaskEntity.createEntityFromJSON(json, this.getUpdateableFields(), TaskEntity.class);
 		
-		int state = details.getState();
-		CulturalAssetEntity culturalAsset = details.getCulturalAsset();
-		List<SubtaskEntity> subtasks = details.getSubtasks();
-		UserEntity contactUser = details.getContactUser();
-		List<UserEntity> helperUsers = details.getHelperUsers();
-		int recommendedHelperUsers = details.getRecommendedHelperUsers();
+		if (this.containsFields(json, TaskEntity.NAME)) {
+			this.setName(details.getName());
+		}
+		if (this.containsFields(json, TaskEntity.DESCRIPTION)) {
+			this.setDescription(details.getDescription());
+		}
+		if (this.containsFields(json, TaskEntity.PRIORITY)) {
+			this.setPriority(details.getPriority());
+		}
+		if (this.containsFields(json, TaskEntity.IS_ENDANGERED)) {
+			this.setIsEndangered(details.getIsEndangered());	
+		}
+		if (this.containsFields(json, TaskEntity.COMMENTS)) {
+			this.setComments(details.getComments());
+		}
+		if (this.containsFields(json, TaskEntity.MEDIA)) {
+			this.setMedia(details.getMedia());
+		}
 		
-		if (name != "unnamed") {
-			this.setName(name);
+		if (this.containsFields(json, TaskEntity.STATE)) {
+			this.setState(details.getState());
 		}
-		if (description != "") {
-			this.setDescription(description);
+		if (this.containsFields(json, TaskEntity.CULTURAL_ASSET)) {
+			this.setCulturalAsset(details.getCulturalAsset());
 		}
-		if (priority != 0) {
-			this.setPriority(priority);
+		if (this.containsFields(json, TaskEntity.SUBTASKS)) {
+			this.setSubtasks(details.getSubtasks());
 		}
-		if (isEndangered != 0) {
-			this.setIsEndangered(isEndangered);	
+		if (this.containsFields(json, TaskEntity.CONTACT_USER)) {
+			this.setContactUser(details.getContactUser());
 		}
-		if (comments != null) {
-			this.setComments(comments);
+		if (this.containsFields(json, TaskEntity.HELPER_USERS)) {
+			this.setHelperUsers(details.getHelperUsers());
 		}
-		if (media != null) {
-			this.setMedia(media);
-		}	
-		
-		if (state != 0) {
-			this.setState(state);
-		}
-		if (culturalAsset != null) {
-			this.setCulturalAsset(culturalAsset);
-		}
-		if (subtasks != null) {
-			this.setSubtasks(subtasks);
-		}
-		if (contactUser != null) {
-			this.setContactUser(contactUser);
-		}
-		if (helperUsers != null) {
-			this.setHelperUsers(helperUsers);
-		}
-		if (recommendedHelperUsers != 1) {
-			this.setRecommendedHelperUsers(recommendedHelperUsers);
+		if (this.containsFields(json, TaskEntity.RECOMMENDED_HELPER_USERS)) {
+			this.setRecommendedHelperUsers(details.getRecommendedHelperUsers());
 		}
 		
 	}

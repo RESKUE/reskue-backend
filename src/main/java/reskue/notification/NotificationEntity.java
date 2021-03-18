@@ -39,6 +39,18 @@ import reskue.usergroup.UserGroupEntity;
 		property = "id")
 public class NotificationEntity extends BaseEntity<NotificationEntity> {
 
+	@Override
+	public String[] getUpdateableFields() {
+		return new String[] {
+			NotificationEntity.TITLE,
+			NotificationEntity.MESSAGE,
+			NotificationEntity.TYPE,
+			NotificationEntity.SENDER,
+			NotificationEntity.RECEIVERS,
+			NotificationEntity.ENTITY
+		};
+	}
+	
 	/**
 	 * The title of the notification.
 	 */
@@ -114,7 +126,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public void setEntity(CulturalAssetEntity entity) { this.entity = entity; }
 	
 	@Override
-	public void applyPatch(NotificationEntity details) {
+	public void applyPatch(String json) {
 		Utility.LOG.error("NotificationEntities can not be updated");
 		throw new UnsupportedOperationException("NotificationEntities can not be updated!");
 	}

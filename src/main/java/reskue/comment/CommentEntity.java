@@ -1,5 +1,6 @@
 package reskue.comment;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,8 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import kueres.base.BaseEntity;
 import kueres.media.MediaEntity;
@@ -37,6 +40,17 @@ import reskue.user.UserEntity;
 		generator = ObjectIdGenerators.PropertyGenerator.class,
 		property = "id")
 public class CommentEntity extends BaseEntity<CommentEntity>{
+	
+	@Override
+	public String[] getUpdateableFields() {
+		return new String[] {
+			CommentEntity.COMMENT_CULTURAL_ASSET,
+			CommentEntity.COMMENT_TASK,
+			CommentEntity.TEXT,
+			CommentEntity.MEDIA,
+			CommentEntity.AUTHOR,
+		};
+	}
 	
 	/**
 	 * The cultural asset the comment belongs to if it belongs to a cultural asset.
@@ -126,32 +140,38 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	 *  - createdAt
 	 *  - updatedAt
 	 *  If both a task and a cultural asset are given the related entity is not changed
+	 * @throws JsonProcessingException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws JsonMappingException 
 	 */
 	@Override
-	public void applyPatch(CommentEntity details) {
+	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		
-		CulturalAssetEntity commentCulturalAsset = details.getCommentCulturalAsset();
-		TaskEntity commentTask = details.getCommentTask();
-		String text = details.getText();
-		List<MediaEntity> media = details.getMedia();
+		CommentEntity details = CommentEntity.createEntityFromJSON(json, this.getUpdateableFields(), CommentEntity.class);
 		
-		if (commentCulturalAsset != null && commentTask == null) {
-			this.setCommentCulturalAsset(commentCulturalAsset);
-			this.setCommentTask(null);
+		//TODO: Rework
+//		if (commentCulturalAsset != null && commentTask == null) {
+//			this.setCommentCulturalAsset(commentCulturalAsset);
+//			this.setCommentTask(null);
+//		}
+//		if (commentTask != null && commentCulturalAsset == null) {
+//			this.setCommentCulturalAsset(null);
+//			this.setCommentTask(commentTask);
+//		}
+//		if (commentTask == null && commentCulturalAsset == null) {
+//			this.setCommentCulturalAsset(null);
+//			this.setCommentTask(null);
+//		}
+		if (this.containsFields(json, CommentEntity.TEXT)) {
+			this.setText(details.getText());
 		}
-		if (commentTask != null && commentCulturalAsset == null) {
-			this.setCommentCulturalAsset(null);
-			this.setCommentTask(commentTask);
-		}
-		if (commentTask == null && commentCulturalAsset == null) {
-			this.setCommentCulturalAsset(null);
-			this.setCommentTask(null);
-		}
-		if (text != "") {
-			this.setText(text);
-		}
-		if (media != null) {
-			this.setMedia(media);
+		if (this.containsFields(json, CommentEntity.MEDIA)) {
+			this.setMedia(details.getMedia());
 		}
 		this.setUpdatedAt(new Date());
 		
