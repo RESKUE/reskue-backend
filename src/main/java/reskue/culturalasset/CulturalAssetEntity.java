@@ -48,6 +48,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 				CulturalAssetEntity.DESCRIPTION,
 				CulturalAssetEntity.PRIORITY,
 				CulturalAssetEntity.IS_ENDANGERED,
+				CulturalAssetEntity.LABEL,
 				CulturalAssetEntity.ADDRESS,
 				CulturalAssetEntity.LONGITUDE,
 				CulturalAssetEntity.LATITUDE,
