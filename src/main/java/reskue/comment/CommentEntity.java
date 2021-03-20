@@ -1,5 +1,6 @@
 package reskue.comment;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,8 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import kueres.base.BaseEntity;
 import kueres.media.MediaEntity;
@@ -33,20 +36,29 @@ import reskue.user.UserEntity;
  */
 
 @Entity
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "id")
 public class CommentEntity extends BaseEntity<CommentEntity>{
+	
+	@Override
+	public String[] getUpdateableFields() {
+		return new String[] {
+			CommentEntity.COMMENT_CULTURAL_ASSET,
+			CommentEntity.COMMENT_TASK,
+			CommentEntity.TEXT,
+			CommentEntity.MEDIA,
+			CommentEntity.AUTHOR,
+		};
+	}
 	
 	/**
 	 * The cultural asset the comment belongs to if it belongs to a cultural asset.
 	 */
-	@ManyToOne
+	@ManyToOne()
 	@JoinTable(
-			name = "cultural_asset_comment",
-			joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "cultural_asset_id", referencedColumnName = "id")
+			name = "cultural_asset_comments",
+			joinColumns = { @JoinColumn(name = "comment_id", referencedColumnName = BaseEntity.ID) },
+			inverseJoinColumns = { @JoinColumn(name = "cultural_asset_id", referencedColumnName = BaseEntity.ID) }
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity commentCulturalAsset = null;
 	public static final String COMMENT_CULTURAL_ASSET = "commentCulturalAsset";
@@ -56,12 +68,13 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	/**
 	 * The task the comment belongs to if it belongs to a task.
 	 */
-	@ManyToOne
+	@ManyToOne()
 	@JoinTable(
-			name = "task_comment",
-			joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id")
+			name = "task_comments",
+			joinColumns = { @JoinColumn(name = "comment_id", referencedColumnName = BaseEntity.ID) },
+			inverseJoinColumns = { @JoinColumn(name = "task_id", referencedColumnName = BaseEntity.ID) }
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private TaskEntity commentTask = null;
 	public static final String COMMENT_TASK = "commentTask";
@@ -86,6 +99,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 			joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id")
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";
@@ -97,6 +111,8 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	 */
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "comment_author_id", referencedColumnName = "id")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
 	private UserEntity author = null;
 	public static final String AUTHOR = "author";
 	public UserEntity getAuthor() { return this.author; }
@@ -126,32 +142,39 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	 *  - createdAt
 	 *  - updatedAt
 	 *  If both a task and a cultural asset are given the related entity is not changed
+	 * @throws JsonProcessingException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws JsonMappingException 
 	 */
 	@Override
-	public void applyPatch(CommentEntity details) {
+	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		
-		CulturalAssetEntity commentCulturalAsset = details.getCommentCulturalAsset();
-		TaskEntity commentTask = details.getCommentTask();
-		String text = details.getText();
-		List<MediaEntity> media = details.getMedia();
+		CommentEntity details = CommentEntity.createEntityFromJSON(json, this.getUpdateableFields(), CommentEntity.class);
 		
-		if (commentCulturalAsset != null && commentTask == null) {
-			this.setCommentCulturalAsset(commentCulturalAsset);
+		if (this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &&
+				!this.containsFields(json, CommentEntity.COMMENT_TASK)) {
+			this.setCommentCulturalAsset(details.getCommentCulturalAsset());
 			this.setCommentTask(null);
-		}
-		if (commentTask != null && commentCulturalAsset == null) {
+		} else if (this.containsFields(json, CommentEntity.COMMENT_TASK) &&
+				!this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET)) {
+			this.setCommentTask(details.getCommentTask());
 			this.setCommentCulturalAsset(null);
-			this.setCommentTask(commentTask);
-		}
-		if (commentTask == null && commentCulturalAsset == null) {
+		} else if (!this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &&
+				!this.containsFields(json, CommentEntity.COMMENT_TASK)) {
 			this.setCommentCulturalAsset(null);
 			this.setCommentTask(null);
 		}
-		if (text != "") {
-			this.setText(text);
+		
+		if (this.containsFields(json, CommentEntity.TEXT)) {
+			this.setText(details.getText());
 		}
-		if (media != null) {
-			this.setMedia(media);
+		if (this.containsFields(json, CommentEntity.MEDIA)) {
+			this.setMedia(details.getMedia());
 		}
 		this.setUpdatedAt(new Date());
 		
