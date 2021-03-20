@@ -1,5 +1,6 @@
 package reskue.culturalasset;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -19,6 +20,9 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import kueres.event.EventType;
 import kueres.eventbus.EventConsumer;
@@ -143,14 +147,29 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @return The updated cultural asset.
 	 * @throws ResourceNotFoundException if there is no cultural asset with the
 	 *                                   specified identifier.
+	 * @throws JsonProcessingException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws JsonMappingException 
 	 */
-	@Override
-	public CulturalAssetEntity update(long id, CulturalAssetEntity details) throws ResourceNotFoundException {
+	//@Override
+	public CulturalAssetEntity update(long id, String detailsJSON) throws ResourceNotFoundException, JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 
 		Utility.LOG.trace("CulturalAssetService.update called.");
 
+		CulturalAssetEntity details = CulturalAssetEntity.createEntityFromJSON(detailsJSON, new CulturalAssetEntity().getUpdateableFields(), CulturalAssetEntity.class);
+		Utility.LOG.info("details: {}", EventConsumer.writeObjectAsJSON(details));
+		
 		CulturalAssetEntity entity = this.findById(id);
 
+		Utility.LOG.info("entity before: {}", EventConsumer.writeObjectAsJSON(entity));
+		entity.applyPatch(detailsJSON);
+		Utility.LOG.info("entity after: {}", EventConsumer.writeObjectAsJSON(entity));
+		
 		if (entity.getCulturalAssetParent() != null) {
 			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());
 			this.removeConnection(entity, parent);
@@ -166,8 +185,6 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 				this.repository.save(child);
 			});
 		}
-
-		entity.applyPatch(details);
 
 		if (details.getAddress() != null || details.getLongitude() != null || details.getLatitude() != null) {
 

@@ -1,5 +1,6 @@
 package reskue.usergroup;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import javax.persistence.ManyToMany;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import kueres.base.BaseEntity;
 import reskue.notification.NotificationEntity;
@@ -29,10 +32,15 @@ import reskue.user.UserEntity;
  */
 
 @Entity
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "id")
 public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
+	
+	@Override
+	public String[] getUpdateableFields() {
+		return new String[] {
+			UserGroupEntity.NAME,
+			UserGroupEntity.USERS
+		};
+	}
 	
 	/**
 	 * The name of the user group.
@@ -52,6 +60,7 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 			joinColumns = @JoinColumn(name = "usergroup_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<UserEntity> users = new ArrayList<UserEntity>();
 	public static final String USERS = "users";
@@ -61,33 +70,29 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	/**
 	 * The list of notifications that every user of the user group should receive.
 	 */
-	@JsonIdentityReference(alwaysAsId = true)
 	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(
 			name = "notification_receivers",
 			joinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "notification_id", referencedColumnName = "id")
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notificationReceiver = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATION_RECEIVER = "notificationReceiver";
 	public List<NotificationEntity> getNotificationReceiver() { return this.notificationReceiver; }
 	public void setNotificationReceiver(List<NotificationEntity> notificationReceiver) { this.notificationReceiver = notificationReceiver; }
 
 	@Override
-	public void applyPatch(UserGroupEntity details) {
+	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		
-		String name = details.getName();
-		List<UserEntity> users = details.getUsers();
-		List<NotificationEntity> notifications = details.getNotificationReceiver();
+		UserGroupEntity details = UserGroupEntity.createEntityFromJSON(json, this.getUpdateableFields(), UserGroupEntity.class);
 		
-		if (name != "unnamed") {
-			this.setName(name);
+		if (this.containsFields(json, UserGroupEntity.NAME)) {
+			this.setName(details.getName());
 		}
-		if (users != null) {
-			this.setUsers(users);
-		}
-		if (notifications != null) {
-			this.setNotificationReceiver(notifications);
+		if (this.containsFields(json, UserGroupEntity.USERS)) {
+			this.setUsers(details.getUsers());
 		}
 		
 	}
