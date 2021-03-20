@@ -29,6 +29,7 @@
 	</repositories>
 
 	<dependencies>
+	
 		<dependency>
 			<groupId>kueres</groupId>
 			<artifactId>backend</artifactId>
@@ -99,19 +100,11 @@
 				<configuration>
 					<mainClass>reskue.App</mainClass>
 				</configuration>
-
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.2.0</version>
 			</plugin>
 		</plugins>
 	</build>
