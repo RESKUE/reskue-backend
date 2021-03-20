@@ -14,7 +14,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import kueres.base.BaseController;
-import kueres.utility.Utility;
 
 @Component
 public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {

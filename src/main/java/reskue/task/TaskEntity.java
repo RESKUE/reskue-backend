@@ -7,7 +7,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -16,11 +15,13 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import kueres.base.BaseEntity;
 import kueres.media.MediaEntity;
 import reskue.ReskueEntity;
 import reskue.comment.CommentEntity;
@@ -39,9 +40,6 @@ import reskue.user.UserEntity;
  */
 
 @Entity
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "id")
 public class TaskEntity extends ReskueEntity<TaskEntity>{
 	
 	@Override
@@ -76,6 +74,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	 */
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "cultural_asset_id", referencedColumnName = "id")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity culturalAsset = null;
 	public static final String CULTURAL_ASSET = "culturalAsset";
@@ -85,12 +84,13 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The list of comments associated with the task.
 	 */
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany()
 	@JoinTable(
-			name = "task_comment",
-			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id")
+			name = "task_comments",
+			joinColumns = { @JoinColumn(name = "task_id", referencedColumnName = BaseEntity.ID) },
+			inverseJoinColumns = { @JoinColumn(name = "comment_id", referencedColumnName = BaseEntity.ID) }
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<CommentEntity> comments = new ArrayList<CommentEntity>();
 	public static final String COMMENTS = "comments";
@@ -101,7 +101,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	 * The list of subtasks associated with the task.
 	 */
 	@JsonManagedReference
-	@OneToMany(mappedBy = "task", cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "task", cascade = CascadeType.PERSIST)
 	private List<SubtaskEntity> subtasks = new ArrayList<SubtaskEntity>();
 	public static final String SUBTASKS = "subtasks";
 	public List<SubtaskEntity> getSubtasks() { return this.subtasks; }
@@ -110,8 +110,9 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The user that is the contact of the task.
 	 */
-	@ManyToOne(cascade = CascadeType.MERGE)
+	@ManyToOne()
 	@JoinColumn(name = "task_contact_id", referencedColumnName = "id")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private UserEntity contactUser = null;
 	public static final String CONTACT_USER = "contactUser";
@@ -121,13 +122,13 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The list of users that help completing the task.
 	 */
-	@ManyToMany(cascade = CascadeType.MERGE)
+	@ManyToMany()
 	@JoinTable(
 			name = "task_helpers",
 			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "helper_id", referencedColumnName = "id")
 	)
-	@JsonIdentityReference(alwaysAsId = true)
+	@JsonIgnoreProperties(UserEntity.TASK_HELPER)
 	private List<UserEntity> helperUsers = new ArrayList<UserEntity>();
 	public static final String HELPER_USERS = "helperUsers";
 	public List<UserEntity> getHelperUsers() { return this.helperUsers; }
@@ -151,6 +152,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id")
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";

@@ -36,9 +36,6 @@ import reskue.user.UserEntity;
  */
 
 @Entity
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "id")
 public class CommentEntity extends BaseEntity<CommentEntity>{
 	
 	@Override
@@ -55,12 +52,13 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	/**
 	 * The cultural asset the comment belongs to if it belongs to a cultural asset.
 	 */
-	@ManyToOne
+	@ManyToOne()
 	@JoinTable(
-			name = "cultural_asset_comment",
-			joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "cultural_asset_id", referencedColumnName = "id")
+			name = "cultural_asset_comments",
+			joinColumns = { @JoinColumn(name = "comment_id", referencedColumnName = BaseEntity.ID) },
+			inverseJoinColumns = { @JoinColumn(name = "cultural_asset_id", referencedColumnName = BaseEntity.ID) }
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity commentCulturalAsset = null;
 	public static final String COMMENT_CULTURAL_ASSET = "commentCulturalAsset";
@@ -70,12 +68,13 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	/**
 	 * The task the comment belongs to if it belongs to a task.
 	 */
-	@ManyToOne
+	@ManyToOne()
 	@JoinTable(
-			name = "task_comment",
-			joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id")
+			name = "task_comments",
+			joinColumns = { @JoinColumn(name = "comment_id", referencedColumnName = BaseEntity.ID) },
+			inverseJoinColumns = { @JoinColumn(name = "task_id", referencedColumnName = BaseEntity.ID) }
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private TaskEntity commentTask = null;
 	public static final String COMMENT_TASK = "commentTask";
@@ -100,6 +99,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 			joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id")
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";
@@ -111,6 +111,8 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	 */
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "comment_author_id", referencedColumnName = "id")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
 	private UserEntity author = null;
 	public static final String AUTHOR = "author";
 	public UserEntity getAuthor() { return this.author; }
@@ -154,19 +156,20 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 		
 		CommentEntity details = CommentEntity.createEntityFromJSON(json, this.getUpdateableFields(), CommentEntity.class);
 		
-		//TODO: Rework
-//		if (commentCulturalAsset != null && commentTask == null) {
-//			this.setCommentCulturalAsset(commentCulturalAsset);
-//			this.setCommentTask(null);
-//		}
-//		if (commentTask != null && commentCulturalAsset == null) {
-//			this.setCommentCulturalAsset(null);
-//			this.setCommentTask(commentTask);
-//		}
-//		if (commentTask == null && commentCulturalAsset == null) {
-//			this.setCommentCulturalAsset(null);
-//			this.setCommentTask(null);
-//		}
+		if (this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &&
+				!this.containsFields(json, CommentEntity.COMMENT_TASK)) {
+			this.setCommentCulturalAsset(details.getCommentCulturalAsset());
+			this.setCommentTask(null);
+		} else if (this.containsFields(json, CommentEntity.COMMENT_TASK) &&
+				!this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET)) {
+			this.setCommentTask(details.getCommentTask());
+			this.setCommentCulturalAsset(null);
+		} else if (!this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &&
+				!this.containsFields(json, CommentEntity.COMMENT_TASK)) {
+			this.setCommentCulturalAsset(null);
+			this.setCommentTask(null);
+		}
+		
 		if (this.containsFields(json, CommentEntity.TEXT)) {
 			this.setText(details.getText());
 		}

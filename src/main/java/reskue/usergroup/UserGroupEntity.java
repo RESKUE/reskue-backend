@@ -32,9 +32,6 @@ import reskue.user.UserEntity;
  */
 
 @Entity
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "id")
 public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	
 	@Override
@@ -63,6 +60,7 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 			joinColumns = @JoinColumn(name = "usergroup_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<UserEntity> users = new ArrayList<UserEntity>();
 	public static final String USERS = "users";
@@ -72,13 +70,14 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	/**
 	 * The list of notifications that every user of the user group should receive.
 	 */
-	@JsonIdentityReference(alwaysAsId = true)
 	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(
 			name = "notification_receivers",
 			joinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "notification_id", referencedColumnName = "id")
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notificationReceiver = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATION_RECEIVER = "notificationReceiver";
 	public List<NotificationEntity> getNotificationReceiver() { return this.notificationReceiver; }

@@ -7,7 +7,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
@@ -19,6 +18,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import kueres.base.BaseEntity;
 import kueres.media.MediaEntity;
 import reskue.ReskueEntity;
 import reskue.comment.CommentEntity;
@@ -36,9 +36,6 @@ import reskue.task.TaskEntity;
  */
 
 @Entity
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "id")
 public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	
 	@Override
@@ -55,7 +52,9 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 				CulturalAssetEntity.TASKS,
 				CulturalAssetEntity.COMMENTS,
 				CulturalAssetEntity.MEDIA,
-				CulturalAssetEntity.NOTIFICATIONS
+				CulturalAssetEntity.NOTIFICATIONS,
+				CulturalAssetEntity.CULTURAL_ASSET_PARENT,
+				CulturalAssetEntity.CULTURAL_ASSET_CHILDREN
 		};
 	}
 	
@@ -90,6 +89,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	 * The list of tasks associated with the cultural asset.
 	 */
 	@OneToMany(mappedBy = "culturalAsset", cascade = CascadeType.MERGE)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<TaskEntity> tasks = new ArrayList<TaskEntity>();
 	public static final String TASKS = "tasks";
@@ -99,12 +99,13 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of comments associated with the cultural asset.
 	 */
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany()
 	@JoinTable(
-			name = "cultural_asset_comment",
-			joinColumns = @JoinColumn(name = "cultural_asset_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id")
+			name = "cultural_asset_comments",
+			joinColumns = { @JoinColumn(name = "cultural_asset_id", referencedColumnName = BaseEntity.ID) },
+			inverseJoinColumns = { @JoinColumn(name = "comment_id", referencedColumnName = BaseEntity.ID) }
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<CommentEntity> comments = new ArrayList<CommentEntity>();
 	public static final String COMMENTS = "comments";
@@ -147,6 +148,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	 */
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "parent_id", referencedColumnName = "id")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity culturalAssetParent;
 	public static final String CULTURAL_ASSET_PARENT = "culturalAssetParent";
@@ -158,6 +160,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	 */
 	@OneToMany(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "child_parent_id", referencedColumnName = "id")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<CulturalAssetEntity> culturalAssetChildren = new ArrayList<CulturalAssetEntity>();
 	public static final String CULTURAL_ASSET_CHILDREN = "culturalAssetChildren";	
@@ -168,6 +171,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	 * The list of notifications associated with the cultural asset.
 	 */
 	@OneToMany(mappedBy = "entity", cascade = CascadeType.MERGE)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notifications = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATIONS = "notifications";	
@@ -183,6 +187,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 			joinColumns = @JoinColumn(name = "cultural_asset_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id")
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";

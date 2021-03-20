@@ -30,9 +30,6 @@ import reskue.task.TaskEntity;
  */
 
 @Entity
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "id")
 public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	
 	@Override
@@ -49,9 +46,7 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	 * The task the subtask belongs to.
 	 */
 	@JsonBackReference
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "task_id", referencedColumnName = "id")
-	@JsonIdentityReference(alwaysAsId = true)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private TaskEntity task = null;
 	public static final String TASK = "task";
 	public TaskEntity getTask() { return this.task; }
