@@ -34,11 +34,20 @@ import reskue.usergroup.UserGroupEntity;
  */
 
 @Entity
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "id")
 public class NotificationEntity extends BaseEntity<NotificationEntity> {
 
+	@Override
+	public String[] getUpdateableFields() {
+		return new String[] {
+			NotificationEntity.TITLE,
+			NotificationEntity.MESSAGE,
+			NotificationEntity.TYPE,
+			NotificationEntity.SENDER,
+			NotificationEntity.RECEIVERS,
+			NotificationEntity.ENTITY
+		};
+	}
+	
 	/**
 	 * The title of the notification.
 	 */
@@ -71,7 +80,6 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	 */
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "notification_sender_id", referencedColumnName = "id")
-	@JsonIdentityReference(alwaysAsId = true)
 	private UserEntity sender = null;
 	public static final String SENDER = "sender";
 	public UserEntity getSender() { return this.sender; }
@@ -80,13 +88,14 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	/**
 	 * The list of user groups that should receive the notification.
 	 */
-	@JsonIdentityReference(alwaysAsId = true)
 	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(
 			name = "notification_receivers",
 			joinColumns = @JoinColumn(name = "notification_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = "id")
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<UserGroupEntity> receivers = new ArrayList<UserGroupEntity>();
 	public static final String RECEIVERS = "receivers";
 	public List<UserGroupEntity> getReceivers() { return this.receivers; }
@@ -107,6 +116,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	 */
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "notification_entity_id", referencedColumnName = "id")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity entity = null;
 	public static final String ENTITY = "entity";
@@ -114,7 +124,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public void setEntity(CulturalAssetEntity entity) { this.entity = entity; }
 	
 	@Override
-	public void applyPatch(NotificationEntity details) {
+	public void applyPatch(String json) {
 		Utility.LOG.error("NotificationEntities can not be updated");
 		throw new UnsupportedOperationException("NotificationEntities can not be updated!");
 	}

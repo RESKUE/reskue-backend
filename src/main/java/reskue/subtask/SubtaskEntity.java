@@ -1,5 +1,7 @@
 package reskue.subtask;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +12,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import kueres.base.BaseEntity;
 import reskue.task.TaskEntity;
@@ -26,18 +30,23 @@ import reskue.task.TaskEntity;
  */
 
 @Entity
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "id")
 public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
+	
+	@Override
+	public String[] getUpdateableFields() {
+		return new String[] {
+			SubtaskEntity.TASK,
+			SubtaskEntity.STATE,
+			SubtaskEntity.TEXT,
+			SubtaskEntity.IS_REQUIRED
+		};
+	}
 	
 	/**
 	 * The task the subtask belongs to.
 	 */
 	@JsonBackReference
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "task_id", referencedColumnName = "id")
-	@JsonIdentityReference(alwaysAsId = true)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private TaskEntity task = null;
 	public static final String TASK = "task";
 	public TaskEntity getTask() { return this.task; }
@@ -71,21 +80,18 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	public void setIsRequired(boolean isRequired) { this.isRequired = isRequired; }
 
 	@Override
-	public void applyPatch(SubtaskEntity details) {
+	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		
-		TaskEntity task = details.getTask();
-		int state = details.getState();
-		String text = details.getText();
-		boolean isRequired = details.getIsRequired();
+		SubtaskEntity details = SubtaskEntity.createEntityFromJSON(json, this.getUpdateableFields(), SubtaskEntity.class);
 		
-		if (task != null) {
-			this.setTask(task);
+		if (this.containsFields(json, SubtaskEntity.TASK)) {
+			this.setTask(details.getTask());
 		}
-		if (state != 0) {
-			this.setState(state);
+		if (this.containsFields(json, SubtaskEntity.STATE)) {
+			this.setState(details.getState());
 		}
-		if (text != "") {
-			this.setText(text);
+		if (this.containsFields(json, SubtaskEntity.TEXT)) {
+			this.setText(details.getText());
 		}
 		this.setIsRequired(isRequired);
 

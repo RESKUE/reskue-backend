@@ -1,9 +1,11 @@
 package reskue.user;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+//import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -14,7 +16,10 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import kueres.base.BaseEntity;
 import reskue.comment.CommentEntity;
@@ -33,10 +38,15 @@ import reskue.usergroup.UserGroupEntity;
  */
 
 @Entity
-@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "id")
 public class UserEntity extends BaseEntity<UserEntity>{
+	
+	@Override
+	public String[] getUpdateableFields() {
+		return new String[] {
+			UserEntity.NAME,
+			UserEntity.USER_GROUPS
+		};
+	}
 	
 	/**
 	 * The name of the user.
@@ -60,7 +70,8 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	/**
 	 * The list of tasks that the user is a contact of.
 	 */
-	@OneToMany(mappedBy = "contactUser", cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "contactUser")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<TaskEntity> taskContact = new ArrayList<TaskEntity>();
 	public static final String TASK_CONTACT = "taskContact";
@@ -70,13 +81,13 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	/**
 	 * The list of tasks that the user is a helper of.
 	 */
-	@ManyToMany(cascade = CascadeType.MERGE)
+	@ManyToMany()
 	@JoinTable(
 			name = "task_helpers",
 			joinColumns = @JoinColumn(name = "helper_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id")
 	)
-	@JsonIdentityReference(alwaysAsId = true)
+	@JsonIgnoreProperties(TaskEntity.HELPER_USERS)
 	private List<TaskEntity> taskHelper = new ArrayList<TaskEntity>();
 	public static final String TASK_HELPER = "taskHelper";
 	public List<TaskEntity> getTaskHelper() { return this.taskHelper; }
@@ -86,6 +97,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	 * The list of comments that the user is an author of.
 	 */
 	@OneToMany(mappedBy = "author", cascade = CascadeType.MERGE)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<CommentEntity> commentAuthor = new ArrayList<CommentEntity>();
 	public static final String COMMENT_AUTHOR = "commentAuthor";
@@ -101,6 +113,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "usergroup_id", referencedColumnName = "id")
 	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<UserGroupEntity> userGroups = new ArrayList<UserGroupEntity>();
 	public static final String USER_GROUPS = "userGroups";
@@ -111,6 +124,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	 * The list of notifications that the user has send.
 	 */
 	@OneToMany(mappedBy = "sender", cascade = CascadeType.MERGE)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notificationSender = new ArrayList<NotificationEntity>();
 	public static final String NOTIFICATION_SENDER = "notificationSender";
@@ -118,36 +132,15 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	public void setNotificationSender(List<NotificationEntity> notificationSender) { this.notificationSender = notificationSender; }
 	
 	@Override
-	public void applyPatch(UserEntity details) {
+	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		
-		String name = details.getName();
-		String keycloakId = details.getName();
-		List<TaskEntity> taskContact = details.getTaskContact();
-		List<TaskEntity> taskHelper = details.getTaskHelper();
-		List<CommentEntity> commentAuthor = details.getCommentAuthor();
-		List<UserGroupEntity> userGroups = details.getUserGroups();
-		List<NotificationEntity> notificationSender = details.getNotificationSender();
+		UserEntity details = UserEntity.createEntityFromJSON(json, this.getUpdateableFields(), UserEntity.class);
 		
-		if (name != "unnamed") {
-			this.setName(name);
+		if (this.containsFields(json, UserEntity.NAME)) {
+			this.setName(details.getName());
 		}
-		if (keycloakId != null) {
-			this.setKeycloakId(keycloakId);
-		}
-		if (taskContact != null) {
-			this.setTaskContact(taskContact);
-		}
-		if (taskHelper != null) {
-			this.setTaskHelper(taskHelper);
-		}
-		if (commentAuthor != null) {
-			this.setCommentAuthor(commentAuthor);
-		}
-		if (userGroups != null) {
-			this.setUserGroups(userGroups);
-		}
-		if (notificationSender != null) {
-			this.setNotificationSender(notificationSender);
+		if (this.containsFields(json, UserEntity.USER_GROUPS)) {
+			this.setUserGroups(details.getUserGroups());
 		}
 		
 	}
