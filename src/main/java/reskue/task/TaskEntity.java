@@ -72,7 +72,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The cultural asset the task belongs to.
 	 */
-	@ManyToOne(cascade = CascadeType.MERGE)
+	@ManyToOne()
 	@JoinColumn(name = "cultural_asset_id", referencedColumnName = "id")
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)

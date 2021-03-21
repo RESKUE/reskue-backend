@@ -109,7 +109,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	/**
 	 * The author of the comment.
 	 */
-	@ManyToOne(cascade = CascadeType.MERGE)
+	@ManyToOne()
 	@JoinColumn(name = "comment_author_id", referencedColumnName = "id")
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)

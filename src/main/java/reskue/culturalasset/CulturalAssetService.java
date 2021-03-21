@@ -162,13 +162,10 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		Utility.LOG.trace("CulturalAssetService.update called.");
 
 		CulturalAssetEntity details = CulturalAssetEntity.createEntityFromJSON(detailsJSON, new CulturalAssetEntity().getUpdateableFields(), CulturalAssetEntity.class);
-		Utility.LOG.info("details: {}", EventConsumer.writeObjectAsJSON(details));
 		
 		CulturalAssetEntity entity = this.findById(id);
 
-		Utility.LOG.info("entity before: {}", EventConsumer.writeObjectAsJSON(entity));
 		entity.applyPatch(detailsJSON);
-		Utility.LOG.info("entity after: {}", EventConsumer.writeObjectAsJSON(entity));
 		
 		if (entity.getCulturalAssetParent() != null) {
 			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());
