@@ -54,7 +54,7 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	/**
 	 * The list of users that are part of the user group.
 	 */
-	@ManyToMany(cascade = CascadeType.MERGE)
+	@ManyToMany()
 	@JoinTable(
 			name = "usergroup_users",
 			joinColumns = @JoinColumn(name = "usergroup_id", referencedColumnName = "id"),

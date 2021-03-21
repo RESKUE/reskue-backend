@@ -88,7 +88,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of tasks associated with the cultural asset.
 	 */
-	@OneToMany(mappedBy = "culturalAsset", cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "culturalAsset")
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<TaskEntity> tasks = new ArrayList<TaskEntity>();
@@ -146,7 +146,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The parent of the cultural asset.
 	 */
-	@ManyToOne(cascade = CascadeType.MERGE)
+	@ManyToOne()
 	@JoinColumn(name = "parent_id", referencedColumnName = "id")
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
@@ -158,7 +158,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of children associated with the cultural asset.
 	 */
-	@OneToMany(cascade = CascadeType.MERGE)
+	@OneToMany()
 	@JoinColumn(name = "child_parent_id", referencedColumnName = "id")
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
@@ -170,7 +170,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of notifications associated with the cultural asset.
 	 */
-	@OneToMany(mappedBy = "entity", cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "entity")
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notifications = new ArrayList<NotificationEntity>();
@@ -243,6 +243,12 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		}
 		if (this.containsFields(json, CulturalAssetEntity.NOTIFICATIONS)) {
 			this.setNotifications(details.getNotifications());
+		}
+		if (this.containsFields(json, CulturalAssetEntity.CULTURAL_ASSET_PARENT)) {
+			this.setCulturalAssetParent(details.getCulturalAssetParent());
+		}
+		if (this.containsFields(json, CulturalAssetEntity.CULTURAL_ASSET_CHILDREN)) {
+			this.setCulturalAssetChildren(details.getCulturalAssetChildren());
 		}
 		
 	}

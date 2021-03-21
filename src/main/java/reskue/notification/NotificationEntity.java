@@ -114,7 +114,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	 * The cultural asset that the notification refers to.
 	 * This potentially marks the cultural asset as endangered.
 	 */
-	@ManyToOne(cascade = CascadeType.MERGE)
+	@ManyToOne()
 	@JoinColumn(name = "notification_entity_id", referencedColumnName = "id")
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)

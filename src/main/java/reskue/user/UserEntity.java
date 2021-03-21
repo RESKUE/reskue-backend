@@ -96,7 +96,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	/**
 	 * The list of comments that the user is an author of.
 	 */
-	@OneToMany(mappedBy = "author", cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "author")
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<CommentEntity> commentAuthor = new ArrayList<CommentEntity>();
@@ -107,7 +107,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	/**
 	 * The list of user groups that the user is a part of.
 	 */
-	@ManyToMany(cascade = CascadeType.MERGE)
+	@ManyToMany()
 	@JoinTable(
 			name = "usergroup_users",
 			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
