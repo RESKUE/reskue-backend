@@ -11,6 +11,7 @@ src/test/resources/services/location-db/data
 src/test/resources/services/rabbitmq/data
 src/test/resources/services/rabbitmq/logs
 
+node_modules/
 
 # .env
 prod.env
