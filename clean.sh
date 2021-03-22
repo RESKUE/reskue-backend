@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 keycloakToken="keycloak"
 contentToken="content-db"
 rabbitmqToken="rabbitmq"

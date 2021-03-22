@@ -73,7 +73,6 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	 * The cultural asset the task belongs to.
 	 */
 	@ManyToOne()
-	@JoinColumn(name = "cultural_asset_id", referencedColumnName = "id")
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity culturalAsset = null;
@@ -100,8 +99,8 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The list of subtasks associated with the task.
 	 */
-	@JsonManagedReference
-	@OneToMany(mappedBy = "task", cascade = CascadeType.PERSIST)
+	@OneToMany(cascade = CascadeType.ALL, targetEntity = SubtaskEntity.class)
+	@JoinColumn(name = "task_id", referencedColumnName = "id")
 	private List<SubtaskEntity> subtasks = new ArrayList<SubtaskEntity>();
 	public static final String SUBTASKS = "subtasks";
 	public List<SubtaskEntity> getSubtasks() { return this.subtasks; }

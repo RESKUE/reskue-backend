@@ -1,17 +1,103 @@
 # RESKUE Backend
 
-## General information
-- Some commands in this README require a docker-compose version >1.25.4
-- All commands described in this README work from the project root directory
+## Needed before getting started
+- npm
+- docker and docker-compose
+- git
 
 ## Modes
 - Production (prod): All services + Spring Boot in a container
 - Development (dev): All services in a container without Spring Boot
 
-## Services
-1. Create two files at the project root: `prod.env` and `dev.env`
-2. Copy the content from `default.env` into `prod.env` and `dev.env`
-3. Fill out all configuration settings. Values that are already set should only be changed if you know what they do.
+## Getting started - read before doing anything
+1. Clone the master branch for use in production mode
+```
+git clone --single-branch --branch master https://gitlab-ext.iosb.fraunhofer.de/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend.git
+```
+or the develop branch for use in development mode
+```
+git clone --single-branch --branch develop https://gitlab-ext.iosb.fraunhofer.de/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend.git
+```
+2. Change into the repository directory
+```
+cd reskue-backend
+```
+3. Install npm dependencies
+```
+npm install
+```
+4. Update the project
+```
+npm run update
+```
+5. Create enviroment files for development and/or production mode
+```
+Production mode:
+cp default.env prod.env
+
+Development mode:
+cp default.env dev.env
+```
+6. Fill out all missing entries in the enviroment files. An overview over all enviroment variables can be found at the end of this README.
+
+## Running the project
+### Production mode
+- Starting the backend
+```
+With console output:
+npm run start:prod
+
+Without console output:
+npm run start:prod:d
+```
+- Stopping the backend
+```
+npm run stop:prod
+```
+
+### Development mode
+- Starting the backend
+```
+npm run start:dev
+```
+- Stopping the backend
+```
+npm run stop:dev
+```
+- Running the Postman API tests with Newman. All backend services have to be running for this.
+```
+npm run test
+```
+
+## Update
+Update the project - also updates the current git branch
+```
+npm run update
+```
+
+### Cleanup
+- Clean Keycloak data
+```
+npm run clean:keycloak
+```
+- Clean the content database
+```
+npm run clean:content
+```
+- Clean RabbitMQ data
+```
+npm run clean:rabbitmq
+```
+- Clean the location database
+```
+npm run clean:location
+```
+- Clean all data directories. Warning: also deletes Keycloak user data!
+```
+npm run clean:all
+```
+
+## Enviroment variables
 ```
 # content-database
 CONTENT_DB=content_db   #name of the content database
@@ -57,44 +143,14 @@ LOCATION_MQTT_PORT=5439           #mqtt port of the frost server
 
 # Spring
 SPRING_PORT=8080                                #port of the spring service
-LOGGING_LEVEL_ORG_SPRINGFRAMEWORK=WARN          #log levels: ERROR, WARN, INFO, DEBUG or TRACE
+#log levels: ERROR, WARN, INFO, DEBUG or TRACE
+LOGGING_LEVEL_ORG_SPRINGFRAMEWORK=WARN          
 SPRING_JPA_HIBERNATE_DDL_AUTO=none              #hibernate auto ddl: validate, update, create, create-drop or none
 SPRING_DATASOURCE_INITIALIZATION_MODE=always    #spring data intilization mode
 SPRING_DATASOURCE_PLATFORM=postgres             #database vendor
 SPRING_DATASOURCE_PLATFORM_JDBC=postgresql      #jdbc database type
-KUERES_MEDIA_DIR=                               #local file path to a directory where media will be stored
-KUERES_TOPIC_EXCHANGE=reskue-events             #default rabbitmq topic exchange
-KUERES_DEFAULT_QUEUE=event-consumer             #default rabbitmq queue
-```
-4. Start the services in either development or production mode
-  * Start services in development mode
-```
-sudo docker-compose -f docker-compose.dev.yml --env-file dev.env up --build
-```
-  * Start services in production mode
-```
-docker login gitlab-ext.iosb.fraunhofer.de:4567
-docker pull gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend:latest
-sudo docker-compose -f docker-compose.prod.yml --env-file prod.env up -d
-```
-5. Stop all services
-  * Stop services in development mode
-```
-sudo docker-compose -f docker-compose.dev.yml --env-file dev.env down
-```
-  * Stop services in production mode
-```
-sudo docker-compose -f docker-compose.prod.yml --env-file prod.env down
-```
-6. Clean up data directories - omit services that should not be deleted
-```
-./clean.sh keycloak,rabbitmq,content-db,location-db
-```
-
-## Updates
-1. Pull the master-branch of reskue-backend
-2. Pull the latest docker image of the spring boot application
-```
-docker login gitlab-ext.iosb.fraunhofer.de:4567
-docker pull gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend:latest
+#local file path to a directory where media will be stored
+KUERES_MEDIA_DIR=                               
+#url to a Nominatim server used for the location service
+KUERES_NOMINATIM_URL=https://nominatim.openstreetmap.org  
 ```

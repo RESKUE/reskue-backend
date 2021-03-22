@@ -45,8 +45,9 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	/**
 	 * The task the subtask belongs to.
 	 */
-	@JsonBackReference
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
 	private TaskEntity task = null;
 	public static final String TASK = "task";
 	public TaskEntity getTask() { return this.task; }

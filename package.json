@@ -1,0 +1,29 @@
+{
+  "name": "reskue-backend",
+  "version": "0.0.1-SNAPSHOT",
+  "description": "The backend for the RESKUE project",
+  "main": "index.js",
+  "scripts": {
+    "start:prod": "docker-compose -f docker-compose.prod.yml --env-file prod.env up",
+    "start:prod:d": "docker-compose -f docker-compose.prod.yml --env-file prod.env up -d",
+    "stop:prod": "docker-compose -f docker-compose.prod.yml --env-file prod.env down",
+    "start:dev": "docker-compose -f docker-compose.dev.yml --env-file dev.env up --build",
+    "stop:dev": "docker-compose -f docker-compose.dev.yml --env-file dev.env down",
+    "update": "git pull && docker pull gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend:latest",
+    "clean:all": "npm run clean:keycloak && npm run clean:content && npm run clean:rabbitmq && npm run clean:location",
+    "clean:keycloak": "./clean.sh keycloak",
+    "clean:content": "./clean.sh content-db",
+    "clean:rabbitmq": "./clean.sh rabbitmq",
+    "clean:location": "./clean.sh location-db",
+    "test": "newman run RESKUE.tests.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab-ext.iosb.fraunhofer.de/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend.git"
+  },
+  "author": "Tim Engbrocks, Jan Straßburg",
+  "license": "MIT",
+  "dependencies": {
+    "newman": "^5.2.2"
+  }
+}
