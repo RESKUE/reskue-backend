@@ -88,7 +88,8 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of tasks associated with the cultural asset.
 	 */
-	@OneToMany(mappedBy = "culturalAsset")
+	@OneToMany()
+	@JoinColumn(name = "cultural_asset_id", referencedColumnName = "id")
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<TaskEntity> tasks = new ArrayList<TaskEntity>();
@@ -170,7 +171,8 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of notifications associated with the cultural asset.
 	 */
-	@OneToMany(mappedBy = "entity")
+	@OneToMany()
+	@JoinColumn(name = "notification_entity_id", referencedColumnName = "id")
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notifications = new ArrayList<NotificationEntity>();

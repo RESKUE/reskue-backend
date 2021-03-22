@@ -1,0 +1,5177 @@
+{
+	"info": {
+		"_postman_id": "48b5cee6-6e3b-4e42-97d0-24e3eaebeb12",
+		"name": "RESKUE",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+    {
+			"name": "Reset collection variables",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"Object.keys(utils.data).forEach(key => {",
+							"    pm.collectionVariables.set(utils.keys[key], JSON.stringify(utils.data[key]))",
+							"    if (!utils.data[key]) pm.collectionVariables.unset(utils.keys[key])",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment",
+			"item": [
+				{
+					"name": "Comment: Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"comment_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"comment_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"comment_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"comment_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Entity created correctly\", () => {\r",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, relationKeys);\r",
+									"    pm.expect(same).to.be.true;\r",
+									"    testRelationsRequests(utils.testRelations(parsedBody, \"commentRelationKeys\", relationKeys));\r",
+									"    pm.collectionVariables.set(\"comment_id\", parsedBody.id);\r",
+									"});\r",
+									"\r",
+									"function testRelationsRequests(requests) {\r",
+									"    requests.forEach(request => {\r",
+									"        pm.sendRequest(request.request, (err, response) => {\r",
+									"            pm.test(\"relation test: \" + request.type, () => {\r",
+									"                const json = response.json();\r",
+									"                pm.expect(json.id).to.eql(request.id);\r",
+									"                var same = utils.areEntitiesTheSameRelation(json, utils.data[request.type + \"DefaultEntity\"], utils.data[request.type + \"EntityKeys\"], utils.data[request.type + \"RelationKeys\"]);\r",
+									"                pm.expect(same).to.be.true;\r",
+									"            });\r",
+									"        });\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"Object.keys(utils.data).forEach(key => {",
+									"    if (!utils.data[key]) pm.collectionVariables.unset(utils.keys[key])",
+									"    else pm.collectionVariables.set(utils.keys[key], JSON.stringify(utils.data[key]))",
+									"});",
+									"",
+									"function setTaskOnCommentDefaultEntity(id) {",
+									"    const commentDefaultEntity = JSON.parse(pm.collectionVariables.get(\"comment_default_entity\"));",
+									"    commentDefaultEntity.commentTask = { id };",
+									"    pm.collectionVariables.set(\"comment_default_entity\", JSON.stringify(commentDefaultEntity));",
+									"}",
+									"",
+									"function setAuthorOnCommentDefaultEntity(id) {",
+									"    const commentDefaultEntity = JSON.parse(pm.collectionVariables.get(\"comment_default_entity\"));",
+									"    commentDefaultEntity.author = { id };",
+									"    pm.collectionVariables.set(\"comment_default_entity\", JSON.stringify(commentDefaultEntity));",
+									"}",
+									"",
+									"if (!pm.collectionVariables.get(\"task_id\")) {",
+									"    const request = {",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/task\",",
+									"        method: \"POST\",",
+									"        header: {",
+									"            \"content-type\": \"application/json\"",
+									"        },",
+									"        body: {",
+									"            mode: \"raw\",",
+									"            raw: utils.data.taskDefaultEntity",
+									"        }",
+									"    };",
+									"    pm.sendRequest(request, (err, response) => {",
+									"        const id = response.json().id;",
+									"        pm.collectionVariables.set(\"task_id\", id);",
+									"        setTaskOnCommentDefaultEntity(id);",
+									"    });",
+									"} else {",
+									"    setTaskOnCommentDefaultEntity(pm.collectionVariables.get(\"task_id\"));",
+									"}",
+									"",
+									"if (!pm.collectionVariables.get(\"user_id\")) {",
+									"    const request = {",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/user\",",
+									"        method: \"POST\",",
+									"        header: {",
+									"            \"content-type\": \"application/json\"",
+									"        },",
+									"        body: {",
+									"            mode: \"raw\",",
+									"            raw: utils.data.userDefaultEntity",
+									"        }",
+									"    };",
+									"    pm.sendRequest(request, (err, response) => {",
+									"        const id = response.json().id;",
+									"        pm.collectionVariables.set(\"user_id\", id);",
+									"        setAuthorOnCommentDefaultEntity(id);",
+									"    });",
+									"} else {",
+									"    setAuthorOnCommentDefaultEntity(pm.collectionVariables.get(\"user_id\"));",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{comment_default_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/comment",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Comment: Find all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"comment_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"comment_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"comment_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"comment_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Created entity was found\", () => {\r",
+									"    var content = parsedBody.content;\r",
+									"    var found = false;\r",
+									"    for (var i = 0; i < content.length && !found; i++) {\r",
+									"        found = content[i].id == pm.collectionVariables.get(\"comment_id\");\r",
+									"    }\r",
+									"    pm.expect(found).to.eql(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/comment",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Comment: Find by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"comment_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"comment_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"comment_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"comment_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Correct entity found\", () => {\r",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, relationKeys);\r",
+									"    pm.expect(same).to.eql(true);\r",
+									"    pm.expect(parsedBody.id).to.eql(pm.collectionVariables.get(\"comment_id\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/comment/{{comment_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comment",
+								"{{comment_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Comment: Get all media",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"comment_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"comment_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"comment_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"comment_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Get all media\", () => {\r",
+									"    const content = parsedBody.content;\r",
+									"    const media = JSON.parse(pm.collectionVariables.get(\"comment_default_entity\")).media;\r",
+									"    pm.expect(content.length).to.eql(media.length);\r",
+									"    for (var i = 0; i < media.length; i++) {\r",
+									"        var found = false;\r",
+									"        for (var j = 0; j < content.length; j++) {\r",
+									"            found = (media[i].id == content[j].id);\r",
+									"            if (found) break;\r",
+									"        }\r",
+									"        pm.expect(found).to.be.true;\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/comment/{{comment_id}}/media",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comment",
+								"{{comment_id}}",
+								"media"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Comment: Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"comment_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"comment_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"comment_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"comment_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Entity correctly updated\", () => {\r",
+									"    var same = utils.areEntitiesTheSame(parsedBody, patchEntity, entityKeys, relationKeys);\r",
+									"    pm.expect(same).to.be.true;\r",
+									"    testRelationsRequests(utils.testRelations(parsedBody, \"commentRelationKeys\", relationKeys));\r",
+									"    pm.expect(parsedBody.id).to.eql(pm.collectionVariables.get(\"comment_id\"));\r",
+									"});\r",
+									"\r",
+									"function testRelationsRequests(requests) {\r",
+									"    requests.forEach(request => {\r",
+									"        pm.sendRequest(request.request, (err, response) => {\r",
+									"            pm.test(\"relation test: \" + request.type, () => {\r",
+									"                const json = response.json();\r",
+									"                pm.expect(json.id).to.eql(request.id);\r",
+									"                var same = utils.areEntitiesTheSameRelation(json, utils.data[request.type + \"DefaultEntity\"], utils.data[request.type + \"EntityKeys\"], utils.data[request.type + \"RelationKeys\"]);\r",
+									"                pm.expect(same).to.be.true;\r",
+									"            });\r",
+									"        });\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"request = {",
+									"    url: pm.collectionVariables.get(\"base_url\") + \"/culturalAsset\",",
+									"    method: \"POST\",",
+									"    header: {",
+									"        \"content-type\": \"application/json\"",
+									"    },",
+									"    body: {",
+									"        mode: \"raw\",",
+									"        raw: utils.data.culturalAssetDefaultEntity",
+									"    }",
+									"};",
+									"pm.sendRequest(request, (err, response) => {",
+									"    const id = response.json().id;",
+									"    const commentPatchEntity = JSON.parse(pm.collectionVariables.get(\"comment_patch_entity\"));",
+									"    commentPatchEntity.commentCulturalAsset = { id };",
+									"    pm.collectionVariables.set(\"comment_patch_entity\", JSON.stringify(commentPatchEntity));",
+									"});",
+									"",
+									"const commentDefaultEntity = JSON.parse(pm.collectionVariables.get(\"comment_default_entity\"));",
+									"const commentPatchEntity = JSON.parse(pm.collectionVariables.get(\"comment_patch_entity\"));",
+									"commentPatchEntity.author = commentDefaultEntity.author;",
+									"pm.collectionVariables.set(\"comment_patch_entity\", JSON.stringify(commentPatchEntity));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{comment_patch_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/comment/{{comment_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comment",
+								"{{comment_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Comment: Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = pm.collectionVariables.get(\"comment_entity_keys\");\r",
+									"const relationKeys = pm.collectionVariables.get(\"comment_relation_keys\");\r",
+									"const defaultEntity = pm.collectionVariables.get(\"comment_default_entity\");\r",
+									"const patchEntity = pm.collectionVariables.get(\"comment_patch_entity\");\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Created entity was deleted\", () => {\r",
+									"    pm.expect(parsedBody.deleted).to.eql(true);\r",
+									"    pm.collectionVariables.set(\"comment_id\", null);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/comment/{{comment_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comment",
+								"{{comment_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Comment: Create and automatically set author",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"comment_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"comment_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"comment_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"comment_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Correct author set\", () => {\r",
+									"    pm.expect(parsedBody.author).to.eql(pm.collectionVariables.get(\"requester_user_id\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Entity created correctly\", () => {\r",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, []);\r",
+									"    pm.expect(same).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"Object.keys(utils.data).forEach(key => {",
+									"    if (!utils.data[key]) pm.collectionVariables.unset(utils.keys[key])",
+									"    else pm.collectionVariables.set(utils.keys[key], JSON.stringify(utils.data[key]))",
+									"});",
+									"",
+									"if (!pm.collectionVariables.get(\"requester_user_id\")) {",
+									"    const request = {",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/user/me\",",
+									"        method: 'GET'",
+									"    };",
+									"    pm.sendRequest(request, (err, response) => {",
+									"        const id = response.json().id;",
+									"        pm.collectionVariables.set(\"requester_user_id\", id);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{comment_default_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/comment/autoAuthor",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comment",
+								"autoAuthor"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Cultural Asset",
+			"item": [
+				{
+					"name": "Cultural Asset: Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Entity created correctly\", () => {",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, relationKeys);",
+									"    pm.expect(same).to.be.true;",
+									"    testRelationsRequests(utils.testRelations(parsedBody, \"culturalAssetRelationKeys\", relationKeys));",
+									"    pm.collectionVariables.set(\"cultural_asset_id\", parsedBody.id);",
+									"});",
+									"",
+									"function testRelationsRequests(requests) {",
+									"    requests.forEach(request => {",
+									"        pm.sendRequest(request.request, (err, response) => {",
+									"            pm.test(\"relation test: \" + request.type, () => {",
+									"                const json = response.json();",
+									"                pm.expect(json.id).to.eql(request.id);",
+									"                //var same = utils.areEntitiesTheSameRelation(json, utils.data[request.type + \"DefaultEntity\"], utils.data[request.type + \"EntityKeys\"], utils.data[request.type + \"RelationKeys\"]);",
+									"                var same = utils.areEntitiesTheSameRelation(json, utils.data[request.type + \"DefaultEntity\"], utils.data[request.type + \"EntityKeys\"], [",
+									"    \"media\",",
+									"    \"tasks\",",
+									"    \"comments\",",
+									"    \"notifications\"]);",
+									"                ",
+									"                pm.expect(same).to.be.true;",
+									"            });",
+									"        });",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"Object.keys(utils.data).forEach(key => {\r",
+									"    if (!utils.data[key]) pm.collectionVariables.unset(utils.keys[key])\r",
+									"    else pm.collectionVariables.set(utils.keys[key], JSON.stringify(utils.data[key]))\r",
+									"});\r",
+									"\r",
+									"function addParentToCulturalAssetDefaultEntity(id) {\r",
+									"    const culturalAssetDefaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"    culturalAssetDefaultEntity.culturalAssetParent = { id };\r",
+									"    pm.collectionVariables.set(\"cultural_asset_default_entity\", JSON.stringify(culturalAssetDefaultEntity));\r",
+									"}\r",
+									"\r",
+									"if (!pm.collectionVariables.get(\"parent_cultural_asset_id\")) {\r",
+									"    const request = {\r",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/culturalAsset\",\r",
+									"        method: \"POST\",\r",
+									"        header: {\r",
+									"            \"content-type\": \"application/json\"\r",
+									"        },\r",
+									"        body: {\r",
+									"            mode: \"raw\",\r",
+									"            raw: utils.data.culturalAssetParentEntity\r",
+									"        }\r",
+									"    };\r",
+									"    pm.sendRequest(request, (err, response) => {\r",
+									"        const id = response.json().id;\r",
+									"        pm.collectionVariables.set(\"parent_cultural_asset_id\", id);\r",
+									"        addParentToCulturalAssetDefaultEntity(id);\r",
+									"    });\r",
+									"} else {\r",
+									"    addParentToCulturalAssetDefaultEntity(pm.collectionVariables.get(\"parent_cultural_asset_id\"));\r",
+									"}\r",
+									"\r",
+									"function addChildToCulturalAssetDefaultEntity(id) {\r",
+									"    const culturalAssetDefaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"    culturalAssetDefaultEntity.culturalAssetChildren.push({ id });\r",
+									"    pm.collectionVariables.set(\"cultural_asset_default_entity\", JSON.stringify(culturalAssetDefaultEntity));\r",
+									"}\r",
+									"\r",
+									"if (!pm.collectionVariables.get(\"child_cultural_asset_id\")) {\r",
+									"    const request = {\r",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/culturalAsset\",\r",
+									"        method: \"POST\",\r",
+									"        header: {\r",
+									"            \"content-type\": \"application/json\"\r",
+									"        },\r",
+									"        body: {\r",
+									"            mode: \"raw\",\r",
+									"            raw: utils.data.culturalAssetChildEntity\r",
+									"        }\r",
+									"    };\r",
+									"    pm.sendRequest(request, (err, response) => {\r",
+									"        const id = response.json().id;\r",
+									"        pm.collectionVariables.set(\"child_cultural_asset_id\", id);\r",
+									"        addChildToCulturalAssetDefaultEntity(id);\r",
+									"    });\r",
+									"} else {\r",
+									"    addChildToCulturalAssetDefaultEntity(pm.collectionVariables.get(\"child_cultural_asset_id\"));\r",
+									"}\r",
+									"\r",
+									"function addTaskToCulturalAssetDefaultEntity(id) {\r",
+									"    const culturalAssetDefaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"    culturalAssetDefaultEntity.tasks.push({ id });\r",
+									"    pm.collectionVariables.set(\"cultural_asset_default_entity\", JSON.stringify(culturalAssetDefaultEntity));\r",
+									"}\r",
+									"\r",
+									"if (!pm.collectionVariables.get(\"task_id\")) {\r",
+									"    const request = {\r",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/task\",\r",
+									"        method: \"POST\",\r",
+									"        header: {\r",
+									"            \"content-type\": \"application/json\"\r",
+									"        },\r",
+									"        body: {\r",
+									"            mode: \"raw\",\r",
+									"            raw: utils.data.taskDefaultEntity\r",
+									"        }\r",
+									"    };\r",
+									"    pm.sendRequest(request, (err, response) => {\r",
+									"        const id = response.json().id;\r",
+									"        pm.collectionVariables.set(\"task_id\", id);\r",
+									"        addTaskToCulturalAssetDefaultEntity(id);\r",
+									"    });\r",
+									"} else {\r",
+									"    addTaskToCulturalAssetDefaultEntity(pm.collectionVariables.get(\"task_id\"));\r",
+									"}\r",
+									"\r",
+									"function addCommentToCulturalAssetDefaultEntity(id) {\r",
+									"    const culturalAssetDefaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"    culturalAssetDefaultEntity.comments.push({ id });\r",
+									"    pm.collectionVariables.set(\"cultural_asset_default_entity\", JSON.stringify(culturalAssetDefaultEntity));\r",
+									"}\r",
+									"\r",
+									"if (!pm.collectionVariables.get(\"comment_id\")) {\r",
+									"    const request = {\r",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/comment\",\r",
+									"        method: \"POST\",\r",
+									"        header: {\r",
+									"            \"content-type\": \"application/json\"\r",
+									"        },\r",
+									"        body: {\r",
+									"            mode: \"raw\",\r",
+									"            raw: utils.data.commentDefaultEntity\r",
+									"        }\r",
+									"    };\r",
+									"    pm.sendRequest(request, (err, response) => {\r",
+									"        const id = response.json().id;\r",
+									"        pm.collectionVariables.set(\"comment_id\", id);\r",
+									"        addCommentToCulturalAssetDefaultEntity(id);\r",
+									"    });\r",
+									"} else {\r",
+									"    addCommentToCulturalAssetDefaultEntity(pm.collectionVariables.get(\"comment_id\"));\r",
+									"}\r",
+									"\r",
+									"function addNotificationToCulturalAssetDefaultEntity(id) {\r",
+									"    const culturalAssetDefaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"    culturalAssetDefaultEntity.notifications.push({ id });\r",
+									"    pm.collectionVariables.set(\"cultural_asset_default_entity\", JSON.stringify(culturalAssetDefaultEntity));\r",
+									"}\r",
+									"\r",
+									"if (!pm.collectionVariables.get(\"notification_id\")) {\r",
+									"    const request = {\r",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/notification\",\r",
+									"        method: \"POST\",\r",
+									"        header: {\r",
+									"            \"content-type\": \"application/json\"\r",
+									"        },\r",
+									"        body: {\r",
+									"            mode: \"raw\",\r",
+									"            raw: utils.data.notificationDefaultEntity\r",
+									"        }\r",
+									"    };\r",
+									"    pm.sendRequest(request, (err, response) => {\r",
+									"        const id = response.json().id;\r",
+									"        pm.collectionVariables.set(\"notification_id\", id);\r",
+									"        addNotificationToCulturalAssetDefaultEntity(id);\r",
+									"    });\r",
+									"} else {\r",
+									"    addNotificationToCulturalAssetDefaultEntity(pm.collectionVariables.get(\"notification_id\"));\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{cultural_asset_default_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/culturalAsset",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cultural Asset: Find all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Created entity was found\", () => {\r",
+									"    var content = parsedBody.content;\r",
+									"    var found = false;\r",
+									"    for (var i = 0; i < content.length && !found; i++) {\r",
+									"        found = content[i].id == pm.collectionVariables.get(\"cultural_asset_id\");\r",
+									"    }\r",
+									"    pm.expect(found).to.eql(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/culturalAsset",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cultural Asset: Find by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Correct entity found\", () => {\r",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, relationKeys);\r",
+									"    pm.expect(same).to.eql(true);\r",
+									"    pm.expect(parsedBody.id).to.eql(pm.collectionVariables.get(\"cultural_asset_id\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/culturalAsset/{{cultural_asset_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset",
+								"{{cultural_asset_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cultural Asset: Get all media",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Get all media\", () => {\r",
+									"    const content = parsedBody.content;\r",
+									"    const media = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\")).media;\r",
+									"    pm.expect(content.length).to.eql(media.length);\r",
+									"    for (var i = 0; i < media.length; i++) {\r",
+									"        var found = false;\r",
+									"        for (var j = 0; j < content.length; j++) {\r",
+									"            found = (media[i].id == content[j].id);\r",
+									"            if (found) break;\r",
+									"        }\r",
+									"        pm.expect(found).to.be.true;\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/culturalAsset/{{cultural_asset_id}}/media",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset",
+								"{{cultural_asset_id}}",
+								"media"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cultural Asset: Find in radius",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Found cultural asset in radius\", () => {\r",
+									"    const content = parsedBody.content;\r",
+									"    var found = false;\r",
+									"    for (var i = 0; i < content.length; i++) {\r",
+									"        if (content[i]) { //TODO: fix FROST\r",
+									"            found = (pm.collectionVariables.get(\"cultural_asset_id\") == content[i].id);\r",
+									"            if (found) break;\r",
+									"        }\r",
+									"    }\r",
+									"    pm.expect(found).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/culturalAsset/radius?radius={{radius}}&longitude={{longitude}}&latitude={{latitude}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset",
+								"radius"
+							],
+							"query": [
+								{
+									"key": "radius",
+									"value": "{{radius}}"
+								},
+								{
+									"key": "longitude",
+									"value": "{{longitude}}"
+								},
+								{
+									"key": "latitude",
+									"value": "{{latitude}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cultural Asset: Get all tasks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Get all tasks\", () => {\r",
+									"    const content = parsedBody.content;\r",
+									"    const tasks = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\")).tasks;\r",
+									"    pm.expect(content.length).to.eql(tasks.length);\r",
+									"    for (var i = 0; i < tasks.length; i++) {\r",
+									"        var found = false;\r",
+									"        for (var j = 0; j < content.length; j++) {\r",
+									"            found = (tasks[i].id == content[j].id);\r",
+									"            if (found) break;\r",
+									"        }\r",
+									"        pm.expect(found).to.be.true;\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/culturalAsset/{{cultural_asset_id}}/tasks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset",
+								"{{cultural_asset_id}}",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cultural Asset: Get all comments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Get all comments\", () => {\r",
+									"    const content = parsedBody.content;\r",
+									"    const comments = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\")).comments;\r",
+									"    pm.expect(content.length).to.eql(comments.length);\r",
+									"    for (var i = 0; i < comments.length; i++) {\r",
+									"        var found = false;\r",
+									"        for (var j = 0; j < content.length; j++) {\r",
+									"            found = (comments[i].id == content[j].id);\r",
+									"            if (found) break;\r",
+									"        }\r",
+									"        pm.expect(found).to.be.true;\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/culturalAsset/{{cultural_asset_id}}/comments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset",
+								"{{cultural_asset_id}}",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cultural Asset: Get all children",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Get all children\", () => {\r",
+									"    const content = parsedBody.content;\r",
+									"    const children = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\")).culturalAssetChildren;\r",
+									"    pm.expect(content.length).to.eql(children.length);\r",
+									"    for (var i = 0; i < children.length; i++) {\r",
+									"        var found = false;\r",
+									"        for (var j = 0; j < content.length; j++) {\r",
+									"            found = (children[i].id == content[j].id);\r",
+									"            if (found) break;\r",
+									"        }\r",
+									"        pm.expect(found).to.be.true;\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/culturalAsset/{{cultural_asset_id}}/children",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset",
+								"{{cultural_asset_id}}",
+								"children"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cultural Asset: Get all notifications",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Get all notifications\", () => {\r",
+									"    const content = parsedBody.content;\r",
+									"    const notifications = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\")).notifications;\r",
+									"    pm.expect(content.length).to.eql(notifications.length);\r",
+									"    for (var i = 0; i < notifications.length; i++) {\r",
+									"        var found = false;\r",
+									"        for (var j = 0; j < content.length; j++) {\r",
+									"            found = (notifications[i].id == content[j].id);\r",
+									"            if (found) break;\r",
+									"        }\r",
+									"        pm.expect(found).to.be.true;\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/culturalAsset/{{cultural_asset_id}}/notifications",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset",
+								"{{cultural_asset_id}}",
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cultural Asset: Get distance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Distance was calculated\", () => {\r",
+									"    var expected = 6708766;\r",
+									"    var found = +parsedBody;\r",
+									"    var difference = Math.abs(expected - found)\r",
+									"    pm.expect(difference).to.be.below(1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/culturalAsset/{{cultural_asset_id}}/distance?longitude={{longitudeUpdated}}&latitude={{latitudeUpdated}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset",
+								"{{cultural_asset_id}}",
+								"distance"
+							],
+							"query": [
+								{
+									"key": "longitude",
+									"value": "{{longitudeUpdated}}"
+								},
+								{
+									"key": "latitude",
+									"value": "{{latitudeUpdated}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cultural Asset: Add cultural asset child",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Add child to cultural asset correctly\", () => {\r",
+									"    var children = parsedBody.culturalAssetChildren;\r",
+									"    var found = false;\r",
+									"    for (var i = 0; i < children.length; i++) {\r",
+									"        found = children[i] == pm.collectionVariables.get(\"child_cultural_asset_id\");\r",
+									"    }\r",
+									"    pm.expect(found).to.eql(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.collectionVariables.get(\"child_cultural_asset_id\")) {\r",
+									"    const request = {\r",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/culturalAsset\",\r",
+									"        method: 'POST',\r",
+									"        header: {\r",
+									"            \"content-type\": \"application/json\"\r",
+									"        },\r",
+									"        body: {\r",
+									"            mode: \"raw\",\r",
+									"            raw: pm.collectionVariables.get(\"child_cultural_asset_entity\")\r",
+									"        }\r",
+									"    };\r",
+									"    pm.sendRequest(request, (err, response) => {\r",
+									"        const id = response.json().id;\r",
+									"        pm.collectionVariables.set(\"child_cultural_asset_id\", id);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/culturalAsset/{{cultural_asset_id}}/addChild/{{child_cultural_asset_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset",
+								"{{cultural_asset_id}}",
+								"addChild",
+								"{{child_cultural_asset_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cultural Asset: Remove cultural asset child",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Remove child from cultural asset correctly\", () => {\r",
+									"    var children = parsedBody.culturalAssetChildren;\r",
+									"    var found = false;\r",
+									"    for (var i = 0; i < children.length; i++) {\r",
+									"        found = children[i] == pm.collectionVariables.get(\"child_cultural_asset_id\");\r",
+									"    }\r",
+									"    pm.expect(found).to.eql(false);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.collectionVariables.get(\"child_cultural_asset_id\")) {\r",
+									"    const request = {\r",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/culturalAsset\",\r",
+									"        method: 'POST',\r",
+									"        header: {\r",
+									"            \"content-type\": \"application/json\"\r",
+									"        },\r",
+									"        body: {\r",
+									"            mode: \"raw\",\r",
+									"            raw: pm.collectionVariables.get(\"child_cultural_asset_entity\")\r",
+									"        }\r",
+									"    };\r",
+									"    pm.sendRequest(request, (err, response) => {\r",
+									"        const id = response.json().id;\r",
+									"        pm.collectionVariables.set(\"child_cultural_asset_id\", id);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/culturalAsset/{{cultural_asset_id}}/removeChild/{{child_cultural_asset_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset",
+								"{{cultural_asset_id}}",
+								"removeChild",
+								"{{child_cultural_asset_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cultural Asset: Set cultural asset parent",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Parent correctly set\", () => {\r",
+									"    var parent = parsedBody.culturalAssetParent;\r",
+									"    var same = parent == pm.collectionVariables.get(\"parent_cultural_asset_id\");\r",
+									"    pm.expect(same).to.eql(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.collectionVariables.get(\"parent_cultural_asset_id\")) {\r",
+									"    const request = {\r",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/culturalAsset\",\r",
+									"        method: 'POST',\r",
+									"        header: {\r",
+									"            \"content-type\": \"application/json\"\r",
+									"        },\r",
+									"        body: {\r",
+									"            mode: \"raw\",\r",
+									"            raw: pm.collectionVariables.get(\"parent_cultural_asset_entity\")\r",
+									"        }\r",
+									"    };\r",
+									"    pm.sendRequest(request, (err, response) => {\r",
+									"        const id = response.json().id;\r",
+									"        pm.collectionVariables.set(\"parent_cultural_asset_id\", id);\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/culturalAsset/{{cultural_asset_id}}/setParent/{{parent_cultural_asset_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset",
+								"{{cultural_asset_id}}",
+								"setParent",
+								"{{parent_cultural_asset_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cultural Asset: Remove cultural asset parent",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Parent correctly removed\", () => {\r",
+									"    var parent = parsedBody.culturalAssetParent;\r",
+									"    var same = parent == null;\r",
+									"    pm.expect(same).to.eql(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/culturalAsset/{{cultural_asset_id}}/removeParent",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset",
+								"{{cultural_asset_id}}",
+								"removeParent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cultural Asset: Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Entity correctly updated\", () => {   \r",
+									"    var same = utils.areEntitiesTheSame(parsedBody, patchEntity, entityKeys, relationKeys);\r",
+									"    pm.expect(same).to.be.true;\r",
+									"    testRelationsRequests(utils.testRelations(parsedBody, \"culturalAssetRelationKeys\", relationKeys));\r",
+									"    pm.expect(parsedBody.id).to.eql(pm.collectionVariables.get(\"cultural_asset_id\"));\r",
+									"});\r",
+									"\r",
+									"function testRelationsRequests(requests) {\r",
+									"    requests.forEach(request => {\r",
+									"        pm.sendRequest(request.request, (err, response) => {\r",
+									"            pm.test(\"relation test: \" + request.type, () => {\r",
+									"                const json = response.json();\r",
+									"                pm.expect(json.id).to.eql(request.id);\r",
+									"                var same = utils.areEntitiesTheSameRelation(json, utils.data[request.type + \"DefaultEntity\"], utils.data[request.type + \"EntityKeys\"], utils.data[request.type + \"RelationKeys\"]);\r",
+									"                pm.expect(same).to.be.true;\r",
+									"            });\r",
+									"        });\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const tasks = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\")).tasks;",
+									"const oldTaskId = tasks[tasks.length - 1].id;",
+									"request = {",
+									"    url: pm.collectionVariables.get(\"base_url\") + \"/task\",",
+									"    method: \"POST\",",
+									"    header: {",
+									"        \"content-type\": \"application/json\"",
+									"    },",
+									"    body: {",
+									"        mode: \"raw\",",
+									"        raw: utils.data.taskDefaultEntity",
+									"    }",
+									"};",
+									"pm.sendRequest(request, (err, response) => {",
+									"    const newTaskId = response.json().id;",
+									"    for (var i = 0; i < tasks.length; i++) {",
+									"        if (tasks[i].id == oldTaskId) {",
+									"            tasks.splice(i, 1);",
+									"            tasks.push({ id: newTaskId });",
+									"        }",
+									"    }",
+									"    const culturalAssetPatchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));",
+									"    culturalAssetPatchEntity.tasks = tasks;",
+									"    pm.collectionVariables.set(\"cultural_asset_patch_entity\", JSON.stringify(culturalAssetPatchEntity));",
+									"})",
+									"",
+									"const comments = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\")).comments;",
+									"const oldCommentId = comments[comments.length - 1].id;",
+									"request = {",
+									"    url: pm.collectionVariables.get(\"base_url\") + \"/comment\",",
+									"    method: \"POST\",",
+									"    header: {",
+									"        \"content-type\": \"application/json\"",
+									"    },",
+									"    body: {",
+									"        mode: \"raw\",",
+									"        raw: utils.data.commentDefaultEntity",
+									"    }",
+									"};",
+									"pm.sendRequest(request, (err, response) => {",
+									"    const newCommentId = response.json().id;",
+									"    for (var i = 0; i < comments.length; i++) {",
+									"        if (comments[i].id == oldCommentId) {",
+									"            comments.splice(i, 1);",
+									"            comments.push({ id: newCommentId });",
+									"        }",
+									"    }",
+									"    const culturalAssetPatchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));",
+									"    culturalAssetPatchEntity.comments = comments;",
+									"    pm.collectionVariables.set(\"cultural_asset_patch_entity\", JSON.stringify(culturalAssetPatchEntity));",
+									"})",
+									"",
+									"const notifications = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\")).notifications;",
+									"const oldNotificationId = notifications[notifications.length - 1].id;",
+									"request = {",
+									"    url: pm.collectionVariables.get(\"base_url\") + \"/notification\",",
+									"    method: \"POST\",",
+									"    header: {",
+									"        \"content-type\": \"application/json\"",
+									"    },",
+									"    body: {",
+									"        mode: \"raw\",",
+									"        raw: utils.data.notificationDefaultEntity",
+									"    }",
+									"};",
+									"pm.sendRequest(request, (err, response) => {",
+									"    const newNotificationId = response.json().id;",
+									"    for (var i = 0; i < notifications.length; i++) {",
+									"        if (notifications[i].id == oldNotificationId) {",
+									"            notifications.splice(i, 1);",
+									"            notifications.push({ id: newNotificationId });",
+									"        }",
+									"    }",
+									"    const culturalAssetPatchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));",
+									"    culturalAssetPatchEntity.notifications = notifications;",
+									"    pm.collectionVariables.set(\"cultural_asset_patch_entity\", JSON.stringify(culturalAssetPatchEntity));",
+									"})",
+									"",
+									"request = {",
+									"    url: pm.collectionVariables.get(\"base_url\") + \"/culturalAsset\",",
+									"    method: \"POST\",",
+									"    header: {",
+									"        \"content-type\": \"application/json\"",
+									"    },",
+									"    body: {",
+									"        mode: \"raw\",",
+									"        raw: utils.data.culturalAssetDefaultEntity",
+									"    }",
+									"};",
+									"pm.sendRequest(request, (err, response) => {",
+									"    const id = response.json().id;",
+									"    const culturalAssetPatchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));",
+									"    culturalAssetPatchEntity.culturalAssetParent = { id };",
+									"    pm.collectionVariables.set(\"cultural_asset_patch_entity\", JSON.stringify(culturalAssetPatchEntity));",
+									"});",
+									"",
+									"const culturalAssetChildren = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\")).culturalAssetChildren;",
+									"const oldCulturalAssetChildId = culturalAssetChildren[culturalAssetChildren.length - 1].id;",
+									"request = {",
+									"    url: pm.collectionVariables.get(\"base_url\") + \"/culturalAsset\",",
+									"    method: \"POST\",",
+									"    header: {",
+									"        \"content-type\": \"application/json\"",
+									"    },",
+									"    body: {",
+									"        mode: \"raw\",",
+									"        raw: utils.data.culturalAssetDefaultEntity",
+									"    }",
+									"};",
+									"pm.sendRequest(request, (err, response) => {",
+									"    const newCulturalAssetChildId = response.json().id;",
+									"    for (var i = 0; i < culturalAssetChildren.length; i++) {",
+									"        if (culturalAssetChildren[i].id == oldCulturalAssetChildId) {",
+									"            culturalAssetChildren.splice(i, 1);",
+									"            culturalAssetChildren.push({ id: newCulturalAssetChildId });",
+									"        }",
+									"    }",
+									"    const culturalAssetPatchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));",
+									"    culturalAssetPatchEntity.culturalAssetChildren = culturalAssetChildren;",
+									"    pm.collectionVariables.set(\"cultural_asset_patch_entity\", JSON.stringify(culturalAssetPatchEntity));",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{cultural_asset_patch_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/culturalAsset/{{cultural_asset_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset",
+								"{{cultural_asset_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cultural Asset: Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"cultural_asset_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"cultural_asset_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Created entity was deleted\", () => {\r",
+									"    pm.expect(parsedBody.deleted).to.eql(true);\r",
+									"    pm.collectionVariables.set(\"cultural_asset_id\", null);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/culturalAsset/{{cultural_asset_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"culturalAsset",
+								"{{cultural_asset_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Notification",
+			"item": [
+				{
+					"name": "Notification: Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"notification_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"notification_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"notification_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"notification_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Entity created correctly\", () => {\r",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, relationKeys);\r",
+									"    pm.expect(same).to.be.true;\r",
+									"    testRelationsRequests(utils.testRelations(parsedBody, \"notificationRelationKeys\", relationKeys));\r",
+									"    pm.collectionVariables.set(\"notification_id\", parsedBody.id);\r",
+									"});\r",
+									"\r",
+									"function testRelationsRequests(requests) {\r",
+									"    requests.forEach(request => {\r",
+									"        pm.sendRequest(request.request, (err, response) => {\r",
+									"            pm.test(\"relation test: \" + request.type, () => {\r",
+									"                const json = response.json();\r",
+									"                pm.expect(json.id).to.eql(request.id);\r",
+									"                var same = utils.areEntitiesTheSameRelation(json, utils.data[request.type + \"DefaultEntity\"], utils.data[request.type + \"EntityKeys\"], utils.data[request.type + \"RelationKeys\"]);\r",
+									"                pm.expect(same).to.be.true;\r",
+									"            });\r",
+									"        });\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"Object.keys(utils.data).forEach(key => {",
+									"    if (!utils.data[key]) pm.collectionVariables.unset(utils.keys[key])",
+									"    else pm.collectionVariables.set(utils.keys[key], JSON.stringify(utils.data[key]))",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{notification_default_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/notification",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notification"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Notification: Find all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"notification_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"notification_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"notification_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"notification_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Created entity was found\", () => {\r",
+									"    var content = parsedBody.content;\r",
+									"    var found = false;\r",
+									"    for (var i = 0; i < content.length && !found; i++) {\r",
+									"        found = content[i].id == pm.collectionVariables.get(\"notification_id\");\r",
+									"    }\r",
+									"    pm.expect(found).to.eql(true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/notification",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notification"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Notification: Find by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"notification_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"notification_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"notification_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"notification_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Correct entity found\", () => {\r",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, relationKeys);\r",
+									"    pm.expect(same).to.eql(true);\r",
+									"    pm.expect(parsedBody.id).to.eql(pm.collectionVariables.get(\"notification_id\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/notification/{{notification_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notification",
+								"{{notification_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Notification: Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"notification_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"notification_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"notification_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"notification_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Created entity was deleted\", () => {\r",
+									"    pm.expect(parsedBody.deleted).to.eql(true);\r",
+									"    pm.collectionVariables.set(\"notification_id\", null);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/notification/{{notification_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notification",
+								"{{notification_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Notification: Create and automatically set sender",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"notification_entity_keys\"));\r",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"notification_relation_keys\"));\r",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"notification_default_entity\"));\r",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"notification_patch_entity\"));\r",
+									"\r",
+									"const parsedBody = JSON.parse(responseBody);\r",
+									"pm.test(\"Correct sender set\", () => {\r",
+									"    pm.expect(parsedBody.sender.id).to.eql(pm.collectionVariables.get(\"requester_user_id\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Entity created correctly\", () => {\r",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, []);\r",
+									"    pm.expect(same).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"Object.keys(utils.data).forEach(key => {",
+									"    if (!utils.data[key]) pm.collectionVariables.unset(utils.keys[key])",
+									"    else pm.collectionVariables.set(utils.keys[key], JSON.stringify(utils.data[key]))",
+									"});",
+									"",
+									"if (!pm.collectionVariables.get(\"requester_user_id\")) {",
+									"    const request = {",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/user/me\",",
+									"        method: 'GET'",
+									"    };",
+									"    pm.sendRequest(request, (err, response) => {",
+									"        const id = response.json().id;",
+									"        pm.collectionVariables.set(\"requester_user_id\", id);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{notification_default_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/notification/autoSender",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notification",
+								"autoSender"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Subtask",
+			"item": [
+				{
+					"name": "Subtask: Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"subtask_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"subtask_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"subtask_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"subtask_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Entity created correctly\", () => {",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, relationKeys);",
+									"    pm.expect(same).to.be.true;",
+									"    testRelationsRequests(utils.testRelations(parsedBody, \"subtaskRelationKeys\", relationKeys));",
+									"    pm.collectionVariables.set(\"subtask_id\", parsedBody.id);",
+									"});",
+									"",
+									"function testRelationsRequests(requests) {",
+									"    requests.forEach(request => {",
+									"        pm.sendRequest(request.request, (err, response) => {",
+									"            pm.test(\"relation test: \" + request.type, () => {",
+									"                const json = response.json();",
+									"                pm.expect(json.id).to.eql(request.id);",
+									"                var same = utils.areEntitiesTheSameRelation(json, utils.data[request.type + \"DefaultEntity\"], utils.data[request.type + \"EntityKeys\"], utils.data[request.type + \"RelationKeys\"]);",
+									"                pm.expect(same).to.be.true;",
+									"            });",
+									"        });",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"Object.keys(utils.data).forEach(key => {",
+									"    if (!utils.data[key]) pm.collectionVariables.unset(utils.keys[key])",
+									"    else pm.collectionVariables.set(utils.keys[key], JSON.stringify(utils.data[key]))",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{subtask_default_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/subtask",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"subtask"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subtask: Find all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"subtask_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"subtask_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"subtask_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"subtask_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Created entity was found\", () => {",
+									"    var content = parsedBody.content;",
+									"    var found = false;",
+									"    for (var i = 0; i < content.length && !found; i++) {",
+									"        found = content[i].id == pm.collectionVariables.get(\"subtask_id\");",
+									"    }",
+									"    pm.expect(found).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/subtask",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"subtask"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subtask: Find by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"subtask_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"subtask_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"subtask_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"subtask_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Correct entity found\", () => {",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, relationKeys);",
+									"    pm.expect(same).to.eql(true);",
+									"    pm.expect(parsedBody.id).to.eql(pm.collectionVariables.get(\"subtask_id\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/subtask/{{subtask_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"subtask",
+								"{{subtask_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subtask: Change state",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"subtask_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"subtask_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"subtask_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"subtask_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Updated state correctly\", () => {",
+									"    pm.expect(parsedBody.state).to.eql(+pm.collectionVariables.get(\"updated_state\"));",
+									"    pm.collectionVariables.set(\"updated_state\", parsedBody.state + 1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/subtask/{{subtask_id}}/changeState/{{updated_state}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"subtask",
+								"{{subtask_id}}",
+								"changeState",
+								"{{updated_state}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subtask: Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"subtask_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"subtask_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"subtask_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"subtask_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Entity correctly updated\", () => {",
+									"    var same = utils.areEntitiesTheSame(parsedBody, patchEntity, entityKeys, relationKeys);",
+									"    pm.expect(same).to.be.true;",
+									"    testRelationsRequests(utils.testRelations(parsedBody, \"subtaskRelationKeys\", relationKeys));",
+									"    pm.expect(parsedBody.id).to.eql(pm.collectionVariables.get(\"subtask_id\"));",
+									"});",
+									"",
+									"function testRelationsRequests(requests) {",
+									"    requests.forEach(request => {",
+									"        pm.sendRequest(request.request, (err, response) => {",
+									"            pm.test(\"relation test: \" + request.type, () => {",
+									"                const json = response.json();",
+									"                pm.expect(json.id).to.eql(request.id);",
+									"                var same = utils.areEntitiesTheSameRelation(json, utils.data[request.type + \"DefaultEntity\"], utils.data[request.type + \"EntityKeys\"], utils.data[request.type + \"RelationKeys\"]);",
+									"                pm.expect(same).to.be.true;",
+									"            });",
+									"        });",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{subtask_patch_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/subtask/{{subtask_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"subtask",
+								"{{subtask_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subtask: Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"subtask_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"subtask_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"subtask_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"subtask_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Created entity was deleted\", () => {",
+									"    pm.expect(parsedBody.deleted).to.eql(true);",
+									"    pm.collectionVariables.set(\"user_id\", null);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/subtask/{{subtask_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"subtask",
+								"{{subtask_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Task",
+			"item": [
+				{
+					"name": "Task: Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"task_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"task_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Entity created correctly\", () => {",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, relationKeys);",
+									"    pm.expect(same).to.be.true;",
+									"    testRelationsRequests(utils.testRelations(parsedBody, \"taskRelationKeys\", relationKeys));",
+									"    pm.collectionVariables.set(\"task_id\", parsedBody.id);",
+									"});",
+									"",
+									"function testRelationsRequests(requests) {",
+									"    requests.forEach(request => {",
+									"        pm.sendRequest(request.request, (err, response) => {",
+									"            pm.test(\"relation test: \" + request.type, () => {",
+									"                const json = response.json();",
+									"                pm.expect(json.id).to.eql(request.id);",
+									"                var same = utils.areEntitiesTheSameRelation(json, utils.data[request.type + \"DefaultEntity\"], utils.data[request.type + \"EntityKeys\"], utils.data[request.type + \"RelationKeys\"], 2);",
+									"                pm.expect(same).to.be.true;",
+									"            });",
+									"        });",
+									"    });",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"Object.keys(utils.data).forEach(key => {",
+									"    if (!utils.data[key]) pm.collectionVariables.unset(utils.keys[key])",
+									"    else pm.collectionVariables.set(utils.keys[key], JSON.stringify(utils.data[key]))",
+									"});",
+									"",
+									"function addCommentToTaskDefaultEntity(id) {",
+									"    const taskDefaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"    taskDefaultEntity.comments.push({ id });",
+									"    pm.collectionVariables.set(\"task_default_entity\", JSON.stringify(taskDefaultEntity));",
+									"}",
+									"",
+									"function addHelperUserToTaskDefaultEntity(id) {",
+									"    const taskDefaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"    taskDefaultEntity.helperUsers.push({ id });",
+									"    pm.collectionVariables.set(\"task_default_entity\", JSON.stringify(taskDefaultEntity));",
+									"}",
+									"",
+									"function addSubtaskToTaskDefaultEntity(subtask) {",
+									"    const taskDefaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"    taskDefaultEntity.subtasks.push(subtask);",
+									"    pm.collectionVariables.set(\"task_default_entity\", JSON.stringify(taskDefaultEntity));",
+									"}",
+									"",
+									"function setCulturalAssetOnTaskDefaultEntity(id) {",
+									"    const taskDefaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"    taskDefaultEntity.culturalAsset = { id };",
+									"    pm.collectionVariables.set(\"task_default_entity\", JSON.stringify(taskDefaultEntity));",
+									"}",
+									"",
+									"function setContactUserOnTaskDefaultEntity(id) {",
+									"    const taskDefaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"    taskDefaultEntity.contactUser = { id };",
+									"    pm.collectionVariables.set(\"task_default_entity\", JSON.stringify(taskDefaultEntity));",
+									"}",
+									"",
+									"if (!pm.collectionVariables.get(\"comment_id\")) {",
+									"    const request = {",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/comment\",",
+									"        method: \"POST\",",
+									"        header: {",
+									"            \"content-type\": \"application/json\"",
+									"        },",
+									"        body: {",
+									"            mode: \"raw\",",
+									"            raw: utils.data.commentDefaultEntity",
+									"        }",
+									"    };",
+									"    pm.sendRequest(request, (err, response) => {",
+									"        const id = response.json().id;",
+									"        pm.collectionVariables.set(\"comment_id\", id);",
+									"        addCommentToTaskDefaultEntity(id);",
+									"    });",
+									"} else {",
+									"    addCommentToTaskDefaultEntity(pm.collectionVariables.get(\"comment_id\"));",
+									"}",
+									"",
+									"if (!pm.collectionVariables.get(\"user_id\")) {",
+									"    const request = {",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/user\",",
+									"        method: \"POST\",",
+									"        header: {",
+									"            \"content-type\": \"application/json\"",
+									"        },",
+									"        body: {",
+									"            mode: \"raw\",",
+									"            raw: utils.data.userDefaultEntity",
+									"        }",
+									"    };",
+									"    pm.sendRequest(request, (err, response) => {",
+									"        const id = response.json().id;",
+									"        pm.collectionVariables.set(\"user_id\", id);",
+									"        setContactUserOnTaskDefaultEntity(id);",
+									"        addHelperUserToTaskDefaultEntity(id);",
+									"    });",
+									"} else {",
+									"    setContactUserOnTaskDefaultEntity(pm.collectionVariables.get(\"user_id\"));",
+									"    addHelperUserToTaskDefaultEntity(pm.collectionVariables.get(\"user_id\"));",
+									"}",
+									"",
+									"addSubtaskToTaskDefaultEntity(JSON.parse(pm.collectionVariables.get(\"subtask_default_entity\")));",
+									"",
+									"if (!pm.collectionVariables.get(\"cultural_asset_id\")) {",
+									"    const request = {",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/culturalAsset\",",
+									"        method: \"POST\",",
+									"        header: {",
+									"            \"content-type\": \"application/json\"",
+									"        },",
+									"        body: {",
+									"            mode: \"raw\",",
+									"            raw: utils.data.culturalAssetDefaultEntity",
+									"        }",
+									"    };",
+									"    pm.sendRequest(request, (err, response) => {",
+									"        const id = response.json().id;",
+									"        pm.collectionVariables.set(\"cultural_asset_id\", id);",
+									"        setCulturalAssetOnTaskDefaultEntity(id);",
+									"    });",
+									"} else {",
+									"    setCulturalAssetOnTaskDefaultEntity(pm.collectionVariables.get(\"cultural_asset_id\"));",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task_default_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/task",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Task: Find all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"task_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"task_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Created entity was found\", () => {",
+									"    var content = parsedBody.content;",
+									"    var found = false;",
+									"    for (var i = 0; i < content.length && !found; i++) {",
+									"        found = content[i].id == pm.collectionVariables.get(\"task_id\");",
+									"    }",
+									"    pm.expect(found).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/task",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Task: Find by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"task_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"task_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Correct entity found\", () => {",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, relationKeys);",
+									"    pm.expect(same).to.eql(true);",
+									"    pm.expect(parsedBody.id).to.eql(pm.collectionVariables.get(\"task_id\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/task/{{task_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"task",
+								"{{task_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Task: Get all media",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"task_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"task_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Get all media\", () => {",
+									"    const content = parsedBody.content;",
+									"    const media = JSON.parse(pm.collectionVariables.get(\"task_default_entity\")).media;",
+									"    pm.expect(content.length).to.eql(media.length);",
+									"    for (var i = 0; i < media.length; i++) {",
+									"        var found = false;",
+									"        for (var j = 0; j < content.length; j++) {",
+									"            found = (media[i].id == content[j].id);",
+									"            if (found) break;",
+									"        }",
+									"        pm.expect(found).to.be.true;",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/task/{{task_id}}/media",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"task",
+								"{{task_id}}",
+								"media"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Task: Get all comments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"task_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"task_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Get all comments\", () => {",
+									"    const content = parsedBody.content;",
+									"    const comments = JSON.parse(pm.collectionVariables.get(\"task_default_entity\")).comments;",
+									"    pm.expect(content.length).to.eql(comments.length);",
+									"    for (var i = 0; i < comments.length; i++) {",
+									"        var found = false;",
+									"        for (var j = 0; j < content.length; j++) {",
+									"            found = (comments[i].id == content[j].id);",
+									"            if (found) break;",
+									"        }",
+									"        pm.expect(found).to.be.true;",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/task/{{task_id}}/comments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"task",
+								"{{task_id}}",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Task: Get all subtasks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"task_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"task_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Get all subtasks\", () => {",
+									"    const content = parsedBody.content;",
+									"    const subtasks = JSON.parse(pm.collectionVariables.get(\"task_default_entity\")).subtasks;",
+									"    pm.expect(content.length).to.eql(subtasks.length);",
+									"    for (var i = 0; i < subtasks.length; i++) {",
+									"        var found = false;",
+									"        for (var j = 0; j < content.length && !found; j++) {",
+									"            found = utils.areEntitiesTheSame(subtasks[i], content[j], utils.data.subtaskDefaultEntity, [])",
+									"        }",
+									"        pm.expect(found).to.be.true;",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/task/{{task_id}}/subtasks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"task",
+								"{{task_id}}",
+								"subtasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Task: Get all helpers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"task_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"task_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Get all helpers\", () => {",
+									"    const content = parsedBody.content;",
+									"    const helperUsers = JSON.parse(pm.collectionVariables.get(\"task_default_entity\")).helperUsers;",
+									"    pm.expect(content.length).to.eql(helperUsers.length);",
+									"    for (var i = 0; i < helperUsers.length; i++) {",
+									"        var found = false;",
+									"        for (var j = 0; j < content.length; j++) {",
+									"            found = (helperUsers[i].id == content[j].id);",
+									"            if (found) break;",
+									"        }",
+									"        pm.expect(found).to.be.true;",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/task/{{task_id}}/helpers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"task",
+								"{{task_id}}",
+								"helpers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Task: Change state",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"task_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"task_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Updated state correctly\", () => {",
+									"    pm.expect(parsedBody.state).to.eql(+pm.collectionVariables.get(\"updated_state\"));",
+									"    pm.collectionVariables.set(\"updated_state\", parsedBody.state + 1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/task/{{task_id}}/changeState/{{updated_state}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"task",
+								"{{task_id}}",
+								"changeState",
+								"{{updated_state}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Task: Assign helper",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"task_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"task_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"User was assigned as helper\", () => {",
+									"    var helperUsers = parsedBody.helperUsers;",
+									"    var found = false;",
+									"    for (var i = 0; i < helperUsers.length && !found; i++) {",
+									"        found = helperUsers[i].id == pm.collectionVariables.get(\"requester_user_id\");",
+									"    }",
+									"    pm.expect(found).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.collectionVariables.get(\"requester_user_id\")) {",
+									"    const request = {",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/user/me\",",
+									"        method: 'GET'",
+									"    };",
+									"    pm.sendRequest(request, (err, response) => {",
+									"        const id = response.json().id;",
+									"        pm.collectionVariables.set(\"requester_user_id\", id);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/task/{{task_id}}/assignHelper/{{requester_user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"task",
+								"{{task_id}}",
+								"assignHelper",
+								"{{requester_user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Task: Remove helper",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"task_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"task_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"User was removed as helper\", () => {",
+									"    var helperUsers = parsedBody.helperUsers;",
+									"    var found = false;",
+									"    for (var i = 0; i < helperUsers.length; i++) {",
+									"        found = helperUsers[i] == pm.collectionVariables.get(\"requester_user_id\");",
+									"    }",
+									"    pm.expect(found).to.eql(false);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.collectionVariables.get(\"requester_user_id\")) {",
+									"    const request = {",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/user/me\",",
+									"        method: 'GET'",
+									"    };",
+									"    pm.sendRequest(request, (err, response) => {",
+									"        const id = response.json().id;",
+									"        pm.collectionVariables.set(\"requester_user_id\", id);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/task/{{task_id}}/removeHelper/{{requester_user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"task",
+								"{{task_id}}",
+								"removeHelper",
+								"{{requester_user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Task: Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"task_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"task_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Entity correctly updated\", () => {",
+									"    var same = utils.areEntitiesTheSame(parsedBody, patchEntity, entityKeys, relationKeys);",
+									"    pm.expect(same).to.be.true;",
+									"    testRelationsRequests(utils.testRelations(parsedBody, \"taskRelationKeys\", relationKeys));",
+									"    pm.expect(parsedBody.id).to.eql(pm.collectionVariables.get(\"task_id\"));",
+									"});",
+									"",
+									"function testRelationsRequests(requests) {",
+									"    requests.forEach(request => {",
+									"        pm.sendRequest(request.request, (err, response) => {",
+									"            pm.test(\"relation test: \" + request.type, () => {",
+									"                const json = response.json();",
+									"                pm.expect(json.id).to.eql(request.id);",
+									"                var same = utils.areEntitiesTheSameRelation(json, utils.data[request.type + \"DefaultEntity\"], utils.data[request.type + \"EntityKeys\"], utils.data[request.type + \"RelationKeys\"]);",
+									"                pm.expect(same).to.be.true;",
+									"            });",
+									"        });",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const comments = JSON.parse(pm.collectionVariables.get(\"task_default_entity\")).comments;",
+									"const oldCommentId = comments[comments.length - 1].id;",
+									"request = {",
+									"    url: pm.collectionVariables.get(\"base_url\") + \"/comment\",",
+									"    method: \"POST\",",
+									"    header: {",
+									"        \"content-type\": \"application/json\"",
+									"    },",
+									"    body: {",
+									"        mode: \"raw\",",
+									"        raw: utils.data.commentDefaultEntity",
+									"    }",
+									"};",
+									"pm.sendRequest(request, (err, response) => {",
+									"    const newCommentId = response.json().id;",
+									"    for (var i = 0; i < comments.length; i++) {",
+									"        if (comments[i].id == oldCommentId) {",
+									"            comments.splice(i, 1);",
+									"            comments.push({ id: newCommentId });",
+									"        }",
+									"    }",
+									"    const taskPatchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"    taskPatchEntity.comments = comments;",
+									"    pm.collectionVariables.set(\"task_patch_entity\", JSON.stringify(taskPatchEntity));",
+									"});",
+									"",
+									"const helperUsers = JSON.parse(pm.collectionVariables.get(\"task_default_entity\")).helperUsers;",
+									"const oldHelperId = helperUsers[helperUsers.length - 1].id;",
+									"request = {",
+									"    url: pm.collectionVariables.get(\"base_url\") + \"/user\",",
+									"    method: \"POST\",",
+									"    header: {",
+									"        \"content-type\": \"application/json\"",
+									"    },",
+									"    body: {",
+									"        mode: \"raw\",",
+									"        raw: utils.data.userDefaultEntity",
+									"    }",
+									"};",
+									"pm.sendRequest(request, (err, response) => {",
+									"    const newHelperId = response.json().id;",
+									"    for (var i = 0; i < helperUsers.length; i++) {",
+									"        if (helperUsers[i].id == oldHelperId) {",
+									"            helperUsers.splice(i, 1);",
+									"            helperUsers.push({ id: newHelperId });",
+									"        }",
+									"    }",
+									"    const taskPatchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"    taskPatchEntity.helperUsers = helperUsers;",
+									"    pm.collectionVariables.set(\"task_patch_entity\", JSON.stringify(taskPatchEntity));",
+									"});",
+									"",
+									"request = {",
+									"    url: pm.collectionVariables.get(\"base_url\") + \"/user\",",
+									"    method: \"POST\",",
+									"    header: {",
+									"        \"content-type\": \"application/json\"",
+									"    },",
+									"    body: {",
+									"        mode: \"raw\",",
+									"        raw: utils.data.userDefaultEntity",
+									"    }",
+									"};",
+									"pm.sendRequest(request, (err, response) => {",
+									"    const id = response.json().id;",
+									"    const taskPatchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"    taskPatchEntity.contactUser = { id };",
+									"    pm.collectionVariables.set(\"task_patch_entity\", JSON.stringify(taskPatchEntity));",
+									"});",
+									"",
+									"const taskPatchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"taskPatchEntity.subtasks = [utils.data.subtaskDefaultEntity];",
+									"pm.collectionVariables.set(\"task_patch_entity\", JSON.stringify(taskPatchEntity));",
+									"",
+									"request = {",
+									"    url: pm.collectionVariables.get(\"base_url\") + \"/culturalAsset\",",
+									"    method: \"POST\",",
+									"    header: {",
+									"        \"content-type\": \"application/json\"",
+									"    },",
+									"    body: {",
+									"        mode: \"raw\",",
+									"        raw: utils.data.culturalAssetDefaultEntity",
+									"    }",
+									"};",
+									"pm.sendRequest(request, (err, response) => {",
+									"    const id = response.json().id;",
+									"    const taskPatchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"    taskPatchEntity.culturalAsset = { id };",
+									"    pm.collectionVariables.set(\"task_patch_entity\", JSON.stringify(taskPatchEntity));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task_patch_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/task/{{task_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"task",
+								"{{task_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Task: Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"task_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"task_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Created entity was deleted\", () => {",
+									"    pm.expect(parsedBody.deleted).to.eql(true);",
+									"    pm.collectionVariables.set(\"task_id\", null);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/task/{{task_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"task",
+								"{{task_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Task: Create and automatically set contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"task_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"task_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"task_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"task_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Correct sender set\", () => {",
+									"    pm.expect(parsedBody.contactUser).to.eql(pm.collectionVariables.get(\"requester_user_id\"));",
+									"});",
+									"",
+									"pm.test(\"Entity created correctly\", () => {",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, []);",
+									"    pm.expect(same).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"Object.keys(utils.data).forEach(key => {",
+									"    if (!utils.data[key]) pm.collectionVariables.unset(utils.keys[key])",
+									"    else pm.collectionVariables.set(utils.keys[key], JSON.stringify(utils.data[key]))",
+									"});",
+									"",
+									"if (!pm.collectionVariables.get(\"requester_user_id\")) {",
+									"    const request = {",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/user/me\",",
+									"        method: 'GET'",
+									"    };",
+									"    pm.sendRequest(request, (err, response) => {",
+									"        const id = response.json().id;",
+									"        pm.collectionVariables.set(\"requester_user_id\", id);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task_default_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/task/autoContact",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"task",
+								"autoContact"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "User group",
+			"item": [
+				{
+					"name": "User group: Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_group_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_group_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_group_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_group_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Entity created correctly\", () => {",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, relationKeys);",
+									"    pm.expect(same).to.be.true;",
+									"    testRelationsRequests(utils.testRelations(parsedBody, \"userGroupRelationKeys\", relationKeys));",
+									"    pm.collectionVariables.set(\"user_group_id\", parsedBody.id);",
+									"});",
+									"",
+									"function testRelationsRequests(requests) {",
+									"    requests.forEach(request => {",
+									"        pm.sendRequest(request.request, (err, response) => {",
+									"            pm.test(\"relation test: \" + request.type, () => {",
+									"                const json = response.json();",
+									"                pm.expect(json.id).to.eql(request.id);",
+									"                var same = utils.areEntitiesTheSameRelation(json, utils.data[request.type + \"DefaultEntity\"], utils.data[request.type + \"EntityKeys\"], utils.data[request.type + \"RelationKeys\"]);",
+									"                pm.expect(same).to.be.true;",
+									"            });",
+									"        });",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"Object.keys(utils.data).forEach(key => {",
+									"    if (!utils.data[key]) pm.collectionVariables.unset(utils.keys[key])",
+									"    else pm.collectionVariables.set(utils.keys[key], JSON.stringify(utils.data[key]))",
+									"});",
+									"",
+									"function addUserToUserGroupDefaultEntity(id) {",
+									"    const userGroupDefaultEntity = JSON.parse(pm.collectionVariables.get(\"user_group_default_entity\"));",
+									"    userGroupDefaultEntity.users.push({ id });",
+									"    pm.collectionVariables.set(\"user_group_default_entity\", JSON.stringify(userGroupDefaultEntity));",
+									"}",
+									"",
+									"if (!pm.collectionVariables.get(\"user_id\")) {",
+									"    const request = {",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/user\",",
+									"        method: \"POST\",",
+									"        header: {",
+									"            \"content-type\": \"application/json\"",
+									"        },",
+									"        body: {",
+									"            mode: \"raw\",",
+									"            raw: utils.data.userDefaultEntity",
+									"        }",
+									"    };",
+									"    pm.sendRequest(request, (err, response) => {",
+									"        const id = response.json().id;",
+									"        pm.collectionVariables.set(\"user_id\", id);",
+									"        addUserToUserGroupDefaultEntity(id);",
+									"    });",
+									"} else {",
+									"    addUserToUserGroupDefaultEntity(pm.collectionVariables.get(\"user_id\"));",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{user_group_default_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/userGroup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"userGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User group: Find by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_group_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_group_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_group_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_group_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Correct entity found\", () => {",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, relationKeys);",
+									"    console.log(parsedBody)",
+									"    console.log(defaultEntity)",
+									"    pm.expect(same).to.eql(true);",
+									"    pm.expect(parsedBody.id).to.eql(pm.collectionVariables.get(\"user_group_id\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/userGroup/{{user_group_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"userGroup",
+								"{{user_group_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User group: Find all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_group_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_group_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_group_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_group_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Created entity was found\", () => {",
+									"    var content = parsedBody.content;",
+									"    var found = false;",
+									"    for (var i = 0; i < content.length && !found; i++) {",
+									"        found = content[i].id == pm.collectionVariables.get(\"user_group_id\");",
+									"    }",
+									"    pm.expect(found).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/userGroup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"userGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User group: Get all users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_group_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_group_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_group_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_group_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Get all users\", () => {",
+									"    const content = parsedBody.content;",
+									"    const users = JSON.parse(pm.collectionVariables.get(\"user_group_default_entity\")).users;",
+									"    pm.expect(content.length).to.eql(users.length);",
+									"    for (var i = 0; i < users.length; i++) {",
+									"        var found = false;",
+									"        for (var j = 0; j < content.length; j++) {",
+									"            found = (users[i].id == content[j].id);",
+									"            if (found) break;",
+									"        }",
+									"        pm.expect(found).to.be.true;",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/userGroup/{{user_group_id}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"userGroup",
+								"{{user_group_id}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User group: Add user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_group_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_group_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_group_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_group_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Add user to group correctly\", () => {",
+									"    var users = parsedBody.users;",
+									"    var found = false;",
+									"    for (var i = 0; i < users.length; i++) {",
+									"        found = users[i] == pm.collectionVariables.get(\"requester_user_id\");",
+									"    }",
+									"    pm.expect(found).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.collectionVariables.get(\"requester_user_id\")) {",
+									"    const request = {",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/user/me\",",
+									"        method: 'GET'",
+									"    };",
+									"    pm.sendRequest(request, (err, response) => {",
+									"        const id = response.json().id;",
+									"        pm.collectionVariables.set(\"requester_user_id\", id);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/userGroup/{{user_group_id}}/addUser/{{requester_user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"userGroup",
+								"{{user_group_id}}",
+								"addUser",
+								"{{requester_user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User group: Remove user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_group_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_group_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_group_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_group_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Remove user to group correctly\", () => {",
+									"    var users = parsedBody.users;",
+									"    var found = false;",
+									"    for (var i = 0; i < users.length; i++) {",
+									"        found = users[i] == pm.collectionVariables.get(\"requester_user_id\");",
+									"    }",
+									"    pm.expect(found).to.eql(false);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.collectionVariables.get(\"requester_user_id\")) {",
+									"    const request = {",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/user/me\",",
+									"        method: 'GET'",
+									"    };",
+									"    pm.sendRequest(request, (err, response) => {",
+									"        const id = response.json().id;",
+									"        pm.collectionVariables.set(\"requester_user_id\", id);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/userGroup/{{user_group_id}}/removeUser/{{requester_user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"userGroup",
+								"{{user_group_id}}",
+								"removeUser",
+								"{{requester_user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User group: All notifications for user groups",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_group_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_group_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_group_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_group_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Get all notifications for user groups\", () => {",
+									"    const content = parsedBody.content;",
+									"    const userGroupId = pm.collectionVariables.get(\"user_group_id\");",
+									"    for (var i = 0; i < content.length; i++) {",
+									"        var found = false;",
+									"        var receivers = content[i].receivers;",
+									"        for (var j = 0; j < receivers.length; j++) {",
+									"            found = (receivers[j] == userGroupId);",
+									"            if (found) break;",
+									"        }",
+									"        pm.expect(found).to.be.true;",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const notificationRequest = {",
+									"    url: pm.collectionVariables.get(\"base_url\") + \"/notification\",",
+									"    method: \"POST\",",
+									"    header: {",
+									"        \"content-type\": \"application/json\"",
+									"    },",
+									"    body: {",
+									"        mode: \"raw\",",
+									"        raw: {",
+									"            \"title\": \"A notification\",",
+									"            \"message\": \"This is a notification\",",
+									"            \"type\": 0,",
+									"            \"receivers\": [",
+									"                {",
+									"                    \"id\": pm.collectionVariables.get(\"user_group_id\")",
+									"                }",
+									"            ]",
+									"        }",
+									"    }",
+									"};",
+									"pm.sendRequest(notificationRequest, (err, response) => {",
+									"    const id = response.json().id;",
+									"    pm.collectionVariables.set(\"notification_id\", id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/userGroup/notifications?ids={{user_group_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"userGroup",
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "ids",
+									"value": "{{user_group_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User group: Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_group_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_group_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_group_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_group_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Entity correctly updated\", () => {",
+									"    var same = utils.areEntitiesTheSame(parsedBody, patchEntity, entityKeys, relationKeys);",
+									"    pm.expect(same).to.be.true;",
+									"    testRelationsRequests(utils.testRelations(parsedBody, \"userGroupRelationKeys\", relationKeys));",
+									"    pm.expect(parsedBody.id).to.eql(pm.collectionVariables.get(\"user_group_id\"));",
+									"});",
+									"",
+									"function testRelationsRequests(requests) {",
+									"    requests.forEach(request => {",
+									"        pm.sendRequest(request.request, (err, response) => {",
+									"            pm.test(\"relation test: \" + request.type, () => {",
+									"                const json = response.json();",
+									"                pm.expect(json.id).to.eql(request.id);",
+									"                var same = utils.areEntitiesTheSameRelation(json, utils.data[request.type + \"DefaultEntity\"], utils.data[request.type + \"EntityKeys\"], utils.data[request.type + \"RelationKeys\"]);",
+									"                pm.expect(same).to.be.true;",
+									"            });",
+									"        });",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//TODO: this could be solved better",
+									"const users = JSON.parse(pm.collectionVariables.get(\"user_group_default_entity\")).users;",
+									"const oldId = users[users.length - 1].id;",
+									"",
+									"request = {",
+									"    url: pm.collectionVariables.get(\"base_url\") + \"/user\",",
+									"    method: \"POST\",",
+									"    header: {",
+									"        \"content-type\": \"application/json\"",
+									"    },",
+									"    body: {",
+									"        mode: \"raw\",",
+									"        raw: utils.data.userDefaultEntity",
+									"    }",
+									"};",
+									"pm.sendRequest(request, (err, response) => {",
+									"    const newId = response.json().id;",
+									"    for (var i = 0; i < users.length; i++) {",
+									"        if (users[i].id == oldId) {",
+									"            users.splice(i, 1);",
+									"            users.push({ id: newId });",
+									"        }",
+									"    }",
+									"    const userGroupPatchEntity = JSON.parse(pm.collectionVariables.get(\"user_group_patch_entity\"));",
+									"    userGroupPatchEntity.users = users;",
+									"    pm.collectionVariables.set(\"user_group_patch_entity\", JSON.stringify(userGroupPatchEntity));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{user_group_patch_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/userGroup/{{user_group_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"userGroup",
+								"{{user_group_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User group: Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_group_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_group_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_group_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_group_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Created entity was deleted\", () => {",
+									"    pm.expect(parsedBody.deleted).to.eql(true);",
+									"    pm.collectionVariables.set(\"user_group_id\", null);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/userGroup/{{user_group_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"userGroup",
+								"{{user_group_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "User: Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Entity created correctly\", () => {",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, relationKeys);",
+									"    pm.expect(same).to.be.true;",
+									"    testRelationsRequests(utils.testRelations(parsedBody, \"userRelationKeys\", relationKeys));",
+									"    pm.collectionVariables.set(\"user_id\", parsedBody.id);",
+									"});",
+									"",
+									"function testRelationsRequests(requests) {",
+									"    requests.forEach(request => {",
+									"        pm.sendRequest(request.request, (err, response) => {",
+									"            pm.test(\"relation test: \" + request.type, () => {",
+									"                const json = response.json();",
+									"                pm.expect(json.id).to.eql(request.id);",
+									"                var same = utils.areEntitiesTheSameRelation(json, utils.data[request.type + \"DefaultEntity\"], utils.data[request.type + \"EntityKeys\"], utils.data[request.type + \"RelationKeys\"]);",
+									"                pm.expect(same).to.be.true;",
+									"            });",
+									"        });",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"Object.keys(utils.data).forEach(key => {",
+									"    if (!utils.data[key]) pm.collectionVariables.unset(utils.keys[key])",
+									"    else pm.collectionVariables.set(utils.keys[key], JSON.stringify(utils.data[key]))",
+									"});",
+									"",
+									"function addUserGroupToUserDefaultEntity(id) {",
+									"    const userGroupDefaultEntity = JSON.parse(pm.collectionVariables.get(\"user_default_entity\"));",
+									"    userGroupDefaultEntity.userGroups.push({ id });",
+									"    pm.collectionVariables.set(\"user_default_entity\", JSON.stringify(userGroupDefaultEntity));",
+									"}",
+									"",
+									"if (!pm.collectionVariables.get(\"user_group_id\")) {",
+									"    const request = {",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/userGroup\",",
+									"        method: \"POST\",",
+									"        header: {",
+									"            \"content-type\": \"application/json\"",
+									"        },",
+									"        body: {",
+									"            mode: \"raw\",",
+									"            raw: utils.data.userGroupDefaultEntity",
+									"        }",
+									"    };",
+									"    pm.sendRequest(request, (err, response) => {",
+									"        const id = response.json().id;",
+									"        pm.collectionVariables.set(\"user_group_id\", id);",
+									"        addUserGroupToUserDefaultEntity(id);",
+									"    });",
+									"} else {",
+									"    addUserGroupToUserDefaultEntity(pm.collectionVariables.get(\"user_group_id\"));",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{user_default_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Find all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Created entity was found\", () => {",
+									"    var content = parsedBody.content;",
+									"    var found = false;",
+									"    for (var i = 0; i < content.length && !found; i++) {",
+									"        found = content[i].id == pm.collectionVariables.get(\"user_id\");",
+									"    }",
+									"    pm.expect(found).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Find by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Correct entity found\", () => {",
+									"    var same = utils.areEntitiesTheSame(parsedBody, defaultEntity, entityKeys, relationKeys);",
+									"    pm.expect(same).to.eql(true);",
+									"    pm.expect(parsedBody.id).to.eql(pm.collectionVariables.get(\"user_id\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/{{user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get all contact tasks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Get all contact tasks\", () => {",
+									"    const content = parsedBody.content;",
+									"    const taskContact = JSON.parse(pm.collectionVariables.get(\"user_default_entity\")).taskContact;",
+									"    pm.expect(content.length).to.eql(taskContact.length);",
+									"    for (var i = 0; i < taskContact.length; i++) {",
+									"        var found = false;",
+									"        for (var j = 0; j < content.length; j++) {",
+									"            found = (taskContact[i].id == content[j].id);",
+									"            if (found) break;",
+									"        }",
+									"        pm.expect(found).to.be.true;",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/{{user_id}}/contactTasks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"{{user_id}}",
+								"contactTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get all helper tasks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Get all helper tasks\", () => {",
+									"    const content = parsedBody.content;",
+									"    const taskHelper = JSON.parse(pm.collectionVariables.get(\"user_default_entity\")).taskHelper;",
+									"    pm.expect(content.length).to.eql(taskHelper.length);",
+									"    for (var i = 0; i < taskHelper.length; i++) {",
+									"        var found = false;",
+									"        for (var j = 0; j < content.length; j++) {",
+									"            found = (taskHelper[i].id == content[j].id);",
+									"            if (found) break;",
+									"        }",
+									"        pm.expect(found).to.be.true;",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/{{user_id}}/helperTasks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"{{user_id}}",
+								"helperTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get all comments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Get all comments\", () => {",
+									"    const content = parsedBody.content;",
+									"    const commentAuthor = JSON.parse(pm.collectionVariables.get(\"user_default_entity\")).commentAuthor;",
+									"    pm.expect(content.length).to.eql(commentAuthor.length);",
+									"    for (var i = 0; i < commentAuthor.length; i++) {",
+									"        var found = false;",
+									"        for (var j = 0; j < content.length; j++) {",
+									"            found = (commentAuthor[i].id == content[j].id);",
+									"            if (found) break;",
+									"        }",
+									"        pm.expect(found).to.be.true;",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/{{user_id}}/userComments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"{{user_id}}",
+								"userComments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get all user groups",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Get all user groups\", () => {",
+									"    const content = parsedBody.content;",
+									"    const userGroups = JSON.parse(pm.collectionVariables.get(\"user_default_entity\")).userGroups;",
+									"    pm.expect(content.length).to.eql(userGroups.length);",
+									"    for (var i = 0; i < userGroups.length; i++) {",
+									"        var found = false;",
+									"        for (var j = 0; j < content.length; j++) {",
+									"            found = (userGroups[i].id == content[j].id);",
+									"            if (found) break;",
+									"        }",
+									"        pm.expect(found).to.be.true;",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/{{user_id}}/userGroups",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"{{user_id}}",
+								"userGroups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Returns the correct user name\", () => {",
+									"    pm.expect(parsedBody.name).to.eql(pm.collectionVariables.get(\"username\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Get all notifications sent by the user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.collectionVariables.get(\"requester_user_id\")) {",
+									"    const request = {",
+									"        url: pm.collectionVariables.get(\"base_url\") + \"/user/me\",",
+									"        method: 'GET'",
+									"    };",
+									"    pm.sendRequest(request, (err, response) => {",
+									"        const id = response.json().id;",
+									"        pm.collectionVariables.set(\"requester_user_id\", id);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/{{requester_user_id}}/sendNotifications",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"{{requester_user_id}}",
+								"sendNotifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Entity correctly updated\", () => {",
+									"    var same = utils.areEntitiesTheSame(parsedBody, patchEntity, entityKeys, relationKeys);",
+									"    pm.expect(same).to.be.true;",
+									"    testRelationsRequests(utils.testRelations(parsedBody, \"userRelationKeys\", relationKeys));",
+									"    pm.expect(parsedBody.id).to.eql(pm.collectionVariables.get(\"user_id\"));",
+									"});",
+									"",
+									"function testRelationsRequests(requests) {",
+									"    requests.forEach(request => {",
+									"        pm.sendRequest(request.request, (err, response) => {",
+									"            pm.test(\"relation test: \" + request.type, () => {",
+									"                const json = response.json();",
+									"                pm.expect(json.id).to.eql(request.id);",
+									"                var same = utils.areEntitiesTheSameRelation(json, utils.data[request.type + \"DefaultEntity\"], utils.data[request.type + \"EntityKeys\"], utils.data[request.type + \"RelationKeys\"]);",
+									"                pm.expect(same).to.be.true;",
+									"            });",
+									"        });",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const userGroups = JSON.parse(pm.collectionVariables.get(\"user_default_entity\")).userGroups;",
+									"const oldId = userGroups[userGroups.length - 1].id;",
+									"",
+									"request = {",
+									"    url: pm.collectionVariables.get(\"base_url\") + \"/userGroup\",",
+									"    method: \"POST\",",
+									"    header: {",
+									"        \"content-type\": \"application/json\"",
+									"    },",
+									"    body: {",
+									"        mode: \"raw\",",
+									"        raw: utils.data.userGroupDefaultEntity",
+									"    }",
+									"};",
+									"pm.sendRequest(request, (err, response) => {",
+									"    const newId = response.json().id;",
+									"    for (var i = 0; i < userGroups.length; i++) {",
+									"        if (userGroups[i].id == oldId) {",
+									"            userGroups.splice(i, 1);",
+									"            userGroups.push({ id: newId });",
+									"        }",
+									"    }",
+									"    const userPatchEntity = JSON.parse(pm.collectionVariables.get(\"user_patch_entity\"));",
+									"    userPatchEntity.userGroups = userGroups;",
+									"    pm.collectionVariables.set(\"user_patch_entity\", JSON.stringify(userPatchEntity));",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{user_patch_entity}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user/{{user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entityKeys = JSON.parse(pm.collectionVariables.get(\"user_entity_keys\"));",
+									"const relationKeys = JSON.parse(pm.collectionVariables.get(\"user_relation_keys\"));",
+									"const defaultEntity = JSON.parse(pm.collectionVariables.get(\"user_default_entity\"));",
+									"const patchEntity = JSON.parse(pm.collectionVariables.get(\"user_patch_entity\"));",
+									"",
+									"const parsedBody = JSON.parse(responseBody);",
+									"pm.test(\"Created entity was deleted\", () => {",
+									"    pm.expect(parsedBody.deleted).to.eql(true);",
+									"    pm.collectionVariables.set(\"user_id\", null);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/{{user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"const tokenUrl = 'http://localhost:5436/auth/realms/reskue/protocol/openid-connect/token';",
+					"const clientId = 'reskue';",
+					"const grantType = 'password';",
+					"const username = 'admin';",
+					"const password = '1234';",
+					"",
+					"pm.collectionVariables.set('username', username);",
+					"",
+					"const getTokenRequest = {",
+					"  url: tokenUrl,",
+					"  method: 'POST',",
+					"  header: 'Content-Type:application/x-www-form-urlencoded',",
+					"  body: {",
+					"    mode: 'urlencoded',",
+					"    urlencoded: [",
+					"        {key: \"client_id\", value: clientId, disabled: false},",
+					"        {key: \"grant_type\", value: grantType, disabled: false},",
+					"        {key: \"username\", value: username, disabled: false},",
+					"        {key: \"password\", value: password, disabled: false}",
+					"    ]",
+					"  }",
+					"};",
+					"",
+					"pm.sendRequest(getTokenRequest, (err, response) => {",
+					"  const jsonResponse = response.json();",
+					"  const newAccessToken = jsonResponse.access_token;",
+					"",
+					"  pm.collectionVariables.set('access_token', newAccessToken);",
+					"});",
+					"",
+					"utils = {",
+					"    areEntitiesTheSame: function(responseEntity, defaultEntity, entityKeys, relationKeys) {",
+					"        var same = true;",
+					"        for (var i = 0; i < entityKeys.length && same; i++) {",
+					"            same = responseEntity[entityKeys[i]] == defaultEntity[entityKeys[i]];",
+					"        }",
+					"        for (i = 0; i < relationKeys.length && same; i++) {",
+					"            if (Array.isArray(defaultEntity[relationKeys[i]])) {",
+					"                same = responseEntity[relationKeys[i]].length == defaultEntity[relationKeys[i]].length;",
+					"                for (var j = 0; j < responseEntity[relationKeys[i]].length && same; j++) {",
+					"                    if (!defaultEntity[relationKeys[i]][j].id) continue;",
+					"                    var responseId = responseEntity[relationKeys[i]][j].id ? responseEntity[relationKeys[i]][j].id : responseEntity[relationKeys[i]][j];",
+					"                    same = responseId == defaultEntity[relationKeys[i]][j].id;",
+					"                    ",
+					"                } ",
+					"            } else {",
+					"                var defaultId = defaultEntity[relationKeys[i]] ? defaultEntity[relationKeys[i]].id : defaultEntity[relationKeys[i]];",
+					"                same = responseEntity[relationKeys[i]] == defaultId;",
+					"            }",
+					"        }",
+					"        return same;",
+					"    },",
+					"    testRelations: function (data, typeName, relationKeys) {",
+					"        var requests = [];",
+					"        for (var i = 0; i < relationKeys.length; i++) {",
+					"            if (!!data[relationKeys[i]]) {",
+					"                var id = null;",
+					"                if (Array.isArray(data[relationKeys[i]])) {",
+					"                    if (data[relationKeys[i]].length > 0) id = data[relationKeys[i]][data[relationKeys[i]].length - 1];",
+					"                } else id = +data[relationKeys[i]];",
+					"                if (id) {",
+					"                    if (id.id) id = id.id;",
+					"                    request = {",
+					"                        url: pm.collectionVariables.get(\"base_url\") + \"/\" +  utils.types[typeName][i] + \"/\" + id,",
+					"                        method: \"GET\"",
+					"                    };",
+					"                    requests.push({ request, id, type: utils.types[typeName][i]});",
+					"                }",
+					"            }",
+					"        }",
+					"        return requests;",
+					"    },",
+					"    areEntitiesTheSameRelation: function(responseEntity, defaultEntity, entityKeys, relationKeys, maxDiff = 1) {",
+					"        var same = true;",
+					"        for (var i = 0; i < entityKeys.length && same; i++) {",
+					"            same = responseEntity[entityKeys[i]] == defaultEntity[entityKeys[i]];",
+					"        }",
+					"        var diff = 0;",
+					"        for (i = 0; i < relationKeys.length && same; i++) {",
+					"            if (Array.isArray(defaultEntity[relationKeys[i]])) {",
+					"                same = responseEntity[relationKeys[i]].length == defaultEntity[relationKeys[i]].length;",
+					"                for (var j = 0; j < responseEntity[relationKeys[i]].length && same; j++) {",
+					"                    if (!defaultEntity[relationKeys[i]][j].id) continue;",
+					"                    var responseId = responseEntity[relationKeys[i]][j].id ? responseEntity[relationKeys[i]][j].id : responseEntity[relationKeys[i]][j];",
+					"                    same = responseId == defaultEntity[relationKeys[i]][j].id;",
+					"                    ",
+					"                } ",
+					"            } else {",
+					"                var defaultId = defaultEntity[relationKeys[i]] ? defaultEntity[relationKeys[i]].id : defaultEntity[relationKeys[i]];",
+					"                same = responseEntity[relationKeys[i]] == defaultId;",
+					"            }",
+					"            if (!same && diff < maxDiff) {",
+					"                diff++;",
+					"                same = true;",
+					"            }",
+					"        }",
+					"        return same;",
+					"    },",
+					"    getInitialValues: function() {",
+					"        return  [",
+					"            {",
+					"                \"key\": \"base_url\",",
+					"                \"value\": \"http://localhost:8080/api\"",
+					"            },",
+					"            {",
+					"                \"key\": \"radius\",",
+					"                \"value\": \"500\"",
+					"            },",
+					"            {",
+					"                \"key\": \"longitude\",",
+					"                \"value\": \"38.897699700000004\"",
+					"            },",
+					"            {",
+					"                \"key\": \"latitude\",",
+					"                \"value\": \"-77.03655315\"",
+					"            },",
+					"            {",
+					"                \"key\": \"longitudeUpdated\",",
+					"                \"value\": \"52.520045350000004\"",
+					"            },",
+					"            {",
+					"                \"key\": \"latitudeUpdated\",",
+					"                \"value\": \"13.369133681226069\"",
+					"            }, {",
+					"                \"key\": \"updated_state\",",
+					"                \"value\": \"1\"",
+					"            }",
+					"        ];",
+					"    }",
+					"};",
+					"",
+					"utils.keys = {};",
+					"utils.data = {};",
+					"utils.types = {};",
+					"",
+					"utils.keys.requesterUserId = \"requester_user_id\";",
+					"utils.data.requesterUserId = null;",
+					"",
+					"//-------------------------------------------------",
+					"//COMMENTS",
+					"//-------------------------------------------------",
+					"utils.keys.commentEntityKeys = \"comment_entity_keys\";",
+					"utils.data.commentEntityKeys = [",
+					"    \"text\"]; ",
+					"if (!pm.collectionVariables.get(\"comment_entity_keys\")) {",
+					"    pm.collectionVariables.set(\"comment_entity_keys\", JSON.stringify(utils.data.commentEntityKeys));",
+					"}",
+					"utils.keys.commentRelationKeys = \"comment_relation_keys\";",
+					"utils.data.commentRelationKeys = [",
+					"    \"commentCulturalAsset\",",
+					"    \"commentTask\",",
+					"    \"media\",",
+					"    \"author\"];",
+					"utils.types.commentRelationKeys = [",
+					"    \"culturalAsset\",",
+					"    \"task\",",
+					"    \"media\",",
+					"    \"user\"];",
+					"if (!pm.collectionVariables.get(\"comment_relation_keys\")) {",
+					"    pm.collectionVariables.set(\"comment_relation_keys\", JSON.stringify(utils.data.commentRelationKeys));",
+					"}",
+					"utils.keys.commentDefaultEntity = \"comment_default_entity\";",
+					"utils.data.commentDefaultEntity = {",
+					"    \"text\": \"This is a comment\",",
+					"    \"commentTask\": null,",
+					"    \"media\": [],",
+					"    \"author\": null",
+					"};",
+					"if (!pm.collectionVariables.get(\"comment_default_entity\")) {",
+					"    pm.collectionVariables.set(\"comment_default_entity\", JSON.stringify(utils.data.commentDefaultEntity));",
+					"}",
+					"utils.keys.commentPatchEntity = \"comment_patch_entity\";",
+					"utils.data.commentPatchEntity = {",
+					"    \"text\": \"This is an updated comment\",",
+					"    \"commentCulturalAsset\": null,",
+					"    \"media\": [],",
+					"    \"author\": null",
+					"};",
+					"if (!pm.collectionVariables.get(\"comment_patch_entity\")) {",
+					"    pm.collectionVariables.set(\"comment_patch_entity\", JSON.stringify(utils.data.commentPatchEntity));",
+					"}",
+					"if (!pm.collectionVariables.get(\"comment_id\")) pm.collectionVariables.set(\"comment_id\", \"\");",
+					"utils.keys.commentId = \"comment_id\";",
+					"utils.data.commentId = null;",
+					"//-------------------------------------------------",
+					"//-------------------------------------------------",
+					"",
+					"//-------------------------------------------------",
+					"//CULTURAL ASSET",
+					"//-------------------------------------------------",
+					"utils.keys.culturalAssetEntityKeys = \"cultural_asset_entity_keys\";",
+					"utils.data.culturalAssetEntityKeys = [",
+					"    \"name\", ",
+					"    \"description\", ",
+					"    \"priority\", ",
+					"    \"isEndangered\", ",
+					"    \"label\",",
+					"    \"address\",",
+					"    \"longitude\",",
+					"    \"latitude\"];",
+					"if (!pm.collectionVariables.get(\"cultural_asset_entity_keys\")) {",
+					"    pm.collectionVariables.set(\"cultural_asset_entity_keys\", JSON.stringify(utils.data.culturalAssetEntityKeys));",
+					"}",
+					"utils.keys.culturalAssetRelationKeys = \"cultural_asset_relation_keys\";",
+					"utils.data.culturalAssetRelationKeys = [",
+					"    \"media\",",
+					"    \"tasks\",",
+					"    \"comments\",",
+					"    \"culturalAssetParent\",",
+					"    \"culturalAssetChildren\",",
+					"    \"notifications\"];",
+					"utils.types.culturalAssetRelationKeys = [",
+					"    \"media\",",
+					"    \"task\",",
+					"    \"comment\",",
+					"    \"culturalAsset\",",
+					"    \"culturalAsset\",",
+					"    \"notification\"];",
+					"if (!pm.collectionVariables.get(\"cultural_asset_relation_keys\")) {",
+					"    pm.collectionVariables.set(\"cultural_asset_relation_keys\", JSON.stringify(utils.data.culturalAssetRelationKeys));",
+					"}",
+					"utils.keys.culturalAssetDefaultEntity = \"cultural_asset_default_entity\";",
+					"utils.data.culturalAssetDefaultEntity = {",
+					"    \"name\": \"A cultural asset\",",
+					"    \"description\": \"This is a cultural asset.\",",
+					"    \"priority\": 0,",
+					"    \"isEndangered\": 0,",
+					"    \"label\": \"asset\",",
+					"    \"address\": \"White House, 1600, Pennsylvania Avenue Northwest, Washington, District of Columbia, 20500, United States\",",
+					"    \"longitude\": pm.collectionVariables.get(\"longitude\"),",
+					"    \"latitude\": pm.collectionVariables.get(\"latitude\"),",
+					"    \"media\": [],",
+					"    \"tasks\": [],",
+					"    \"comments\": [],",
+					"    \"culturalAssetParent\": null,",
+					"    \"culturalAssetChildren\": [],",
+					"    \"notifications\": []",
+					"};",
+					"if (!pm.collectionVariables.get(\"cultural_asset_default_entity\")) {",
+					"    pm.collectionVariables.set(\"cultural_asset_default_entity\", JSON.stringify(utils.data.culturalAssetDefaultEntity));",
+					"}",
+					"utils.keys.culturalAssetPatchEntity = \"cultural_asset_patch_entity\";",
+					"utils.data.culturalAssetPatchEntity = {",
+					"    \"name\": \"Another cultural asset\",",
+					"    \"description\": \"This is another cultural asset.\",",
+					"    \"priority\": 1,",
+					"    \"isEndangered\": 1,",
+					"    \"label\": \"important-asset\",",
+					"    \"address\": \"German Chancellery, 1, Willy-Brandt-Straße, Tiergarten, Mitte, Berlin, 10557, Germany\",",
+					"    \"longitude\": pm.collectionVariables.get(\"longitudeUpdated\"),",
+					"    \"latitude\": pm.collectionVariables.get(\"latitudeUpdated\"),",
+					"    \"media\": [],",
+					"    \"tasks\": [],",
+					"    \"comments\": [],",
+					"    \"culturalAssetParent\": null,",
+					"    \"culturalAssetChildren\": [],",
+					"    \"notifications\": []",
+					"};",
+					"if (!pm.collectionVariables.get(\"cultural_asset_patch_entity\")) {",
+					"    pm.collectionVariables.set(\"cultural_asset_patch_entity\", JSON.stringify(utils.data.culturalAssetPatchEntity));",
+					"}",
+					"utils.keys.culturalAssetParentEntity = \"parent_cultural_asset_entity\";",
+					"utils.data.culturalAssetParentEntity = {",
+					"    \"name\": \"A cultural asset\",",
+					"    \"description\": \"This is a cultural asset.\",",
+					"    \"priority\": 0,",
+					"    \"isEndangered\": 0,",
+					"    \"label\": \"asset\",",
+					"    \"address\": \"White House, 1600, Pennsylvania Avenue Northwest, Washington, District of Columbia, 20500, United States\",",
+					"    \"longitude\": pm.collectionVariables.get(\"longitude\"),",
+					"    \"latitude\": pm.collectionVariables.get(\"latitude\"),",
+					"    \"media\": [],",
+					"    \"tasks\": [],",
+					"    \"comments\": [],",
+					"    \"culturalAssetParent\": null,",
+					"    \"culturalAssetChildren\": [],",
+					"    \"notifications\": []",
+					"};",
+					"if (!pm.collectionVariables.get(\"parent_cultural_asset_entity\")) {",
+					"    pm.collectionVariables.set(\"parent_cultural_asset_entity\", JSON.stringify(utils.data.culturalAssetParentEntity));",
+					"}",
+					"utils.keys.culturalAssetChildEntity = \"child_cultural_asset_entity\";",
+					"utils.data.culturalAssetChildEntity = {",
+					"    \"name\": \"A cultural asset\",",
+					"    \"description\": \"This is a cultural asset.\",",
+					"    \"priority\": 0,",
+					"    \"isEndangered\": 0,",
+					"    \"label\": \"asset\",",
+					"    \"address\": \"White House, 1600, Pennsylvania Avenue Northwest, Washington, District of Columbia, 20500, United States\",",
+					"    \"longitude\": pm.collectionVariables.get(\"longitude\"),",
+					"    \"latitude\": pm.collectionVariables.get(\"latitude\"),",
+					"    \"media\": [],",
+					"    \"tasks\": [],",
+					"    \"comments\": [],",
+					"    \"culturalAssetParent\": null,",
+					"    \"culturalAssetChildren\": [],",
+					"    \"notifications\": []",
+					"};",
+					"if (!pm.collectionVariables.get(\"child_cultural_asset_entity\")) {",
+					"    pm.collectionVariables.set(\"child_cultural_asset_entity\", JSON.stringify(utils.data.culturalAssetChildEntity));",
+					"}",
+					"if (!pm.collectionVariables.get(\"cultural_asset_id\")) pm.collectionVariables.set(\"cultural_asset_id\", \"\");",
+					"utils.keys.culturalAssetId = \"cultural_asset_id\";",
+					"utils.data.culturalAssetId = null;",
+					"utils.keys.childCulturalAssetId = \"child_cultural_asset_id\";",
+					"utils.data.childCulturalAssetId = null;",
+					"utils.keys.parentCulturalAssetId = \"parent_cultural_asset_id\";",
+					"utils.data.parentCulturalAssetId = null;",
+					"//-------------------------------------------------",
+					"//-------------------------------------------------",
+					"",
+					"//-------------------------------------------------",
+					"//NOTIFICATION",
+					"//-------------------------------------------------",
+					"utils.keys.notificationEntityKeys = \"notification_entity_keys\";",
+					"utils.data.notificationEntityKeys = [",
+					"    \"title\",",
+					"    \"message\",",
+					"    \"type\"];",
+					"if (!pm.collectionVariables.get(\"notification_entity_keys\")) {",
+					"    pm.collectionVariables.set(\"notification_entity_keys\", JSON.stringify(utils.data.notificationEntityKeys));",
+					"}",
+					"utils.keys.notificationRelationKeys = \"notification_relation_keys\";",
+					"utils.data.notificationRelationKeys = [",
+					"    \"sender\",",
+					"    \"receivers\",",
+					"    \"entity\"];",
+					"utils.types.notificationRelationKeys = [",
+					"    \"user\",",
+					"    \"userGroup\",",
+					"    \"culturalAsset\"];",
+					"if (!pm.collectionVariables.get(\"notification_relation_keys\")) {",
+					"    pm.collectionVariables.set(\"notification_relation_keys\", JSON.stringify(utils.data.notificationRelationKeys));",
+					"}",
+					"utils.keys.notificationDefaultEntity = \"notification_default_entity\";",
+					"utils.data.notificationDefaultEntity = {",
+					"    \"title\": \"A notification\",",
+					"    \"message\": \"This is a notification\",",
+					"    \"type\": 0,",
+					"    \"sender\": null,",
+					"    \"receivers\": [],",
+					"    \"entity\": null",
+					"};",
+					"if (!pm.collectionVariables.get(\"notification_default_entity\")) {",
+					"    pm.collectionVariables.set(\"notification_default_entity\", JSON.stringify(utils.data.notificationDefaultEntity));",
+					"}",
+					"utils.keys.notificationPatchEntity = \"notification_patch_entity\";",
+					"utils.data.notificationPatchEntity = {",
+					"    \"title\": \"An updatedd notification\",",
+					"    \"message\": \"This is an updated notification\",",
+					"    \"type\": 0,",
+					"    \"sender\": null,",
+					"    \"receivers\": [],",
+					"    \"entity\": null",
+					"};",
+					"if (!pm.collectionVariables.get(\"notification_patch_entity\")) {",
+					"    pm.collectionVariables.set(\"notification_patch_entity\", JSON.stringify(utils.data.notificationPatchEntity));",
+					"}",
+					"if (!pm.collectionVariables.get(\"notification_id\")) pm.collectionVariables.set(\"notification_id\", \"\");",
+					"utils.keys.notificationId = \"notification_id\";",
+					"utils.data.notificationId = null;",
+					"//-------------------------------------------------",
+					"//-------------------------------------------------",
+					"",
+					"//-------------------------------------------------",
+					"//SUBTASK",
+					"//-------------------------------------------------",
+					"utils.keys.subtaskEntityKeys = \"subtask_entity_keys\";",
+					"utils.data.subtaskEntityKeys = [",
+					"    \"state\", ",
+					"    \"text\", ",
+					"    \"isRequired\"];",
+					"if (!pm.collectionVariables.get(\"subtask_entity_keys\")) {",
+					"    pm.collectionVariables.set(\"subtask_entity_keys\", JSON.stringify(utils.data.subtaskEntityKeys));",
+					"}",
+					"utils.keys.subtaskRelationKeys = \"subtask_relation_keys\";",
+					"utils.data.subtaskRelationKeys = [",
+					"    \"task\"];",
+					"utils.types.subtaskRelationKeys = [",
+					"    \"task\"];",
+					"if (!pm.collectionVariables.get(\"subtask_relation_keys\")) {",
+					"    pm.collectionVariables.set(\"subtask_relation_keys\", JSON.stringify(utils.data.subtaskRelationKeys));",
+					"}",
+					"utils.keys.subtaskDefaultEntity = \"subtask_default_entity\";",
+					"utils.data.subtaskDefaultEntity = {",
+					"    \"text\": \"Subtask text\",",
+					"    \"state\": \"0\",",
+					"    \"isRequired\": false,",
+					"    \"task\": null",
+					"};",
+					"if (!pm.collectionVariables.get(\"subtask_default_entity\")) {",
+					"    pm.collectionVariables.set(\"subtask_default_entity\", JSON.stringify(utils.data.subtaskDefaultEntity));",
+					"}",
+					"utils.keys.subtaskPatchEntity = \"subtask_patch_entity\";",
+					"utils.data.subtaskPatchEntity = {",
+					"    \"text\": \"Updated Subtask text\",",
+					"    \"state\": \"0\",",
+					"    \"isRequired\": false,",
+					"    \"task\": null",
+					"};",
+					"if (!pm.collectionVariables.get(\"subtask_patch_entity\")) {",
+					"    pm.collectionVariables.set(\"subtask_patch_entity\", JSON.stringify(utils.data.subtaskPatchEntity));",
+					"}",
+					"if (!pm.collectionVariables.get(\"subtask_id\")) pm.collectionVariables.set(\"subtask_id\", \"\");",
+					"utils.keys.subtaskId = \"subtask_id\";",
+					"utils.data.subtaskId = null;",
+					"//-------------------------------------------------",
+					"//-------------------------------------------------",
+					"",
+					"//-------------------------------------------------",
+					"//TASK",
+					"//-------------------------------------------------",
+					"utils.keys.taskEntityKeys = \"task_entity_keys\";",
+					"utils.data.taskEntityKeys = [",
+					"    \"name\", ",
+					"    \"description\", ",
+					"    \"priority\", ",
+					"    \"isEndangered\", ",
+					"    \"state\",",
+					"    \"recommendedHelperUsers\"];",
+					"if (!pm.collectionVariables.get(\"task_entity_keys\")) {",
+					"    pm.collectionVariables.set(\"task_entity_keys\", JSON.stringify(utils.data.taskEntityKeys));",
+					"}",
+					"utils.keys.taskRelationKeys = \"task_relation_keys\";",
+					"utils.data.taskRelationKeys = [",
+					"    \"media\",",
+					"    \"culturalAsset\",",
+					"    \"comments\",",
+					"    \"subtasks\",",
+					"    \"contactUser\",",
+					"    \"helperUsers\"];",
+					"utils.types.taskRelationKeys = [",
+					"    \"media\",",
+					"    \"culturalAsset\",",
+					"    \"comment\",",
+					"    \"subtask\",",
+					"    \"user\",",
+					"    \"user\"];",
+					"if (!pm.collectionVariables.get(\"task_relation_keys\")) {",
+					"    pm.collectionVariables.set(\"task_relation_keys\", JSON.stringify(utils.data.taskRelationKeys));",
+					"}",
+					"utils.keys.taskDefaultEntity = \"task_default_entity\";",
+					"utils.data.taskDefaultEntity = {",
+					"    \"name\": \"A task\", ",
+					"    \"description\": \"This is a task\", ",
+					"    \"priority\": 0, ",
+					"    \"isEndangered\": 0, ",
+					"    \"state\": 0,",
+					"    \"recommendedHelperUsers\": 1,",
+					"    \"media\": [],",
+					"    \"culturalAsset\": null,",
+					"    \"comments\": [],",
+					"    \"subtasks\": [],",
+					"    \"contactUser\": null,",
+					"    \"helperUsers\": []",
+					"};",
+					"if (!pm.collectionVariables.get(\"task_default_entity\")) {",
+					"    pm.collectionVariables.set(\"task_default_entity\", JSON.stringify(utils.data.taskDefaultEntity));",
+					"}",
+					"utils.keys.taskPatchEntity = \"task_patch_entity\";",
+					"utils.data.taskPatchEntity = {",
+					"    \"name\": \"An updated task\", ",
+					"    \"description\": \"This is an updated task\", ",
+					"    \"priority\": 0, ",
+					"    \"isEndangered\": 0, ",
+					"    \"state\": +pm.collectionVariables.get(\"updated_state\"),",
+					"    \"recommendedHelperUsers\": 2,",
+					"    \"media\": [],",
+					"    \"culturalAsset\": null,",
+					"    \"comments\": [],",
+					"    \"subtasks\": [],",
+					"    \"contactUser\": null,",
+					"    \"helperUsers\": []",
+					"};",
+					"if (!pm.collectionVariables.get(\"task_patch_entity\")) {",
+					"    pm.collectionVariables.set(\"task_patch_entity\", JSON.stringify(utils.data.taskPatchEntity));",
+					"}",
+					"if (!pm.collectionVariables.get(\"task_id\")) pm.collectionVariables.set(\"task_id\", \"\");",
+					"utils.keys.taskId = \"task_id\";",
+					"utils.data.taskId = null;",
+					"//-------------------------------------------------",
+					"//-------------------------------------------------",
+					"",
+					"//-------------------------------------------------",
+					"//USER GROUP",
+					"//-------------------------------------------------",
+					"utils.keys.userGroupEntityKeys = \"user_group_entity_keys\";",
+					"utils.data.userGroupEntityKeys = [",
+					"    \"name\"]; ",
+					"if (!pm.collectionVariables.get(\"user_group_entity_keys\")) {",
+					"    pm.collectionVariables.set(\"user_group_entity_keys\", JSON.stringify(utils.data.userGroupEntityKeys));",
+					"}",
+					"utils.keys.userGroupRelationKeys = \"user_group_relation_keys\";",
+					"utils.data.userGroupRelationKeys = [",
+					"    \"users\",",
+					"    \"notificationReceiver\"];",
+					"utils.types.userGroupRelationKeys = [",
+					"    \"user\",",
+					"    \"userGroup\"];",
+					"if (!pm.collectionVariables.get(\"user_group_relation_keys\")) {",
+					"    pm.collectionVariables.set(\"user_group_relation_keys\", JSON.stringify(utils.data.userGroupRelationKeys));",
+					"}",
+					"utils.keys.userGroupDefaultEntity = \"user_group_default_entity\";",
+					"utils.data.userGroupDefaultEntity = {",
+					"    \"name\": \"A user group\", ",
+					"    \"users\": [],",
+					"    \"notificationReceiver\": []",
+					"};",
+					"if (!pm.collectionVariables.get(\"user_group_default_entity\")) {",
+					"    pm.collectionVariables.set(\"user_group_default_entity\", JSON.stringify(utils.data.userGroupDefaultEntity));",
+					"}",
+					"utils.keys.userGroupPatchEntity = \"user_group_patch_entity\";",
+					"utils.data.userGroupPatchEntity = {",
+					"    \"name\": \"An updated user group\", ",
+					"    \"users\": [],",
+					"    \"notificationReceiver\": []",
+					"};",
+					"if (!pm.collectionVariables.get(\"user_group_patch_entity\")) {",
+					"    pm.collectionVariables.set(\"user_group_patch_entity\", JSON.stringify(utils.data.userGroupPatchEntity));",
+					"}",
+					"if (!pm.collectionVariables.get(\"user_group_id\")) pm.collectionVariables.set(\"user_group_id\", \"\");",
+					"utils.keys.userGroupId = \"user_group_id\";",
+					"utils.data.userGroupId = null;",
+					"//-------------------------------------------------",
+					"//-------------------------------------------------",
+					"",
+					"//-------------------------------------------------",
+					"//USER",
+					"//-------------------------------------------------",
+					"utils.keys.userEntityKeys = \"user_entity_keys\";",
+					"utils.data.userEntityKeys = [",
+					"    \"name\", ",
+					"    \"keycloakId\"]; ",
+					"if (!pm.collectionVariables.get(\"user_entity_keys\")) {",
+					"    pm.collectionVariables.set(\"user_entity_keys\", JSON.stringify(utils.data.userEntityKeys));",
+					"}",
+					"utils.keys.userRelationKeys = \"user_relation_keys\";",
+					"utils.data.userRelationKeys = [",
+					"    \"taskContact\",",
+					"    \"taskHelper\",",
+					"    \"commentAuthor\",",
+					"    \"userGroups\",",
+					"    \"notificationSender\"];",
+					"utils.types.userRelationKeys = [",
+					"    \"task\",",
+					"    \"task\",",
+					"    \"comment\",",
+					"    \"userGroup\",",
+					"    \"notification\"];",
+					"if (!pm.collectionVariables.get(\"user_relation_keys\")) {",
+					"    pm.collectionVariables.set(\"user_relation_keys\", JSON.stringify(utils.data.userRelationKeys));",
+					"}",
+					"utils.keys.userDefaultEntity = \"user_default_entity\";",
+					"utils.data.userDefaultEntity = {",
+					"    \"name\": \"A name\", ",
+					"    \"taskContact\": [],",
+					"    \"taskHelper\": [],",
+					"    \"commentAuthor\": [],",
+					"    \"userGroups\": [],",
+					"    \"notificationSender\": []",
+					"};",
+					"if (!pm.collectionVariables.get(\"user_default_entity\")) {",
+					"    pm.collectionVariables.set(\"user_default_entity\", JSON.stringify(utils.data.userDefaultEntity));",
+					"}",
+					"utils.keys.userPatchEntity = \"user_patch_entity\";",
+					"utils.data.userPatchEntity = {",
+					"    \"name\": \"An updated name\", ",
+					"    \"taskContact\": [],",
+					"    \"taskHelper\": [],",
+					"    \"commentAuthor\": [],",
+					"    \"userGroups\": [],",
+					"    \"notificationSender\": []",
+					"};",
+					"if (!pm.collectionVariables.get(\"user_patch_entity\")) {",
+					"    pm.collectionVariables.set(\"user_patch_entity\", JSON.stringify(utils.data.userPatchEntity));",
+					"}",
+					"if (!pm.collectionVariables.get(\"user_id\")) pm.collectionVariables.set(\"user_id\", \"\");",
+					"utils.keys.userId = \"user_id\";",
+					"utils.data.userId = null;",
+					"//-------------------------------------------------",
+					"//-------------------------------------------------"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Status test\", function () {",
+					"    pm.response.to.have.status(200);",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"key": "child_cultural_asset_entity",
+			"value": ""
+		},
+		{
+			"key": "comment_default_entity",
+			"value": ""
+		},
+		{
+			"key": "comment_entity_keys",
+			"value": ""
+		},
+		{
+			"key": "comment_patch_entity",
+			"value": ""
+		},
+		{
+			"key": "comment_relation_keys",
+			"value": ""
+		},
+		{
+			"key": "cultural_asset_default_entity",
+			"value": ""
+		},
+		{
+			"key": "cultural_asset_entity_keys",
+			"value": ""
+		},
+		{
+			"key": "cultural_asset_patch_entity",
+			"value": ""
+		},
+		{
+			"key": "cultural_asset_relation_keys",
+			"value": ""
+		},
+		{
+			"key": "notification_default_entity",
+			"value": ""
+		},
+		{
+			"key": "notification_entity_keys",
+			"value": ""
+		},
+		{
+			"key": "notification_patch_entity",
+			"value": ""
+		},
+		{
+			"key": "notification_relation_keys",
+			"value": ""
+		},
+		{
+			"key": "parent_cultural_asset_entity",
+			"value": ""
+		},
+		{
+			"key": "subtask_default_entity",
+			"value": ""
+		},
+		{
+			"key": "subtask_entity_keys",
+			"value": ""
+		},
+		{
+			"key": "subtask_patch_entity",
+			"value": ""
+		},
+		{
+			"key": "subtask_relation_keys",
+			"value": ""
+		},
+		{
+			"key": "task_default_entity",
+			"value": ""
+		},
+		{
+			"key": "task_entity_keys",
+			"value": ""
+		},
+		{
+			"key": "task_patch_entity",
+			"value": ""
+		},
+		{
+			"key": "task_relation_keys",
+			"value": ""
+		},
+		{
+			"key": "user_default_entity",
+			"value": ""
+		},
+		{
+			"key": "user_entity_keys",
+			"value": ""
+		},
+		{
+			"key": "user_group_default_entity",
+			"value": ""
+		},
+		{
+			"key": "user_group_entity_keys",
+			"value": ""
+		},
+		{
+			"key": "user_group_patch_entity",
+			"value": ""
+		},
+		{
+			"key": "user_group_relation_keys",
+			"value": ""
+		},
+		{
+			"key": "user_patch_entity",
+			"value": ""
+		},
+		{
+			"key": "user_relation_keys",
+			"value": ""
+		},
+		{
+			"key": "username",
+			"value": ""
+		},
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080/api"
+		},
+		{
+			"key": "latitude",
+			"value": "-77.03655315"
+		},
+		{
+			"key": "latitudeUpdated",
+			"value": "13.369133681226069"
+		},
+		{
+			"key": "longitude",
+			"value": "38.897699700000004"
+		},
+		{
+			"key": "longitudeUpdated",
+			"value": "52.520045350000004"
+		},
+		{
+			"key": "radius",
+			"value": "500"
+		},
+		{
+			"key": "updated_state",
+			"value": "2"
+		}
+	]
+}

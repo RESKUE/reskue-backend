@@ -64,7 +64,7 @@ npm run start:dev
 ```
 npm run stop:dev
 ```
-- Running the Postman API tests with Newman
+- Running the Postman API tests with Newman. All backend services have to be running for this.
 ```
 npm run test
 ```

@@ -15,7 +15,7 @@
     "clean:content": "./clean.sh content-db",
     "clean:rabbitmq": "./clean.sh rabbitmq",
     "clean:location": "./clean.sh location-db",
-    "test": ""
+    "test": "newman run RESKUE.tests.json"
   },
   "repository": {
     "type": "git",
