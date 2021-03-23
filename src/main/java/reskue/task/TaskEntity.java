@@ -16,7 +16,6 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -124,8 +123,8 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	@ManyToMany()
 	@JoinTable(
 			name = "task_helpers",
-			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "helper_id", referencedColumnName = "id")
+			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = "helper_id", referencedColumnName = BaseEntity.ID)
 	)
 	@JsonIgnoreProperties(UserEntity.TASK_HELPER)
 	private List<UserEntity> helperUsers = new ArrayList<UserEntity>();
@@ -148,8 +147,8 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	@OneToMany()
 	@JoinTable(
 			name = "task_media",
-			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id")
+			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = BaseEntity.ID)
 	)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)

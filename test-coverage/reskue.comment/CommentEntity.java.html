@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommentEntity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue.comment</a> &gt; <span class="el_source">CommentEntity.java</span></div><h1>CommentEntity.java</h1><pre class="source lang-java linenums">package reskue.comment;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
+import kueres.base.BaseEntity;
+import kueres.media.MediaEntity;
+import reskue.culturalasset.CulturalAssetEntity;
+import reskue.task.TaskEntity;
+import reskue.user.UserEntity;
+
+/**
+ * 
+ * The CommentEntity is a representation of comments made by users.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
+@Entity
+<span class="fc" id="L39">public class CommentEntity extends BaseEntity&lt;CommentEntity&gt;{</span>
+	
+	@Override
+	public String[] getUpdateableFields() {
+<span class="fc" id="L43">		return new String[] {</span>
+<span class="fc" id="L44">			CommentEntity.COMMENT_CULTURAL_ASSET,</span>
+<span class="fc" id="L45">			CommentEntity.COMMENT_TASK,</span>
+<span class="fc" id="L46">			CommentEntity.TEXT,</span>
+<span class="fc" id="L47">			CommentEntity.MEDIA,</span>
+<span class="fc" id="L48">			CommentEntity.AUTHOR,</span>
+		};
+	}
+	
+	/**
+	 * The cultural asset the comment belongs to if it belongs to a cultural asset.
+	 */
+	@ManyToOne()
+	@JoinTable(
+			name = &quot;cultural_asset_comments&quot;,
+			joinColumns = { @JoinColumn(name = &quot;comment_id&quot;, referencedColumnName = BaseEntity.ID) },
+			inverseJoinColumns = { @JoinColumn(name = &quot;cultural_asset_id&quot;, referencedColumnName = BaseEntity.ID) }
+	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+<span class="fc" id="L63">	private CulturalAssetEntity commentCulturalAsset = null;</span>
+	public static final String COMMENT_CULTURAL_ASSET = &quot;commentCulturalAsset&quot;;
+<span class="fc" id="L65">	public CulturalAssetEntity getCommentCulturalAsset() { return this.commentCulturalAsset; }</span>
+<span class="fc" id="L66">	public void setCommentCulturalAsset(CulturalAssetEntity commentCulturalAsset) { this.commentCulturalAsset = commentCulturalAsset; }</span>
+	
+	/**
+	 * The task the comment belongs to if it belongs to a task.
+	 */
+	@ManyToOne()
+	@JoinTable(
+			name = &quot;task_comments&quot;,
+			joinColumns = { @JoinColumn(name = &quot;comment_id&quot;, referencedColumnName = BaseEntity.ID) },
+			inverseJoinColumns = { @JoinColumn(name = &quot;task_id&quot;, referencedColumnName = BaseEntity.ID) }
+	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+<span class="fc" id="L79">	private TaskEntity commentTask = null;</span>
+	public static final String COMMENT_TASK = &quot;commentTask&quot;;
+<span class="fc" id="L81">	public TaskEntity getCommentTask() { return this.commentTask; }</span>
+<span class="fc" id="L82">	public void setCommentTask(TaskEntity commentTask) { this.commentTask = commentTask; }</span>
+	
+	/**
+	 * The text of the comment.
+	 */
+	@Column(name = &quot;text&quot;, nullable = false, columnDefinition=&quot;TEXT&quot;)
+<span class="fc" id="L88">	private String text = &quot;&quot;;</span>
+	public static final String TEXT = &quot;text&quot;;
+<span class="fc" id="L90">	public String getText() { return this.text; }</span>
+<span class="fc" id="L91">	public void setText(String text) { this.text = text; }</span>
+	
+	/**
+	 * The list of media associated with the comment.
+	 */
+	@OneToMany()
+	@JoinTable(
+			name = &quot;comment_media&quot;,
+			joinColumns = @JoinColumn(name = &quot;comment_id&quot;, referencedColumnName = &quot;id&quot;),
+			inverseJoinColumns = @JoinColumn(name = &quot;media_id&quot;, referencedColumnName = &quot;id&quot;)
+	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+<span class="fc" id="L104">	private List&lt;MediaEntity&gt; media = new ArrayList&lt;MediaEntity&gt;();</span>
+	public static final String MEDIA = &quot;media&quot;;
+<span class="fc" id="L106">	public List&lt;MediaEntity&gt; getMedia() { return this.media; }</span>
+<span class="fc" id="L107">	public void setMedia(List&lt;MediaEntity&gt; media) { this.media = media; }</span>
+	
+	/**
+	 * The author of the comment.
+	 */
+	@ManyToOne()
+	@JoinColumn(name = &quot;comment_author_id&quot;, referencedColumnName = &quot;id&quot;)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+<span class="fc" id="L116">	private UserEntity author = null;</span>
+	public static final String AUTHOR = &quot;author&quot;;
+<span class="fc" id="L118">	public UserEntity getAuthor() { return this.author; }</span>
+<span class="fc" id="L119">	public void setAuthor(UserEntity author) { this.author = author; }</span>
+	
+	/**
+	 * The time when the comment was created.
+	 */
+	@Column(name = &quot;createdAt&quot;, nullable = false)
+<span class="fc" id="L125">	private Date createdAt = new Date();</span>
+	public static final String CREATED_AT = &quot;createdAt&quot;;
+<span class="fc" id="L127">	public Date getCreatedAt() { return this.createdAt; }</span>
+<span class="nc" id="L128">	public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }</span>
+	
+	/**
+	 * The last time the comment was changed.
+	 */
+	@Column(name = &quot;updatedAt&quot;, nullable = false)
+<span class="fc" id="L134">	private Date updatedAt = new Date();</span>
+	public static final String UPDATED_AT = &quot;updatedAt&quot;;
+<span class="fc" id="L136">	public Date getUpdatedAt() { return this.updatedAt; }</span>
+<span class="fc" id="L137">	public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }</span>
+
+	/**
+	 * Doesnt allow changes to:
+	 *  - author
+	 *  - createdAt
+	 *  - updatedAt
+	 *  If both a task and a cultural asset are given the related entity is not changed
+	 * @throws JsonProcessingException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws JsonMappingException 
+	 */
+	@Override
+	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
+		
+<span class="fc" id="L157">		CommentEntity details = CommentEntity.createEntityFromJSON(json, this.getUpdateableFields(), CommentEntity.class);</span>
+		
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">		if (this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &amp;&amp;</span>
+<span class="pc bpc" id="L160" title="1 of 2 branches missed.">				!this.containsFields(json, CommentEntity.COMMENT_TASK)) {</span>
+<span class="fc" id="L161">			this.setCommentCulturalAsset(details.getCommentCulturalAsset());</span>
+<span class="fc" id="L162">			this.setCommentTask(null);</span>
+<span class="pc bnc" id="L163" title="All 2 branches missed.">		} else if (this.containsFields(json, CommentEntity.COMMENT_TASK) &amp;&amp;</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">				!this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET)) {</span>
+<span class="nc" id="L165">			this.setCommentTask(details.getCommentTask());</span>
+<span class="nc" id="L166">			this.setCommentCulturalAsset(null);</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">		} else if (!this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &amp;&amp;</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">				!this.containsFields(json, CommentEntity.COMMENT_TASK)) {</span>
+<span class="nc" id="L169">			this.setCommentCulturalAsset(null);</span>
+<span class="nc" id="L170">			this.setCommentTask(null);</span>
+		}
+		
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">		if (this.containsFields(json, CommentEntity.TEXT)) {</span>
+<span class="fc" id="L174">			this.setText(details.getText());</span>
+		}
+<span class="pc bpc" id="L176" title="1 of 2 branches missed.">		if (this.containsFields(json, CommentEntity.MEDIA)) {</span>
+<span class="fc" id="L177">			this.setMedia(details.getMedia());</span>
+		}
+<span class="fc" id="L179">		this.setUpdatedAt(new Date());</span>
+		
+<span class="fc" id="L181">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommentController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue.comment</a> &gt; <span class="el_source">CommentController.java</span></div><h1>CommentController.java</h1><pre class="source lang-java linenums">package reskue.comment;
+
+import java.util.Optional;
+
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.keycloak.representations.AccessToken;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import kueres.base.BaseController;
+import kueres.media.MediaEntity;
+import kueres.query.EntitySpecification;
+import kueres.query.SortBuilder;
+import kueres.utility.Utility;
+import reskue.ReskueEntity;
+import reskue.user.UserEntity;
+import reskue.user.UserService;
+
+/**
+ * 
+ * The CommentController provides API functions for CommentEntities.
+ * These functions are:
+ *  - all functions of the BaseController in kueres.base
+ *  - finding all media of a comment
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
+@RestController
+@RequestMapping(BaseController.API_ENDPOINT + CommentController.ROUTE)
+<span class="fc" id="L48">public class CommentController extends BaseController&lt;CommentEntity, CommentRepository, CommentService&gt;{</span>
+		
+	/**
+	 * The API route for CommentEntities.
+	 */
+	public static final String ROUTE = &quot;/comment&quot;;
+	
+	@Autowired
+	private UserService userService;
+	
+	/**
+	 * Find all media of the comment.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * &lt;p&gt;
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * &lt;p&gt;
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the comment's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
+	@GetMapping(&quot;/{&quot; + CommentEntity.ID + &quot;}/media&quot;)
+	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
+	public Page&lt;MediaEntity&gt; getAllMedia(
+			@PathVariable(value = ReskueEntity.ID) long id,
+			@RequestParam Optional&lt;String[]&gt; filter,
+			@RequestParam Optional&lt;String[]&gt; sort,
+			@RequestParam Optional&lt;Integer&gt; page,
+			@RequestParam Optional&lt;Integer&gt; size
+			) {
+		
+<span class="fc" id="L84">		Utility.LOG.trace(&quot;CommentController.getAllMedia called.&quot;);</span>
+		
+<span class="fc" id="L86">		EntitySpecification&lt;MediaEntity&gt; specification = null;</span>
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">		if (filter.isPresent()) {</span>
+<span class="nc" id="L88">			specification = new EntitySpecification&lt;MediaEntity&gt;(filter.get());</span>
+		}
+		
+<span class="fc" id="L91">		Pageable pageable = SortBuilder.buildPageable(sort, page, size);</span>
+
+<span class="fc" id="L93">		return service.getAllMedia(id, specification, pageable);</span>
+		
+	}
+	
+	@PostMapping(&quot;/autoAuthor&quot;)
+	@RolesAllowed(&quot;administrator&quot;)
+	public ResponseEntity&lt;CommentEntity&gt; create(
+			@Valid @RequestBody CommentEntity entity,
+			HttpServletRequest request, 
+			HttpServletResponse response) {
+		
+<span class="fc" id="L104">		Utility.LOG.trace(&quot;NotificationController.create called.&quot;);</span>
+		
+<span class="fc" id="L106">		KeycloakAuthenticationToken authToken = (KeycloakAuthenticationToken) request.getUserPrincipal();</span>
+<span class="fc" id="L107">		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();</span>
+		
+<span class="fc" id="L109">		String subject = token.getSubject();</span>
+<span class="fc" id="L110">		UserEntity author = userService.me(subject);</span>
+<span class="fc" id="L111">		entity.setAuthor(author);</span>
+		
+<span class="fc" id="L113">		CommentEntity createdEntity = service.create(entity);</span>
+<span class="fc" id="L114">		return ResponseEntity.ok().body(createdEntity);</span>
+		
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

@@ -9,6 +9,17 @@
 - Production (prod): All services + Spring Boot in a container
 - Development (dev): All services in a container without Spring Boot
 
+## Project structure
+```
+./reskue-backend/
+|-- docs    JavaDoc documentation
+|-- services  All backend services
+|-- src
+|   |-- main  Java source files
+|   `-- test  Java test source files
+`-- test-coverage   Test coverage report
+```
+
 ## Getting started - read before doing anything
 1. Clone the master branch for use in production mode
 ```
@@ -66,7 +77,15 @@ npm run stop:dev
 ```
 - Running the Postman API tests with Newman. All backend services have to be running for this.
 ```
+npm run test:newman
+```
+- Run API tests and generate test coverage. All backend services have to be running for this.
+```
 npm run test
+```
+- Generate JavaDocs.
+```
+npm run docs
 ```
 
 ## Update

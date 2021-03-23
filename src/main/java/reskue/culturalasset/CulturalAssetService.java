@@ -143,18 +143,18 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * will not be changed.
 	 * 
 	 * @param id      - the cultural asset's identifier.
-	 * @param details - the updated data.
+	 * @param detailsJSON - the updated data in JSON format.
 	 * @return The updated cultural asset.
 	 * @throws ResourceNotFoundException if there is no cultural asset with the
 	 *                                   specified identifier.
-	 * @throws JsonProcessingException 
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws JsonMappingException 
+	 * @throws JsonProcessingException if the JSON string can not be processed
+	 * @throws SecurityException if the JSON string can not be processed
+	 * @throws NoSuchMethodException if the JSON string can not be processed
+	 * @throws InvocationTargetException if the JSON string can not be processed
+	 * @throws IllegalArgumentException if the JSON string can not be processed
+	 * @throws IllegalAccessException if the JSON string can not be processed
+	 * @throws InstantiationException if the JSON string can not be processed
+	 * @throws JsonMappingException if the JSON string can not be processed
 	 */
 	//@Override
 	public CulturalAssetEntity update(long id, String detailsJSON) throws ResourceNotFoundException, JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {

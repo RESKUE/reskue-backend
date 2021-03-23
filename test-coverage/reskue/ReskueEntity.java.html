@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReskueEntity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue</a> &gt; <span class="el_source">ReskueEntity.java</span></div><h1>ReskueEntity.java</h1><pre class="source lang-java linenums">package reskue;
+
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+
+import kueres.base.BaseEntity;
+import kueres.media.MediaEntity;
+import reskue.comment.CommentEntity;
+
+/**
+ * 
+ * The ReskueEntity provides different entities with generic fields.
+ * The ReskueEntity is used as a generic superclass for the CulturalAssetEntity and TaskEntity.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
+@MappedSuperclass
+<span class="fc" id="L24">public abstract class ReskueEntity&lt;E extends ReskueEntity&lt;E&gt;&gt; extends BaseEntity&lt;E&gt; {</span>
+	
+	/**
+	 * The name of the entity.
+	 */
+	@Column(name = &quot;name&quot;, nullable = false)
+<span class="fc" id="L30">	private String name = &quot;unnamed&quot;;</span>
+	public static final String NAME = &quot;name&quot;;
+<span class="fc" id="L32">	public String getName() { return this.name; }</span>
+<span class="fc" id="L33">	public void setName(String name) { this.name = name; }</span>
+	
+	/**
+	 * The description of the entity.
+	 */
+	@Column(name = &quot;description&quot;, nullable = false, columnDefinition=&quot;TEXT&quot;)
+<span class="fc" id="L39">	private String description = &quot;&quot;;</span>
+	public static final String DESCRIPTION = &quot;description&quot;;
+<span class="fc" id="L41">	public String getDescription() { return this.description; }</span>
+<span class="fc" id="L42">	public void setDescription(String description) { this.description = description; }</span>
+	
+	/**
+	 * The priority of the entity. The priority should range between 0 and 5.
+	 */
+	@Column(name = &quot;priority&quot;, nullable = false)
+<span class="fc" id="L48">	private int priority = 0;</span>
+	public static final String PRIORITY = &quot;priority&quot;;
+<span class="fc" id="L50">	public int getPriority() { return this.priority; }</span>
+<span class="fc" id="L51">	public void setPriority(int priority) { this.priority = priority; }</span>
+	
+	/**
+	 * If the entity is endangered. 
+	 * Uses an integer instead of a boolean to make sorting easier.
+	 * Use 1 for true and 0 for false.
+	 */
+	@Column(name = &quot;isEndangered&quot;, nullable = false)
+<span class="fc" id="L59">	private int isEndangered = 0;</span>
+	public static final String IS_ENDANGERED = &quot;isEndangered&quot;;
+<span class="fc" id="L61">	public int getIsEndangered() { return this.isEndangered; }</span>
+<span class="fc" id="L62">	public void setIsEndangered(int isEndangered) { this.isEndangered = isEndangered; }</span>
+	
+	public abstract List&lt;MediaEntity&gt; getMedia();
+	public abstract void setMedia(List&lt;MediaEntity&gt; media);
+	
+	public abstract List&lt;CommentEntity&gt; getComments();
+	public abstract void setComments(List&lt;CommentEntity&gt; comments);
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

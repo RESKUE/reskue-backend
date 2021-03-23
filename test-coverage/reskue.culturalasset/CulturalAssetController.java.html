@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CulturalAssetController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue.culturalasset</a> &gt; <span class="el_source">CulturalAssetController.java</span></div><h1>CulturalAssetController.java</h1><pre class="source lang-java linenums">package reskue.culturalasset;
+
+import java.util.Optional;
+
+import javax.annotation.security.RolesAllowed;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import kueres.base.BaseController;
+import kueres.query.EntitySpecification;
+import kueres.query.SortBuilder;
+import kueres.utility.Utility;
+import reskue.ReskueController;
+import reskue.comment.CommentEntity;
+import reskue.notification.NotificationEntity;
+import reskue.task.TaskEntity;
+
+/**
+ * 
+ * The TaskController provides API functions for TaskEntities.
+ * These functions are:
+ *  - all functions of the BaseController in kueres.base
+ *  - all functions of the ReskueController in reskue
+ *  - finding all cultural assets in a radius around a given point
+ *  - finding all tasks of a cultural asset
+ *  - finding all children of a cultural asset
+ *  - finding all notifications of a cultural asset
+ *  - calculating the distance from a point to a cultural asset
+ *  - adding a child to a cultural asset
+ *  - removing a child from a cultural asset
+ *  - setting the parent of a cultural asset
+ *  - removing the parent from a cultural asset
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
+@RestController
+@RequestMapping(BaseController.API_ENDPOINT + CulturalAssetController.ROUTE)
+<span class="fc" id="L50">public class CulturalAssetController extends ReskueController&lt;CulturalAssetEntity, CulturalAssetRepository, CulturalAssetService&gt;{</span>
+	
+	/**
+	 * The API route for CulturalAssetEntities.
+	 */
+	public static final String ROUTE = &quot;/culturalAsset&quot;;
+	
+	/**
+	 * Find all cultural assets in a radius around a given middle point.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * &lt;p&gt;
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * &lt;p&gt;
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param radius - the radius of the search.
+	 * @param longitude - the longitude of the middle of the search.
+	 * @param latitude - the latitude of the middle of the search.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
+	@GetMapping(&quot;/radius&quot;)
+	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
+	public Page&lt;CulturalAssetEntity&gt; findInRadius(
+			@RequestParam double radius,
+			@RequestParam double longitude,
+			@RequestParam double latitude,
+			@RequestParam Optional&lt;String[]&gt; filter,
+			@RequestParam Optional&lt;String[]&gt; sort,
+			@RequestParam Optional&lt;Integer&gt; page,
+			@RequestParam Optional&lt;Integer&gt; size
+			) {
+		
+<span class="fc" id="L87">		Utility.LOG.trace(&quot;CulturalAssetController.findInRadius called.&quot;);</span>
+		
+<span class="fc" id="L89">		EntitySpecification&lt;CulturalAssetEntity&gt; specification = null;</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">		if (filter.isPresent()) {</span>
+<span class="nc" id="L91">			specification = new EntitySpecification&lt;CulturalAssetEntity&gt;(filter.get());</span>
+		}
+		
+<span class="fc" id="L94">		Pageable pageable = SortBuilder.buildPageable(sort, page, size);</span>
+		
+<span class="fc" id="L96">		return service.findInRadius(radius, longitude, latitude, specification, pageable);</span>
+		
+	}
+	
+	/**
+	 * Find all tasks of the cultural asset.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * &lt;p&gt;
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * &lt;p&gt;
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
+	@GetMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/tasks&quot;)
+	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
+	public Page&lt;TaskEntity&gt; getAllTasks(
+			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@RequestParam Optional&lt;String[]&gt; filter,
+			@RequestParam Optional&lt;String[]&gt; sort,
+			@RequestParam Optional&lt;Integer&gt; page,
+			@RequestParam Optional&lt;Integer&gt; size
+			) {
+		
+<span class="fc" id="L126">		Utility.LOG.trace(&quot;CulturalAssetController.getAllTasks called.&quot;);</span>
+		
+<span class="fc" id="L128">		EntitySpecification&lt;TaskEntity&gt; specification = null;</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">		if (filter.isPresent()) {</span>
+<span class="nc" id="L130">			specification = new EntitySpecification&lt;TaskEntity&gt;(filter.get());</span>
+		}
+		
+<span class="fc" id="L133">		Pageable pageable = SortBuilder.buildPageable(sort, page, size);</span>
+		
+<span class="fc" id="L135">		return service.getAllTasks(id, specification, pageable);</span>
+		
+	}
+	
+	/**
+	 * Find all comments of the cultural asset.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * &lt;p&gt;
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * &lt;p&gt;
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
+	@GetMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/comments&quot;)
+	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
+	public Page&lt;CommentEntity&gt; getAllComments(
+			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@RequestParam Optional&lt;String[]&gt; filter, 
+			@RequestParam Optional&lt;String[]&gt; sort,
+			@RequestParam Optional&lt;Integer&gt; page, 
+			@RequestParam Optional&lt;Integer&gt; size) {
+
+<span class="fc" id="L164">		Utility.LOG.trace(&quot;ReskueController.getAllComments called.&quot;);</span>
+		
+<span class="fc" id="L166">		EntitySpecification&lt;CommentEntity&gt; specification = null;</span>
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">		if (filter.isPresent()) {</span>
+<span class="nc" id="L168">			specification = new EntitySpecification&lt;CommentEntity&gt;(filter.get());</span>
+		}
+		
+<span class="fc" id="L171">		Pageable pageable = SortBuilder.buildPageable(sort, page, size);</span>
+
+<span class="fc" id="L173">		return service.getAllComments(id, specification, pageable);</span>
+		
+	}
+	
+	/**
+	 * Find all children of the cultural asset.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * &lt;p&gt;
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * &lt;p&gt;
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
+	@GetMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/children&quot;)
+	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
+	public Page&lt;CulturalAssetEntity&gt; getAllChildren(
+			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@RequestParam Optional&lt;String[]&gt; filter,
+			@RequestParam Optional&lt;String[]&gt; sort,
+			@RequestParam Optional&lt;Integer&gt; page,
+			@RequestParam Optional&lt;Integer&gt; size
+			) {
+		
+<span class="fc" id="L203">		Utility.LOG.trace(&quot;CulturalAssetController.getAllChildren called.&quot;);</span>
+		
+<span class="fc" id="L205">		EntitySpecification&lt;CulturalAssetEntity&gt; specification = null;</span>
+<span class="pc bpc" id="L206" title="1 of 2 branches missed.">		if (filter.isPresent()) {</span>
+<span class="nc" id="L207">			specification = new EntitySpecification&lt;CulturalAssetEntity&gt;(filter.get());</span>
+		}
+		
+<span class="fc" id="L210">		Pageable pageable = SortBuilder.buildPageable(sort, page, size);</span>
+
+<span class="fc" id="L212">		return service.getAllChildren(id, specification, pageable);</span>
+		
+	}
+	
+	/**
+	 * Find all notifications of the cultural asset.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * &lt;p&gt;
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * &lt;p&gt;
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
+	@GetMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/notifications&quot;)
+	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
+	public Page&lt;NotificationEntity&gt; getAllNotifications(
+			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@RequestParam Optional&lt;String[]&gt; filter,
+			@RequestParam Optional&lt;String[]&gt; sort,
+			@RequestParam Optional&lt;Integer&gt; page,
+			@RequestParam Optional&lt;Integer&gt; size
+			) {
+		
+<span class="fc" id="L242">		Utility.LOG.trace(&quot;CulturalAssetController.getAllNotifications called.&quot;);</span>
+		
+<span class="fc" id="L244">		EntitySpecification&lt;NotificationEntity&gt; specification = null;</span>
+<span class="pc bpc" id="L245" title="1 of 2 branches missed.">		if (filter.isPresent()) {</span>
+<span class="nc" id="L246">			specification = new EntitySpecification&lt;NotificationEntity&gt;(filter.get());</span>
+		}
+		
+<span class="fc" id="L249">		Pageable pageable = SortBuilder.buildPageable(sort, page, size);</span>
+
+<span class="fc" id="L251">		return service.getAllNotifications(id, specification, pageable);</span>
+		
+	}
+	
+	/**
+	 * Calculate the distance between a given point and the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param longitude - the longitude of the given point
+	 * @param latitude - the latitude of the given point
+	 * @return The result in meters as a double
+	 */
+	@GetMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/distance&quot;)
+	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
+	public double getDistance(
+			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@RequestParam double longitude,
+			@RequestParam double latitude) {
+		
+<span class="fc" id="L270">		Utility.LOG.trace(&quot;CulturalAssetController.getDistance called.&quot;);</span>
+		
+<span class="fc" id="L272">		return service.getDistance(id, longitude, latitude);</span>
+		
+	}	
+	
+	/**
+	 * Adds a child to the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param childId - the childs's identifier.
+	 * @return The cultural asset after the child was added.
+	 */
+	@PutMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/addChild/{&quot; + CulturalAssetEntity.CULTURAL_ASSET_CHILDREN + &quot;}&quot;)
+	@RolesAllowed( &quot;administrator&quot; )
+	public ResponseEntity&lt;CulturalAssetEntity&gt; addCulturalAssetChild(
+			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_CHILDREN) long childId) {
+		
+<span class="fc" id="L289">		Utility.LOG.trace(&quot;CulturalAssetController.addCulturalAssetChild called.&quot;);</span>
+		
+<span class="fc" id="L291">		CulturalAssetEntity updatedEntity = service.addCulturalAssetChild(id, childId);</span>
+<span class="fc" id="L292">		return ResponseEntity.ok().body(updatedEntity);</span>
+		
+	}
+	
+	/**
+	 * Removes a child from the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param childId - the childs's identifier.
+	 * @return The cultural asset after the child was removed.
+	 */
+	@PutMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/removeChild/{&quot; + CulturalAssetEntity.CULTURAL_ASSET_CHILDREN + &quot;}&quot;)
+	@RolesAllowed( &quot;administrator&quot; )
+	public ResponseEntity&lt;CulturalAssetEntity&gt; removeCulturalAssetChild(
+			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_CHILDREN) long childId) {
+		
+<span class="fc" id="L309">		Utility.LOG.trace(&quot;CulturalAssetController.removeCulturalAssetChild called.&quot;);</span>
+		
+<span class="fc" id="L311">		CulturalAssetEntity updatedEntity = service.removeCulturalAssetChild(id, childId);</span>
+<span class="fc" id="L312">		return ResponseEntity.ok().body(updatedEntity);</span>
+		
+	}
+	
+	/**
+	 * Sets the parent of the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param parentId - the childs's identifier.
+	 * @return The cultural asset after the parent was set.
+	 */
+	@PutMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/setParent/{&quot; + CulturalAssetEntity.CULTURAL_ASSET_PARENT + &quot;}&quot;)
+	@RolesAllowed( &quot;administrator&quot; )
+	public ResponseEntity&lt;CulturalAssetEntity&gt; setCulturalAssetParent(
+			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_PARENT) long parentId) {
+		
+<span class="fc" id="L329">		Utility.LOG.trace(&quot;CulturalAssetController.setCulturalAssetParent called.&quot;);</span>
+		
+<span class="fc" id="L331">		CulturalAssetEntity updatedEntity = service.setCulturalAssetParent(id, parentId);</span>
+<span class="fc" id="L332">		return ResponseEntity.ok().body(updatedEntity);</span>
+		
+	}
+	
+	/**
+	 * Removes the parent of the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @return The cultural asset after the parent was removed.
+	 */
+	@PutMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/removeParent&quot;)
+	@RolesAllowed( &quot;administrator&quot; )
+	public ResponseEntity&lt;CulturalAssetEntity&gt; removeCulturalAssetParent(
+			@PathVariable(value = CulturalAssetEntity.ID) long id) {
+		
+<span class="fc" id="L347">		Utility.LOG.trace(&quot;CulturalAssetController.removeCulturalAssetParent called.&quot;);</span>
+		
+<span class="fc" id="L349">		CulturalAssetEntity updatedEntity = service.removeCulturalAssetParent(id);</span>
+<span class="fc" id="L350">		return ResponseEntity.ok().body(updatedEntity);</span>
+		
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>
