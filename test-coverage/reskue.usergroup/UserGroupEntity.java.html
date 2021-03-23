@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserGroupEntity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue.usergroup</a> &gt; <span class="el_source">UserGroupEntity.java</span></div><h1>UserGroupEntity.java</h1><pre class="source lang-java linenums">package reskue.usergroup;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
+import kueres.base.BaseEntity;
+import reskue.notification.NotificationEntity;
+import reskue.user.UserEntity;
+
+/**
+ * 
+ * The UserGroupEntity is a representation of a group of users.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
+@Entity
+<span class="fc" id="L35">public class UserGroupEntity extends BaseEntity&lt;UserGroupEntity&gt;{</span>
+	
+	@Override
+	public String[] getUpdateableFields() {
+<span class="fc" id="L39">		return new String[] {</span>
+<span class="fc" id="L40">			UserGroupEntity.NAME,</span>
+<span class="fc" id="L41">			UserGroupEntity.USERS</span>
+		};
+	}
+	
+	/**
+	 * The name of the user group.
+	 */
+	@Column(name = &quot;name&quot;, nullable = false)
+<span class="fc" id="L49">	private String name = &quot;unnamed&quot;;</span>
+	public static final String NAME = &quot;name&quot;;
+<span class="fc" id="L51">	public String getName() { return this.name; }</span>
+<span class="fc" id="L52">	public void setName(String name) { this.name = name; }</span>
+	
+	/**
+	 * The list of users that are part of the user group.
+	 */
+	@ManyToMany()
+	@JoinTable(
+			name = &quot;usergroup_users&quot;,
+			joinColumns = @JoinColumn(name = &quot;usergroup_id&quot;, referencedColumnName = &quot;id&quot;),
+			inverseJoinColumns = @JoinColumn(name = &quot;user_id&quot;, referencedColumnName = &quot;id&quot;)
+	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+<span class="fc" id="L65">	private List&lt;UserEntity&gt; users = new ArrayList&lt;UserEntity&gt;();</span>
+	public static final String USERS = &quot;users&quot;;
+<span class="fc" id="L67">	public List&lt;UserEntity&gt; getUsers() { return this.users; }</span>
+<span class="fc" id="L68">	public void setUsers(List&lt;UserEntity&gt; users) { this.users = users; }</span>
+	
+	/**
+	 * The list of notifications that every user of the user group should receive.
+	 */
+	@ManyToMany(cascade = CascadeType.MERGE)
+	@JoinTable(
+			name = &quot;notification_receivers&quot;,
+			joinColumns = @JoinColumn(name = &quot;receiver_id&quot;, referencedColumnName = &quot;id&quot;),
+			inverseJoinColumns = @JoinColumn(name = &quot;notification_id&quot;, referencedColumnName = &quot;id&quot;)
+	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+<span class="fc" id="L81">	private List&lt;NotificationEntity&gt; notificationReceiver = new ArrayList&lt;NotificationEntity&gt;();</span>
+	public static final String NOTIFICATION_RECEIVER = &quot;notificationReceiver&quot;;
+<span class="fc" id="L83">	public List&lt;NotificationEntity&gt; getNotificationReceiver() { return this.notificationReceiver; }</span>
+<span class="fc" id="L84">	public void setNotificationReceiver(List&lt;NotificationEntity&gt; notificationReceiver) { this.notificationReceiver = notificationReceiver; }</span>
+
+	@Override
+	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
+		
+<span class="fc" id="L89">		UserGroupEntity details = UserGroupEntity.createEntityFromJSON(json, this.getUpdateableFields(), UserGroupEntity.class);</span>
+		
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">		if (this.containsFields(json, UserGroupEntity.NAME)) {</span>
+<span class="fc" id="L92">			this.setName(details.getName());</span>
+		}
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">		if (this.containsFields(json, UserGroupEntity.USERS)) {</span>
+<span class="fc" id="L95">			this.setUsers(details.getUsers());</span>
+		}
+		
+<span class="fc" id="L98">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

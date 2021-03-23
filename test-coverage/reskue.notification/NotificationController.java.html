@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NotificationController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue.notification</a> &gt; <span class="el_source">NotificationController.java</span></div><h1>NotificationController.java</h1><pre class="source lang-java linenums">package reskue.notification;
+
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.keycloak.representations.AccessToken;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import kueres.base.BaseController;
+import kueres.utility.Utility;
+import reskue.user.UserEntity;
+import reskue.user.UserService;
+
+/**
+ * 
+ * The NotificationController provides API functions for NotificationEntities.
+ * These functions are:
+ *  - all functions of the BaseController in kueres.base
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
+@RestController
+@RequestMapping(BaseController.API_ENDPOINT + NotificationController.ROUTE)
+<span class="fc" id="L36">public class NotificationController</span>
+		extends BaseController&lt;NotificationEntity, NotificationRepository, NotificationService&gt; {
+	
+	/**
+	 * The API route for NotificationEntities.
+	 */
+	public static final String ROUTE = &quot;/notification&quot;;
+	
+	@Autowired
+	private UserService userService;
+	
+	@PostMapping(&quot;/autoSender&quot;)
+	@RolesAllowed(&quot;administrator&quot;)
+	public ResponseEntity&lt;NotificationEntity&gt; create(
+			@Valid @RequestBody NotificationEntity entity,
+			HttpServletRequest request, 
+			HttpServletResponse response) {
+		
+<span class="fc" id="L54">		Utility.LOG.trace(&quot;NotificationController.create called.&quot;);</span>
+		
+<span class="fc" id="L56">		KeycloakAuthenticationToken authToken = (KeycloakAuthenticationToken) request.getUserPrincipal();</span>
+<span class="fc" id="L57">		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();</span>
+		
+<span class="fc" id="L59">		String subject = token.getSubject();</span>
+<span class="fc" id="L60">		UserEntity sender = userService.me(subject);</span>
+<span class="fc" id="L61">		entity.setSender(sender);</span>
+		
+<span class="fc" id="L63">		NotificationEntity createdEntity = service.create(entity);</span>
+<span class="fc" id="L64">		return ResponseEntity.ok().body(createdEntity);</span>
+		
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

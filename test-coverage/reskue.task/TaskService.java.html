@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TaskService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue.task</a> &gt; <span class="el_source">TaskService.java</span></div><h1>TaskService.java</h1><pre class="source lang-java linenums">package reskue.task;
+
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import kueres.event.EventType;
+import kueres.eventbus.EventConsumer;
+import kueres.query.EntitySpecification;
+import kueres.utility.Utility;
+import reskue.ReskueService;
+import reskue.comment.CommentEntity;
+import reskue.subtask.SubtaskEntity;
+import reskue.user.UserEntity;
+import reskue.user.UserService;
+
+/**
+ * 
+ * The TaskService provides services needed by the TaskController.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
+@Service
+<span class="fc" id="L41">public class TaskService extends ReskueService&lt;TaskEntity, TaskRepository&gt;{</span>
+	
+	/**
+	 * The UserService needed to add users as helpers to the task.
+	 */
+	@Autowired
+	protected UserService userService;
+	
+	/**
+	 * The EntityManager needed to create a CriteriaBuilder.
+	 */
+	@PersistenceContext
+	private EntityManager em;
+	
+	/**
+	 * Set this EventSubscribers identifier and routing.
+	 */
+	@Override
+	@PostConstruct
+	public void init() {
+<span class="fc" id="L61">		this.identifier = TaskController.ROUTE;</span>
+<span class="fc" id="L62">		this.routingKey = TaskController.ROUTE;</span>
+<span class="fc" id="L63">	}</span>
+	
+	/**
+	 * Get all comments of the task.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
+	@SuppressWarnings(&quot;unchecked&quot;)
+	public Page&lt;CommentEntity&gt; getAllComments(long id, EntitySpecification&lt;CommentEntity&gt; specification,
+			Pageable pageable) {
+
+<span class="fc" id="L77">		TaskEntity entity = this.findById(id);</span>
+
+<span class="fc" id="L79">		List&lt;CommentEntity&gt; comments = entity.getComments();</span>
+
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">		if (specification != null) {</span>
+<span class="nc" id="L82">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
+<span class="nc" id="L83">			CriteriaQuery&lt;CommentEntity&gt; criteriaQuery = criteriaBuilder.createQuery(CommentEntity.class);</span>
+<span class="nc" id="L84">			Root&lt;CommentEntity&gt; root = criteriaQuery.from(CommentEntity.class);		</span>
+			
+<span class="nc" id="L86">			comments = comments.stream().filter(</span>
+<span class="nc" id="L87">					(Predicate&lt;? super CommentEntity&gt;) specification.toPredicate(root, criteriaQuery, criteriaBuilder))</span>
+<span class="nc" id="L88">					.collect(Collectors.toList());</span>
+		}
+
+<span class="fc" id="L91">		Page&lt;CommentEntity&gt; page = new PageImpl&lt;CommentEntity&gt;(comments, pageable, comments.size());</span>
+		
+<span class="fc" id="L93">		EventConsumer.sendEvent(&quot;TaskService.getAllComments&quot;, EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));</span>
+
+<span class="fc" id="L95">		return page;</span>
+		
+	}
+	
+	/**
+	 * Get all subtasks of the task.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
+	@SuppressWarnings(&quot;unchecked&quot;)
+	public Page&lt;SubtaskEntity&gt; getAllSubtasks(long id, EntitySpecification&lt;SubtaskEntity&gt; specification,
+			Pageable pageable) {	
+		
+<span class="fc" id="L111">		Utility.LOG.trace(&quot;TaskService.getAllSubtasks called.&quot;);</span>
+		
+<span class="fc" id="L113">		TaskEntity entity = this.findById(id);</span>
+<span class="fc" id="L114">		List&lt;SubtaskEntity&gt; subtasks = entity.getSubtasks();</span>
+
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">		if (specification != null) {</span>
+<span class="nc" id="L117">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
+<span class="nc" id="L118">			CriteriaQuery&lt;SubtaskEntity&gt; criteriaQuery = criteriaBuilder.createQuery(SubtaskEntity.class);</span>
+<span class="nc" id="L119">			Root&lt;SubtaskEntity&gt; root = criteriaQuery.from(SubtaskEntity.class);</span>
+
+<span class="nc" id="L121">			subtasks = subtasks.stream().filter(</span>
+<span class="nc" id="L122">					(Predicate&lt;? super SubtaskEntity&gt;) specification.toPredicate(root, criteriaQuery, criteriaBuilder))</span>
+<span class="nc" id="L123">					.collect(Collectors.toList());</span>
+		}
+
+<span class="fc" id="L126">		Page&lt;SubtaskEntity&gt; page = new PageImpl&lt;SubtaskEntity&gt;(subtasks, pageable, subtasks.size());</span>
+		
+<span class="fc" id="L128">		EventConsumer.sendEvent(&quot;TaskService.getAllSubtasks&quot;, EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));</span>
+
+<span class="fc" id="L130">		return page;</span>
+		
+	}
+	
+	/**
+	 * Get all helper users of the task.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
+	@SuppressWarnings(&quot;unchecked&quot;)
+	public Page&lt;UserEntity&gt; getAllHelpers(long id, EntitySpecification&lt;UserEntity&gt; specification, Pageable pageable) {
+		
+<span class="fc" id="L145">		Utility.LOG.trace(&quot;TaskService.getAllHelpers called.&quot;);</span>
+		
+<span class="fc" id="L147">		TaskEntity entity = this.findById(id);</span>
+<span class="fc" id="L148">		List&lt;UserEntity&gt; helpers = entity.getHelperUsers();</span>
+
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">		if (specification != null) {</span>
+<span class="nc" id="L151">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
+<span class="nc" id="L152">			CriteriaQuery&lt;UserEntity&gt; criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);</span>
+<span class="nc" id="L153">			Root&lt;UserEntity&gt; root = criteriaQuery.from(UserEntity.class);</span>
+
+<span class="nc" id="L155">			helpers = helpers.stream().filter(</span>
+<span class="nc" id="L156">					(Predicate&lt;? super UserEntity&gt;) specification.toPredicate(root, criteriaQuery, criteriaBuilder))</span>
+<span class="nc" id="L157">					.collect(Collectors.toList());</span>
+		}
+
+<span class="fc" id="L160">		Page&lt;UserEntity&gt; page = new PageImpl&lt;UserEntity&gt;(helpers, pageable, helpers.size());</span>
+		
+<span class="fc" id="L162">		EventConsumer.sendEvent(&quot;TaskService.getAllHelpers&quot;, EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));</span>
+
+<span class="fc" id="L164">		return page;</span>
+		
+	}
+	
+	/**
+	 * Changes the state of a task.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param state - the new state of the task.
+	 * @return The task after the state was changed.
+	 */
+	public TaskEntity changeState(long id, int state) {
+		
+<span class="fc" id="L177">		Utility.LOG.trace(&quot;TaskService.changeState called.&quot;);</span>
+		
+<span class="fc" id="L179">		TaskEntity entity = this.findById(id);</span>
+		
+<span class="fc" id="L181">		entity.setState(state);</span>
+		
+<span class="fc" id="L183">		final TaskEntity updatedEntity = repository.save(entity);</span>
+		
+<span class="fc" id="L185">		EventConsumer.sendEvent(&quot;TaskService.changeState&quot;, EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));</span>
+		
+<span class="fc" id="L187">		return updatedEntity;</span>
+		
+	}
+	
+	/**
+	 * Adds a helper user to the task.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param helperId - the helper user's identifier.
+	 * @return The task after the helper user was added.
+	 */
+	public TaskEntity addHelper(long id, long helperId) {
+		
+<span class="fc" id="L200">		Utility.LOG.trace(&quot;TaskService.addHelper called.&quot;);</span>
+		
+<span class="fc" id="L202">		TaskEntity entity = this.findById(id);</span>
+<span class="fc" id="L203">		UserEntity helper = userService.findById(helperId);		</span>
+<span class="fc" id="L204">		List&lt;UserEntity&gt; newHelpers = entity.getHelperUsers();</span>
+		
+		//if the helper is already a helper
+<span class="pc bpc" id="L207" title="1 of 2 branches missed.">		if(newHelpers.contains(helper)) {</span>
+<span class="nc" id="L208">			return entity;</span>
+		} else {
+<span class="fc" id="L210">			newHelpers.add(helper);</span>
+<span class="fc" id="L211">			entity.setHelperUsers(newHelpers);</span>
+		}
+		
+<span class="fc" id="L214">		final TaskEntity updatedEntity = repository.save(entity);</span>
+		
+<span class="fc" id="L216">		EventConsumer.sendEvent(&quot;TaskService.addHelper&quot;, EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));</span>
+		
+<span class="fc" id="L218">		return updatedEntity;</span>
+		
+	}
+	
+	/**
+	 * Removes a helper user from the task.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param helperId - the helper user's identifier.
+	 * @return The task after the helper user was removed.
+	 */
+	public TaskEntity removeHelper(long id, long helperId) {
+		
+<span class="fc" id="L231">		Utility.LOG.trace(&quot;TaskService.removeHelper called.&quot;);</span>
+		
+<span class="fc" id="L233">		TaskEntity entity = this.findById(id);</span>
+<span class="fc" id="L234">		UserEntity helper = userService.findById(helperId);	</span>
+<span class="fc" id="L235">		List&lt;UserEntity&gt; newHelpers = entity.getHelperUsers();</span>
+		
+		//if the helper is actually a helper
+<span class="pc bpc" id="L238" title="1 of 2 branches missed.">		if(newHelpers.contains(helper)) {</span>
+<span class="fc" id="L239">			newHelpers.remove(helper);</span>
+<span class="fc" id="L240">			entity.setHelperUsers(newHelpers);</span>
+<span class="fc" id="L241">		} else {</span>
+<span class="nc" id="L242">			return entity;</span>
+		}
+		
+<span class="fc" id="L245">		final TaskEntity updatedEntity = repository.save(entity);</span>
+		
+<span class="fc" id="L247">		EventConsumer.sendEvent(&quot;TaskService.removeHelper&quot;, EventType.UPDATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));</span>
+		
+<span class="fc" id="L249">		return updatedEntity;</span>
+		
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

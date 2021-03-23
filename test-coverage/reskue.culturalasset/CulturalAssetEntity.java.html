@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CulturalAssetEntity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue.culturalasset</a> &gt; <span class="el_source">CulturalAssetEntity.java</span></div><h1>CulturalAssetEntity.java</h1><pre class="source lang-java linenums">package reskue.culturalasset;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
+import kueres.base.BaseEntity;
+import kueres.media.MediaEntity;
+import reskue.ReskueEntity;
+import reskue.comment.CommentEntity;
+import reskue.notification.NotificationEntity;
+import reskue.task.TaskEntity;
+
+/**
+ * 
+ * The CulturalAssetEntity is a representation of cultural assets.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
+@Entity
+<span class="fc" id="L39">public class CulturalAssetEntity extends ReskueEntity&lt;CulturalAssetEntity&gt;{</span>
+	
+	@Override
+	public String[] getUpdateableFields() {
+<span class="fc" id="L43">		return new String[] {</span>
+<span class="fc" id="L44">				CulturalAssetEntity.NAME,</span>
+<span class="fc" id="L45">				CulturalAssetEntity.DESCRIPTION,</span>
+<span class="fc" id="L46">				CulturalAssetEntity.PRIORITY,</span>
+<span class="fc" id="L47">				CulturalAssetEntity.IS_ENDANGERED,</span>
+<span class="fc" id="L48">				CulturalAssetEntity.LABEL,</span>
+<span class="fc" id="L49">				CulturalAssetEntity.ADDRESS,</span>
+<span class="fc" id="L50">				CulturalAssetEntity.LONGITUDE,</span>
+<span class="fc" id="L51">				CulturalAssetEntity.LATITUDE,</span>
+<span class="fc" id="L52">				CulturalAssetEntity.TASKS,</span>
+<span class="fc" id="L53">				CulturalAssetEntity.COMMENTS,</span>
+<span class="fc" id="L54">				CulturalAssetEntity.MEDIA,</span>
+<span class="fc" id="L55">				CulturalAssetEntity.NOTIFICATIONS,</span>
+<span class="fc" id="L56">				CulturalAssetEntity.CULTURAL_ASSET_PARENT,</span>
+<span class="fc" id="L57">				CulturalAssetEntity.CULTURAL_ASSET_CHILDREN</span>
+		};
+	}
+	
+	/**
+	 * The address of the cultural asset.
+	 */
+	@Column(name = &quot;address&quot;, nullable = true)
+<span class="fc" id="L65">	private String address = null;</span>
+	public static final String ADDRESS = &quot;address&quot;;
+<span class="fc" id="L67">	public String getAddress() { return this.address; }</span>
+<span class="fc" id="L68">	public void setAddress(String address) { this.address = address; }</span>
+	
+	/**
+	 * The longitude of the cultural asset.
+	 */
+	@Column(name = &quot;longitude&quot;, nullable = true)
+<span class="fc" id="L74">	private Double longitude = null;</span>
+	public static final String LONGITUDE = &quot;longitude&quot;;
+<span class="fc" id="L76">	public Double getLongitude() { return this.longitude; }</span>
+<span class="fc" id="L77">	public void setLongitude(Double longitude) { this.longitude = longitude; }</span>
+	
+	/**
+	 * The latitude of the cultural asset.
+	 */
+	@Column(name = &quot;latitude&quot;, nullable = true)
+<span class="fc" id="L83">	private Double latitude = null;</span>
+	public static final String LATITUDE = &quot;latitude&quot;;
+<span class="fc" id="L85">	public Double getLatitude() { return this.latitude; }</span>
+<span class="fc" id="L86">	public void setLatitude(Double latitude) { this.latitude = latitude; }</span>
+	
+	/**
+	 * The list of tasks associated with the cultural asset.
+	 */
+	@OneToMany()
+	@JoinColumn(name = &quot;cultural_asset_id&quot;, referencedColumnName = &quot;id&quot;)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+<span class="fc" id="L95">	private List&lt;TaskEntity&gt; tasks = new ArrayList&lt;TaskEntity&gt;();</span>
+	public static final String TASKS = &quot;tasks&quot;;
+<span class="fc" id="L97">	public List&lt;TaskEntity&gt; getTasks() { return this.tasks; }</span>
+<span class="fc" id="L98">	public void setTasks(List&lt;TaskEntity&gt; tasks) { this.tasks = tasks; }</span>
+	
+	/**
+	 * The list of comments associated with the cultural asset.
+	 */
+	@OneToMany()
+	@JoinTable(
+			name = &quot;cultural_asset_comments&quot;,
+			joinColumns = { @JoinColumn(name = &quot;cultural_asset_id&quot;, referencedColumnName = BaseEntity.ID) },
+			inverseJoinColumns = { @JoinColumn(name = &quot;comment_id&quot;, referencedColumnName = BaseEntity.ID) }
+	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+<span class="fc" id="L111">	private List&lt;CommentEntity&gt; comments = new ArrayList&lt;CommentEntity&gt;();</span>
+	public static final String COMMENTS = &quot;comments&quot;;
+<span class="fc" id="L113">	public List&lt;CommentEntity&gt; getComments() { return this.comments; }</span>
+<span class="fc" id="L114">	public void setComments(List&lt;CommentEntity&gt; comments) { this.comments = comments; }</span>
+	
+	/**
+	 * The label of the cultural asset.
+	 * Labels are similar to descriptions but are intended to be shorter and more important information.
+	 */
+	@Column(name = &quot;label&quot;, nullable = true)
+<span class="fc" id="L121">	private String label = null;</span>
+	public static final String LABEL = &quot;label&quot;;
+<span class="fc" id="L123">	public String getLabel() { return this.label; }</span>
+<span class="fc" id="L124">	public void setLabel(String label) { this.label = label; }</span>
+	
+	/**
+	 * The level of the cultural asset.
+	 * A cultural asset without a parent is level 0
+	 * The hierarchy only supports 4 levels 
+	 */
+	@Column(name = &quot;level&quot;, nullable = false)
+<span class="fc" id="L132">	private int level = 0;</span>
+	public static final String LEVEL = &quot;level&quot;;
+<span class="fc" id="L134">	public int getLevel() { return this.level; }</span>
+<span class="fc" id="L135">	public void setLevel(int level) { this.level = level; }</span>
+	
+	/**
+	 * The location id of the cultural asset.
+	 * This is necessary because the FROST server cannot set specific ids.
+	 */
+	@Column(name = &quot;locationId&quot;, nullable = true)
+<span class="fc" id="L142">	private String locationId = null;</span>
+	public static final String LOCATION_ID = &quot;locationId&quot;;
+<span class="fc" id="L144">	public String getLocationId() { return this.locationId; }</span>
+<span class="fc" id="L145">	public void setLocationId(String locationId) { this.locationId = locationId; }</span>
+	
+	/**
+	 * The parent of the cultural asset.
+	 */
+	@ManyToOne()
+	@JoinColumn(name = &quot;parent_id&quot;, referencedColumnName = &quot;id&quot;)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+	private CulturalAssetEntity culturalAssetParent;
+	public static final String CULTURAL_ASSET_PARENT = &quot;culturalAssetParent&quot;;
+<span class="fc" id="L156">	public CulturalAssetEntity getCulturalAssetParent() { return this.culturalAssetParent; }</span>
+<span class="fc" id="L157">	public void setCulturalAssetParent(CulturalAssetEntity culturalAssetParent) { this.culturalAssetParent = culturalAssetParent; }</span>
+	
+	/**
+	 * The list of children associated with the cultural asset.
+	 */
+	@OneToMany()
+	@JoinColumn(name = &quot;child_parent_id&quot;, referencedColumnName = &quot;id&quot;)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+<span class="fc" id="L166">	private List&lt;CulturalAssetEntity&gt; culturalAssetChildren = new ArrayList&lt;CulturalAssetEntity&gt;();</span>
+	public static final String CULTURAL_ASSET_CHILDREN = &quot;culturalAssetChildren&quot;;	
+<span class="fc" id="L168">	public List&lt;CulturalAssetEntity&gt; getCulturalAssetChildren() { return this.culturalAssetChildren; }</span>
+<span class="fc" id="L169">	public void setCulturalAssetChildren(List&lt;CulturalAssetEntity&gt; culturalAssetChildren) { this.culturalAssetChildren = culturalAssetChildren; }</span>
+	
+	/**
+	 * The list of notifications associated with the cultural asset.
+	 */
+	@OneToMany()
+	@JoinColumn(name = &quot;notification_entity_id&quot;, referencedColumnName = &quot;id&quot;)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+<span class="fc" id="L178">	private List&lt;NotificationEntity&gt; notifications = new ArrayList&lt;NotificationEntity&gt;();</span>
+	public static final String NOTIFICATIONS = &quot;notifications&quot;;	
+<span class="fc" id="L180">	public List&lt;NotificationEntity&gt; getNotifications() { return this.notifications; }</span>
+<span class="fc" id="L181">	public void setNotifications(List&lt;NotificationEntity&gt; notifications) { this.notifications = notifications; }</span>
+	
+	/**
+	 * The list of media associated with the entity.
+	 */
+	@OneToMany()
+	@JoinTable(
+			name = &quot;cultural_asset_media&quot;,
+			joinColumns = @JoinColumn(name = &quot;cultural_asset_id&quot;, referencedColumnName = &quot;id&quot;),
+			inverseJoinColumns = @JoinColumn(name = &quot;media_id&quot;, referencedColumnName = &quot;id&quot;)
+	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+<span class="fc" id="L194">	private List&lt;MediaEntity&gt; media = new ArrayList&lt;MediaEntity&gt;();</span>
+	public static final String MEDIA = &quot;media&quot;;
+<span class="fc" id="L196">	public List&lt;MediaEntity&gt; getMedia() { return this.media; }</span>
+<span class="fc" id="L197">	public void setMedia(List&lt;MediaEntity&gt; media) { this.media = media; }</span>
+	
+	/**
+	 * Does not allow changes to:
+	 *  - culturalAssetChildren
+	 *  - culturalAssetParent
+	 *  - level
+	 *  - locationId
+	 */
+	@Override
+	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
+		
+<span class="fc" id="L209">		CulturalAssetEntity details = CulturalAssetEntity.createEntityFromJSON(json, this.getUpdateableFields(), CulturalAssetEntity.class);</span>
+		
+<span class="pc bpc" id="L211" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.NAME)) {</span>
+<span class="fc" id="L212">			this.setName(details.getName());</span>
+		}
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.DESCRIPTION)) {</span>
+<span class="fc" id="L215">			this.setDescription(details.getDescription());</span>
+		}
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.PRIORITY)) {</span>
+<span class="fc" id="L218">			this.setPriority(details.getPriority());</span>
+		}
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.IS_ENDANGERED)) {</span>
+<span class="fc" id="L221">			this.setIsEndangered(details.getIsEndangered());	</span>
+		}
+<span class="pc bpc" id="L223" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.COMMENTS)) {</span>
+<span class="fc" id="L224">			this.setComments(details.getComments());</span>
+		}
+<span class="pc bpc" id="L226" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.MEDIA)) {</span>
+<span class="fc" id="L227">			this.setMedia(details.getMedia());</span>
+		}
+		
+<span class="pc bpc" id="L230" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.ADDRESS)) {</span>
+<span class="fc" id="L231">			this.setAddress(details.getAddress());</span>
+		}
+<span class="pc bpc" id="L233" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.LABEL)) {</span>
+<span class="fc" id="L234">			this.setLabel(details.getLabel());</span>
+		}
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.LONGITUDE)) {</span>
+<span class="fc" id="L237">			this.setLongitude(details.getLongitude());</span>
+		}
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.LATITUDE)) {</span>
+<span class="fc" id="L240">			this.setLatitude(details.getLatitude());</span>
+		}
+
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.TASKS)) {</span>
+<span class="fc" id="L244">			this.setTasks(details.getTasks());</span>
+		}
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.NOTIFICATIONS)) {</span>
+<span class="fc" id="L247">			this.setNotifications(details.getNotifications());</span>
+		}
+<span class="pc bpc" id="L249" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.CULTURAL_ASSET_PARENT)) {</span>
+<span class="fc" id="L250">			this.setCulturalAssetParent(details.getCulturalAssetParent());</span>
+		}
+<span class="pc bpc" id="L252" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.CULTURAL_ASSET_CHILDREN)) {</span>
+<span class="fc" id="L253">			this.setCulturalAssetChildren(details.getCulturalAssetChildren());</span>
+		}
+		
+<span class="fc" id="L256">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

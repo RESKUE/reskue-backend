@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue.user</a> &gt; <span class="el_source">UserService.java</span></div><h1>UserService.java</h1><pre class="source lang-java linenums">package reskue.user;
+
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import kueres.base.BaseService;
+import kueres.event.EventType;
+import kueres.eventbus.EventConsumer;
+import kueres.query.EntitySpecification;
+import kueres.utility.Utility;
+import reskue.comment.CommentEntity;
+import reskue.notification.NotificationEntity;
+import reskue.task.TaskEntity;
+import reskue.usergroup.UserGroupEntity;
+
+/**
+ * 
+ * The UserService provides services needed by the UserController.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
+@Service
+<span class="fc" id="L40">public class UserService extends BaseService&lt;UserEntity, UserRepository&gt;{</span>
+	
+	/**
+	 * The EntityManager needed to create a CriteriaBuilder.
+	 */
+	@PersistenceContext
+	private EntityManager em;
+	
+	/**
+	 * Set this EventSubscribers identifier and routing.
+	 */	
+	@Override
+	@PostConstruct
+	public void init() {
+<span class="fc" id="L54">		this.identifier = UserController.ROUTE;</span>
+<span class="fc" id="L55">		this.routingKey = UserController.ROUTE;</span>
+<span class="fc" id="L56">	}</span>
+	
+	/**
+	 * Finds a user based on a given keycloakId.
+	 * 
+	 * @param keycloakId - the keycloakId of the user.
+	 * @return The user based on the given keycloakId.
+	 */
+	public UserEntity me(String keycloakId) {
+		
+<span class="fc" id="L66">		List&lt;UserEntity&gt; userEntities = this.repository.findAll();</span>
+		
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">		for (UserEntity userEntity : userEntities) {</span>
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">			if (userEntity.getKeycloakId().equals(keycloakId)) {</span>
+<span class="fc" id="L70">				return userEntity;</span>
+			}
+		}
+		
+<span class="nc" id="L74">		return null;</span>
+		
+	}
+	
+	/**
+	 * Get all tasks where the user is a contact.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
+	@SuppressWarnings(&quot;unchecked&quot;)
+	public Page&lt;TaskEntity&gt; getTasksWhereUserIsContact(long id, EntitySpecification&lt;TaskEntity&gt; specification,
+			Pageable pageable) {
+		
+<span class="fc" id="L90">		Utility.LOG.trace(&quot;UserService.getTasksWhereUserIsContact called.&quot;);</span>
+		
+<span class="fc" id="L92">		UserEntity entity = this.findById(id);</span>
+<span class="fc" id="L93">		List&lt;TaskEntity&gt; contactTasks = entity.getTaskContact();</span>
+	
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">		if (specification != null) {</span>
+<span class="nc" id="L96">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
+<span class="nc" id="L97">			CriteriaQuery&lt;TaskEntity&gt; criteriaQuery = criteriaBuilder.createQuery(TaskEntity.class);</span>
+<span class="nc" id="L98">			Root&lt;TaskEntity&gt; root = criteriaQuery.from(TaskEntity.class);</span>
+
+<span class="nc" id="L100">			contactTasks = contactTasks.stream().filter(</span>
+<span class="nc" id="L101">					(Predicate&lt;? super TaskEntity&gt;) specification.toPredicate(root, criteriaQuery, criteriaBuilder))</span>
+<span class="nc" id="L102">					.collect(Collectors.toList());</span>
+		}
+
+<span class="fc" id="L105">		Page&lt;TaskEntity&gt; page = new PageImpl&lt;TaskEntity&gt;(contactTasks, pageable, contactTasks.size());</span>
+		
+<span class="fc" id="L107">		EventConsumer.sendEvent(&quot;UserService.getTasksWhereUserIsContact&quot;, EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));</span>
+
+<span class="fc" id="L109">		return page;</span>
+		
+	}
+	
+	/**
+	 * Get all tasks where the user is a helper.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
+	@SuppressWarnings(&quot;unchecked&quot;)
+	public Page&lt;TaskEntity&gt; getTasksWhereUserIsHelper(long id, EntitySpecification&lt;TaskEntity&gt; specification,
+			Pageable pageable) {
+		
+<span class="fc" id="L125">		Utility.LOG.trace(&quot;UserService.getTasksWhereUserIsHelper called.&quot;);</span>
+		
+<span class="fc" id="L127">		UserEntity entity = this.findById(id);</span>
+<span class="fc" id="L128">		List&lt;TaskEntity&gt; helperTasks = entity.getTaskHelper();</span>
+	
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">		if (specification != null) {</span>
+<span class="nc" id="L131">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
+<span class="nc" id="L132">			CriteriaQuery&lt;TaskEntity&gt; criteriaQuery = criteriaBuilder.createQuery(TaskEntity.class);</span>
+<span class="nc" id="L133">			Root&lt;TaskEntity&gt; root = criteriaQuery.from(TaskEntity.class);</span>
+
+<span class="nc" id="L135">			helperTasks = helperTasks.stream().filter(</span>
+<span class="nc" id="L136">					(Predicate&lt;? super TaskEntity&gt;) specification.toPredicate(root, criteriaQuery, criteriaBuilder))</span>
+<span class="nc" id="L137">					.collect(Collectors.toList());</span>
+		}
+
+<span class="fc" id="L140">		Page&lt;TaskEntity&gt; page = new PageImpl&lt;TaskEntity&gt;(helperTasks, pageable, helperTasks.size());</span>
+		
+<span class="fc" id="L142">		EventConsumer.sendEvent(&quot;UserService.getTasksWhereUserIsHelper&quot;, EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));</span>
+
+<span class="fc" id="L144">		return page;</span>
+		
+	}
+	
+	/**
+	 * Get all comments where the user is the author.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
+	@SuppressWarnings(&quot;unchecked&quot;)
+	public Page&lt;CommentEntity&gt; getCommentsByUser(long id, EntitySpecification&lt;CommentEntity&gt; specification,
+			Pageable pageable) {
+		
+<span class="fc" id="L160">		Utility.LOG.trace(&quot;UserService.getCommentsByUser called.&quot;);		</span>
+		
+<span class="fc" id="L162">		UserEntity entity = this.findById(id);</span>
+<span class="fc" id="L163">		List&lt;CommentEntity&gt; authorComments = entity.getCommentAuthor();</span>
+	
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">		if (specification != null) {</span>
+<span class="nc" id="L166">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
+<span class="nc" id="L167">			CriteriaQuery&lt;CommentEntity&gt; criteriaQuery = criteriaBuilder.createQuery(CommentEntity.class);</span>
+<span class="nc" id="L168">			Root&lt;CommentEntity&gt; root = criteriaQuery.from(CommentEntity.class);</span>
+
+<span class="nc" id="L170">			authorComments = authorComments.stream().filter(</span>
+<span class="nc" id="L171">					(Predicate&lt;? super CommentEntity&gt;) specification.toPredicate(root, criteriaQuery, criteriaBuilder))</span>
+<span class="nc" id="L172">					.collect(Collectors.toList());</span>
+		}
+
+<span class="fc" id="L175">		Page&lt;CommentEntity&gt; page = new PageImpl&lt;CommentEntity&gt;(authorComments, pageable, authorComments.size());</span>
+		
+<span class="fc" id="L177">		EventConsumer.sendEvent(&quot;UserService.getCommentsByUser&quot;, EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));</span>
+
+<span class="fc" id="L179">		return page;</span>
+		
+	}
+	
+	/**
+	 * Get all user groups where the user is a member.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
+	@SuppressWarnings(&quot;unchecked&quot;)
+	public Page&lt;UserGroupEntity&gt; getUserGroupsForUser(long id, EntitySpecification&lt;UserGroupEntity&gt; specification,
+			Pageable pageable) {
+		
+<span class="fc" id="L195">		Utility.LOG.trace(&quot;UserService.getUserGroupsForUser called.&quot;);				</span>
+		
+<span class="fc" id="L197">		UserEntity entity = this.findById(id);</span>
+<span class="fc" id="L198">		List&lt;UserGroupEntity&gt; userGroups = entity.getUserGroups();</span>
+	
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">		if (specification != null) {</span>
+<span class="nc" id="L201">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
+<span class="nc" id="L202">			CriteriaQuery&lt;UserGroupEntity&gt; criteriaQuery = criteriaBuilder.createQuery(UserGroupEntity.class);</span>
+<span class="nc" id="L203">			Root&lt;UserGroupEntity&gt; root = criteriaQuery.from(UserGroupEntity.class);</span>
+
+<span class="nc" id="L205">			userGroups = userGroups.stream().filter(</span>
+<span class="nc" id="L206">					(Predicate&lt;? super UserGroupEntity&gt;) specification.toPredicate(root, criteriaQuery, criteriaBuilder))</span>
+<span class="nc" id="L207">					.collect(Collectors.toList());</span>
+		}
+
+<span class="fc" id="L210">		Page&lt;UserGroupEntity&gt; page = new PageImpl&lt;UserGroupEntity&gt;(userGroups, pageable, userGroups.size());</span>
+		
+<span class="fc" id="L212">		EventConsumer.sendEvent(&quot;UserService.getUserGroupsForUser&quot;, EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));</span>
+
+<span class="fc" id="L214">		return page;</span>
+		
+	}
+	
+	/**
+	 * Get all notifications where the user is the sender.
+	 * 
+	 * @param id - the user's identifier.
+	 * @param specification - filter for the result.
+	 * @param pageable - sort and pagination for the result.
+	 * @return The result as a page.
+	 */
+	@SuppressWarnings(&quot;unchecked&quot;)
+	public Page&lt;NotificationEntity&gt; getNotificationsSendByUser(long id, EntitySpecification&lt;NotificationEntity&gt; specification,
+			Pageable pageable) {
+		
+<span class="fc" id="L230">		Utility.LOG.trace(&quot;UserService.getNotificationsSendByUser called.&quot;);	</span>
+		
+<span class="fc" id="L232">		UserEntity entity = this.findById(id);</span>
+<span class="fc" id="L233">		List&lt;NotificationEntity&gt; senderNotifiactions = entity.getNotificationSender();</span>
+	
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">		if (specification != null) {</span>
+<span class="nc" id="L236">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
+<span class="nc" id="L237">			CriteriaQuery&lt;NotificationEntity&gt; criteriaQuery = criteriaBuilder.createQuery(NotificationEntity.class);</span>
+<span class="nc" id="L238">			Root&lt;NotificationEntity&gt; root = criteriaQuery.from(NotificationEntity.class);</span>
+
+<span class="nc" id="L240">			senderNotifiactions = senderNotifiactions.stream().filter(</span>
+<span class="nc" id="L241">					(Predicate&lt;? super NotificationEntity&gt;) specification.toPredicate(root, criteriaQuery, criteriaBuilder))</span>
+<span class="nc" id="L242">					.collect(Collectors.toList());</span>
+		}
+
+<span class="fc" id="L245">		Page&lt;NotificationEntity&gt; page = new PageImpl&lt;NotificationEntity&gt;(senderNotifiactions, pageable, senderNotifiactions.size());</span>
+		
+<span class="fc" id="L247">		EventConsumer.sendEvent(&quot;UserService.getNotificationsSendByUser&quot;, EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));</span>
+
+<span class="fc" id="L249">		return page;</span>
+		
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

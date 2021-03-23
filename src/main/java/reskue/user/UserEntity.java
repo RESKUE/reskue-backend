@@ -84,8 +84,8 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	@ManyToMany()
 	@JoinTable(
 			name = "task_helpers",
-			joinColumns = @JoinColumn(name = "helper_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id")
+			joinColumns = @JoinColumn(name = "helper_id", referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = "task_id", referencedColumnName = BaseEntity.ID)
 	)
 	@JsonIgnoreProperties(TaskEntity.HELPER_USERS)
 	private List<TaskEntity> taskHelper = new ArrayList<TaskEntity>();
@@ -110,8 +110,8 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	@ManyToMany()
 	@JoinTable(
 			name = "usergroup_users",
-			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "usergroup_id", referencedColumnName = "id")
+			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = "usergroup_id", referencedColumnName = BaseEntity.ID)
 	)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)

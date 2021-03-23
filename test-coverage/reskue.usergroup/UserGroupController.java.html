@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserGroupController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue.usergroup</a> &gt; <span class="el_source">UserGroupController.java</span></div><h1>UserGroupController.java</h1><pre class="source lang-java linenums">package reskue.usergroup;
+
+import java.util.Optional;
+
+import javax.annotation.security.RolesAllowed;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import kueres.base.BaseController;
+import kueres.query.EntitySpecification;
+import kueres.query.SortBuilder;
+import kueres.utility.Utility;
+import reskue.notification.NotificationEntity;
+import reskue.user.UserEntity;
+
+/**
+ * 
+ * The UserGroupController provides API functions for UserGroupEntities.
+ * These functions are:
+ *  - all functions of the BaseController in kueres.base
+ *  - finding all users of a user group
+ *  - adding a user to a user group
+ *  - removing a user from a user group
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
+@RestController
+@RequestMapping(BaseController.API_ENDPOINT + UserGroupController.ROUTE)
+<span class="fc" id="L41">public class UserGroupController extends BaseController&lt;UserGroupEntity, UserGroupRepository, UserGroupService&gt;{</span>
+	
+	/**
+	 * The API route for UserGroupEntites.
+	 */
+	public static final String ROUTE = &quot;/userGroup&quot;;
+	
+	/**
+	 * Find all users that are part of the user group.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * &lt;p&gt;
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * &lt;p&gt;
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the user groups's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
+	@GetMapping(&quot;/{&quot; + UserGroupEntity.ID + &quot;}/users&quot;)
+	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
+	public Page&lt;UserEntity&gt; getAllUsers(
+			@PathVariable(value = UserGroupEntity.ID) long id,
+			@RequestParam Optional&lt;String[]&gt; filter,
+			@RequestParam Optional&lt;String[]&gt; sort,
+			@RequestParam Optional&lt;Integer&gt; page,
+			@RequestParam Optional&lt;Integer&gt; size
+			) {
+		
+<span class="fc" id="L74">		Utility.LOG.trace(&quot;UserGroupController.getAllUsers called.&quot;);</span>
+		
+<span class="fc" id="L76">		EntitySpecification&lt;UserEntity&gt; specification = null;</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">		if (filter.isPresent()) {</span>
+<span class="nc" id="L78">			specification = new EntitySpecification&lt;UserEntity&gt;(filter.get());</span>
+		}
+		
+<span class="fc" id="L81">		Pageable pageable = SortBuilder.buildPageable(sort, page, size);</span>
+		
+<span class="fc" id="L83">		return service.getAllUsers(id, specification, pageable);</span>
+			
+	}
+	
+	/**
+	 * Find all notifications that the users of the user groups should receive.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * &lt;p&gt;
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * &lt;p&gt;
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param ids - the identifiers of all the user group that are being searched.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
+	@GetMapping(&quot;/notifications&quot;)
+	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
+	public Page&lt;NotificationEntity&gt; getNotifications(
+			@RequestParam Optional&lt;long[]&gt; ids,
+			@RequestParam Optional&lt;String[]&gt; filter,
+			@RequestParam Optional&lt;String[]&gt; sort,
+			@RequestParam Optional&lt;Integer&gt; page,
+			@RequestParam Optional&lt;Integer&gt; size
+			) {
+		
+<span class="fc" id="L113">		Utility.LOG.trace(&quot;UserGroupController.getNotifications called.&quot;);</span>
+		
+<span class="fc" id="L115">		EntitySpecification&lt;NotificationEntity&gt; specification = null;</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">		if (filter.isPresent()) {</span>
+<span class="nc" id="L117">			specification = new EntitySpecification&lt;NotificationEntity&gt;(filter.get());</span>
+		}
+		
+<span class="fc" id="L120">		Pageable pageable = SortBuilder.buildPageable(sort, page, size);</span>
+		
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">		if (ids.isPresent()) {</span>
+<span class="fc" id="L123">			return service.getNotifications(ids.get(), specification, pageable);</span>
+		}
+		
+<span class="nc" id="L126">		return null;</span>
+		
+	}
+	
+	/**
+	 * Adds a user to the user group.
+	 * 
+	 * @param id - the user groups's identifier.
+	 * @param userId - the user's identifier.
+	 * @return The user group after the user was added.
+	 */
+	@PutMapping(&quot;/{&quot; + UserGroupEntity.ID + &quot;_user_group}/addUser/{&quot; + UserEntity.ID + &quot;_user}&quot;)
+	@RolesAllowed({ &quot;administrator&quot; })
+	public ResponseEntity&lt;UserGroupEntity&gt; addUser(
+			@PathVariable(value = UserGroupEntity.ID + &quot;_user_group&quot;) long id,
+			@PathVariable(value = UserEntity.ID + &quot;_user&quot;) long userId) {
+		
+<span class="fc" id="L143">		Utility.LOG.trace(&quot;UserGroupController.addUser called.&quot;);</span>
+<span class="fc" id="L144">		Utility.LOG.info(&quot;user group id: {}, user id: {}&quot;, id, userId);</span>
+<span class="fc" id="L145">		UserGroupEntity updatedEntity = service.addUser(id, userId);</span>
+<span class="fc" id="L146">		return ResponseEntity.ok().body(updatedEntity);</span>
+		
+	}
+	
+	/**
+	 * Removes a user from the user group.
+	 * 
+	 * @param id - the user groups's identifier.
+	 * @param userId - the user's identifier.
+	 * @return The user group after the user was removed.
+	 */
+	@PutMapping(&quot;/{&quot; + UserGroupEntity.ID + &quot;_user_group}/removeUser/{&quot; + UserEntity.ID + &quot;_user}&quot;)
+	@RolesAllowed({ &quot;administrator&quot; })
+	public ResponseEntity&lt;UserGroupEntity&gt; removeUser(
+			@PathVariable(value = UserGroupEntity.ID + &quot;_user_group&quot;) long id,
+			@PathVariable(value = UserEntity.ID + &quot;_user&quot;) long userId) {
+		
+<span class="fc" id="L163">		Utility.LOG.trace(&quot;UserGroupController.removeUser called.&quot;);</span>
+
+<span class="fc" id="L165">		UserGroupEntity updatedEntity = service.removeUser(id, userId);</span>
+<span class="fc" id="L166">		return ResponseEntity.ok().body(updatedEntity);</span>
+		
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

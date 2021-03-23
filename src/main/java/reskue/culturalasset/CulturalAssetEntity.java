@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -148,7 +147,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	 * The parent of the cultural asset.
 	 */
 	@ManyToOne()
-	@JoinColumn(name = "parent_id", referencedColumnName = "id")
+	@JoinColumn(name = "parent_id", referencedColumnName = BaseEntity.ID)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity culturalAssetParent;
@@ -160,7 +159,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	 * The list of children associated with the cultural asset.
 	 */
 	@OneToMany()
-	@JoinColumn(name = "child_parent_id", referencedColumnName = "id")
+	@JoinColumn(name = "child_parent_id", referencedColumnName = BaseEntity.ID)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<CulturalAssetEntity> culturalAssetChildren = new ArrayList<CulturalAssetEntity>();
@@ -172,7 +171,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	 * The list of notifications associated with the cultural asset.
 	 */
 	@OneToMany()
-	@JoinColumn(name = "notification_entity_id", referencedColumnName = "id")
+	@JoinColumn(name = "notification_entity_id", referencedColumnName = BaseEntity.ID)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notifications = new ArrayList<NotificationEntity>();
@@ -186,11 +185,9 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	@OneToMany()
 	@JoinTable(
 			name = "cultural_asset_media",
-			joinColumns = @JoinColumn(name = "cultural_asset_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id")
+			joinColumns = @JoinColumn(name = "cultural_asset_id", referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = BaseEntity.ID)
 	)
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
-	@JsonIdentityReference(alwaysAsId = true)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";
 	public List<MediaEntity> getMedia() { return this.media; }

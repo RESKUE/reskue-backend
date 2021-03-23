@@ -100,7 +100,7 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	/**
 	 * Get all notifications for the user group.
 	 * 
-	 * @param id - the user group's identifier.
+	 * @param ids - the user group's identifier.
 	 * @param specification - filter for the result.
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.

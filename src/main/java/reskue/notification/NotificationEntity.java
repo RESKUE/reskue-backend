@@ -79,7 +79,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	 * The user that send the notification.
 	 */
 	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "notification_sender_id", referencedColumnName = "id")
+	@JoinColumn(name = "notification_sender_id", referencedColumnName = BaseEntity.ID)
 	private UserEntity sender = null;
 	public static final String SENDER = "sender";
 	public UserEntity getSender() { return this.sender; }
@@ -91,8 +91,8 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(
 			name = "notification_receivers",
-			joinColumns = @JoinColumn(name = "notification_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = "id")
+			joinColumns = @JoinColumn(name = "notification_id", referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = BaseEntity.ID)
 	)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)

@@ -11,12 +11,23 @@
     "stop:dev": "docker-compose -f docker-compose.dev.yml --env-file dev.env down",
     "update": "git pull && docker pull gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend:latest",
     "clean:all": "npm run clean:keycloak && npm run clean:content && npm run clean:rabbitmq && npm run clean:location",
-    "clean:keycloak": "./clean.sh keycloak",
-    "clean:content": "./clean.sh content-db",
-    "clean:rabbitmq": "./clean.sh rabbitmq",
-    "clean:location": "./clean.sh location-db",
-    "test": "newman run RESKUE.tests.json"
+    "clean:keycloak": "rm -rf ./services/auth-db/data/ && mkdir ./services/auth-db/data",
+    "clean:content": "rm -rf ./services/content-db/data/ && mkdir ./services/content-db/data",
+    "clean:rabbitmq": "rm -rf ./services/rabbitmq/data/ && mkdir ./services/rabbitmq/data",
+    "clean:location": "rm -rf ./services/location-db/data/ && mkdir ./services/location-db/data",
+    "test": "npm run test:newman && npm run test:dump && npm run test:report && npm run test:export",
+    "test:newman": "newman run RESKUE.tests.json",
+    "test:dump": "java -jar ./src/main/resources/lib/jacococli.jar dump --address localhost --port 36320 --destfile ./target/jacoco-it.exec",
+    "test:report": "java -jar ./src/main/resources/lib/jacococli.jar report ./target/jacoco-it.exec --classfiles ./target/classes/reskue --sourcefiles ./src/main/java/ --html ./target/jacoco-report",
+    "test:export": "cp -r target/jacoco-report/ test-coverage",
+    "docs": "npm run docs:generate && npm run docs:export",
+    "docs:generate": "mvn javadoc:javadoc",
+    "docs:export": "cp -r target/site/apidocs/ docs/"
   },
+  "pre-push": [
+    "test",
+    "docs"
+  ],
   "repository": {
     "type": "git",
     "url": "https://gitlab-ext.iosb.fraunhofer.de/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend.git"
@@ -24,6 +35,8 @@
   "author": "Tim Engbrocks, Jan Straßburg",
   "license": "MIT",
   "dependencies": {
-    "newman": "^5.2.2"
+    "maven": "^5.0.0",
+    "newman": "^5.2.2",
+    "pre-push": "^0.1.1"
   }
 }

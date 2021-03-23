@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserEntity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue.user</a> &gt; <span class="el_source">UserEntity.java</span></div><h1>UserEntity.java</h1><pre class="source lang-java linenums">package reskue.user;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+//import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
+import kueres.base.BaseEntity;
+import reskue.comment.CommentEntity;
+import reskue.notification.NotificationEntity;
+import reskue.task.TaskEntity;
+import reskue.usergroup.UserGroupEntity;
+
+/**
+ * 
+ * The UserEntity is a representation of a user.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
+@Entity
+<span class="fc" id="L41">public class UserEntity extends BaseEntity&lt;UserEntity&gt;{</span>
+	
+	@Override
+	public String[] getUpdateableFields() {
+<span class="fc" id="L45">		return new String[] {</span>
+<span class="fc" id="L46">			UserEntity.NAME,</span>
+<span class="fc" id="L47">			UserEntity.USER_GROUPS</span>
+		};
+	}
+	
+	/**
+	 * The name of the user.
+	 */
+	@Column(name = &quot;name&quot;, nullable = false)
+<span class="fc" id="L55">	private String name = &quot;unnamed&quot;;</span>
+	public static final String NAME = &quot;name&quot;;
+<span class="fc" id="L57">	public String getName() { return this.name; }</span>
+<span class="fc" id="L58">	public void setName(String name) { this.name = name; }</span>
+	
+	/**
+	 * The identifier used by keycloak for the user.
+	 */
+	@JsonIgnore
+	@Column(name = &quot;keycloakId&quot;, nullable = true)
+<span class="fc" id="L65">	private String keycloakId = null;</span>
+	public static final String KEYCLOAK_ID = &quot;keycloakId&quot;;
+<span class="fc" id="L67">	public String getKeycloakId() { return this.keycloakId; }</span>
+<span class="fc" id="L68">	public void setKeycloakId(String keycloakId) { this.keycloakId = keycloakId; }</span>
+	
+	/**
+	 * The list of tasks that the user is a contact of.
+	 */
+	@OneToMany(mappedBy = &quot;contactUser&quot;)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+<span class="fc" id="L76">	private List&lt;TaskEntity&gt; taskContact = new ArrayList&lt;TaskEntity&gt;();</span>
+	public static final String TASK_CONTACT = &quot;taskContact&quot;;
+<span class="fc" id="L78">	public List&lt;TaskEntity&gt; getTaskContact() { return this.taskContact; }</span>
+<span class="fc" id="L79">	public void setTaskContact(List&lt;TaskEntity&gt; taskContact) { this.taskContact = taskContact; }</span>
+	
+	/**
+	 * The list of tasks that the user is a helper of.
+	 */
+	@ManyToMany()
+	@JoinTable(
+			name = &quot;task_helpers&quot;,
+			joinColumns = @JoinColumn(name = &quot;helper_id&quot;, referencedColumnName = &quot;id&quot;),
+			inverseJoinColumns = @JoinColumn(name = &quot;task_id&quot;, referencedColumnName = &quot;id&quot;)
+	)
+	@JsonIgnoreProperties(TaskEntity.HELPER_USERS)
+<span class="fc" id="L91">	private List&lt;TaskEntity&gt; taskHelper = new ArrayList&lt;TaskEntity&gt;();</span>
+	public static final String TASK_HELPER = &quot;taskHelper&quot;;
+<span class="fc" id="L93">	public List&lt;TaskEntity&gt; getTaskHelper() { return this.taskHelper; }</span>
+<span class="fc" id="L94">	public void setTaskHelper(List&lt;TaskEntity&gt; taskHelper) { this.taskHelper = taskHelper; }</span>
+	
+	/**
+	 * The list of comments that the user is an author of.
+	 */
+	@OneToMany(mappedBy = &quot;author&quot;)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+<span class="fc" id="L102">	private List&lt;CommentEntity&gt; commentAuthor = new ArrayList&lt;CommentEntity&gt;();</span>
+	public static final String COMMENT_AUTHOR = &quot;commentAuthor&quot;;
+<span class="fc" id="L104">	public List&lt;CommentEntity&gt; getCommentAuthor() { return this.commentAuthor; }</span>
+<span class="fc" id="L105">	public void setCommentAuthor(List&lt;CommentEntity&gt; commentAuthor) { this.commentAuthor = commentAuthor; }</span>
+	
+	/**
+	 * The list of user groups that the user is a part of.
+	 */
+	@ManyToMany()
+	@JoinTable(
+			name = &quot;usergroup_users&quot;,
+			joinColumns = @JoinColumn(name = &quot;user_id&quot;, referencedColumnName = &quot;id&quot;),
+			inverseJoinColumns = @JoinColumn(name = &quot;usergroup_id&quot;, referencedColumnName = &quot;id&quot;)
+	)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+<span class="fc" id="L118">	private List&lt;UserGroupEntity&gt; userGroups = new ArrayList&lt;UserGroupEntity&gt;();</span>
+	public static final String USER_GROUPS = &quot;userGroups&quot;;
+<span class="fc" id="L120">	public List&lt;UserGroupEntity&gt; getUserGroups() { return this.userGroups; }</span>
+<span class="fc" id="L121">	public void setUserGroups(List&lt;UserGroupEntity&gt; userGroups) { this.userGroups = userGroups; }</span>
+	
+	/**
+	 * The list of notifications that the user has send.
+	 */
+	@OneToMany(mappedBy = &quot;sender&quot;, cascade = CascadeType.MERGE)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+<span class="fc" id="L129">	private List&lt;NotificationEntity&gt; notificationSender = new ArrayList&lt;NotificationEntity&gt;();</span>
+	public static final String NOTIFICATION_SENDER = &quot;notificationSender&quot;;
+<span class="fc" id="L131">	public List&lt;NotificationEntity&gt; getNotificationSender() { return this.notificationSender; }</span>
+<span class="fc" id="L132">	public void setNotificationSender(List&lt;NotificationEntity&gt; notificationSender) { this.notificationSender = notificationSender; }</span>
+	
+	@Override
+	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
+		
+<span class="fc" id="L137">		UserEntity details = UserEntity.createEntityFromJSON(json, this.getUpdateableFields(), UserEntity.class);</span>
+		
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">		if (this.containsFields(json, UserEntity.NAME)) {</span>
+<span class="fc" id="L140">			this.setName(details.getName());</span>
+		}
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">		if (this.containsFields(json, UserEntity.USER_GROUPS)) {</span>
+<span class="fc" id="L143">			this.setUserGroups(details.getUserGroups());</span>
+		}
+		
+<span class="fc" id="L146">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

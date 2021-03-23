@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TaskController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue.task</a> &gt; <span class="el_source">TaskController.java</span></div><h1>TaskController.java</h1><pre class="source lang-java linenums">package reskue.task;
+
+import java.util.Optional;
+
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.keycloak.representations.AccessToken;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import kueres.base.BaseController;
+import kueres.query.EntitySpecification;
+import kueres.query.SortBuilder;
+import kueres.utility.Utility;
+import reskue.ReskueController;
+import reskue.comment.CommentEntity;
+import reskue.subtask.SubtaskEntity;
+import reskue.user.UserEntity;
+import reskue.user.UserService;
+
+/**
+ * 
+ * The TaskController provides API functions for TaskEntities.
+ * These functions are:
+ *  - all functions of the BaseController in kueres.base
+ *  - all functions of the ReskueController in reskue
+ *  - finding all subtasks of a task
+ *  - finding all users that are helping on a task
+ *  - changing the state of a task
+ *  - adding a user to the helpers of a task
+ *  - removing a user from the helpers of a task
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
+@RestController
+@RequestMapping(BaseController.API_ENDPOINT + TaskController.ROUTE)
+<span class="fc" id="L55">public class TaskController extends ReskueController&lt;TaskEntity, TaskRepository, TaskService&gt;{</span>
+	
+	/**
+	 * The API route for TaskEntites.
+	 */
+	public static final String ROUTE = &quot;/task&quot;;
+	
+	@Autowired
+	private UserService userService;
+	
+	/**
+	 * Find all comments of the task.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * &lt;p&gt;
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * &lt;p&gt;
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
+	@GetMapping(&quot;/{&quot; + TaskEntity.ID + &quot;}/comments&quot;)
+	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
+	public Page&lt;CommentEntity&gt; getAllComments(
+			@PathVariable(value = TaskEntity.ID) long id,
+			@RequestParam Optional&lt;String[]&gt; filter, 
+			@RequestParam Optional&lt;String[]&gt; sort,
+			@RequestParam Optional&lt;Integer&gt; page, 
+			@RequestParam Optional&lt;Integer&gt; size) {
+
+<span class="fc" id="L90">		Utility.LOG.trace(&quot;ReskueController.getAllComments called.&quot;);</span>
+		
+<span class="fc" id="L92">		EntitySpecification&lt;CommentEntity&gt; specification = null;</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">		if (filter.isPresent()) {</span>
+<span class="nc" id="L94">			specification = new EntitySpecification&lt;CommentEntity&gt;(filter.get());</span>
+		}
+		
+<span class="fc" id="L97">		Pageable pageable = SortBuilder.buildPageable(sort, page, size);</span>
+
+<span class="fc" id="L99">		return service.getAllComments(id, specification, pageable);</span>
+		
+	}
+	
+	/**
+	 * Find all subtasks of the task.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * &lt;p&gt;
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * &lt;p&gt;
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
+	@GetMapping(&quot;/{&quot; + TaskEntity.ID + &quot;}/subtasks&quot;)
+	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
+	public Page&lt;SubtaskEntity&gt; getAllSubtasks(
+			@PathVariable(value = TaskEntity.ID) long id,
+			@RequestParam Optional&lt;String[]&gt; filter,
+			@RequestParam Optional&lt;String[]&gt; sort,
+			@RequestParam Optional&lt;Integer&gt; page,
+			@RequestParam Optional&lt;Integer&gt; size
+			) {
+		
+<span class="fc" id="L129">		Utility.LOG.trace(&quot;TaskController.getAllSubtasks called.&quot;);</span>
+		
+<span class="fc" id="L131">		EntitySpecification&lt;SubtaskEntity&gt; specification = null;</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">		if (filter.isPresent()) {</span>
+<span class="nc" id="L133">			specification = new EntitySpecification&lt;SubtaskEntity&gt;(filter.get());</span>
+		}
+		
+<span class="fc" id="L136">		Pageable pageable = SortBuilder.buildPageable(sort, page, size);</span>
+		
+<span class="fc" id="L138">		return service.getAllSubtasks(id, specification, pageable);</span>
+			
+	}
+	
+	/**
+	 * Find all users that are working on the task.
+	 * 
+	 * The result can filtered, sorted and paged.
+	 * &lt;p&gt;
+	 * See kueres.query.SearchCriteria for filter syntax.
+	 * &lt;p&gt;
+	 * See kueres.query.SortBuilder for sort syntax.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param filter - the filter options.
+	 * @param sort - the sort options.
+	 * @param page - the number of the page used for pagination.
+	 * @param size - the size of the page used for pagination.
+	 * @return The result as a page.
+	 */
+	@GetMapping(&quot;/{&quot; + TaskEntity.ID + &quot;}/helpers&quot;)
+	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
+	public Page&lt;UserEntity&gt; getAllHelpers(
+			@PathVariable(value = TaskEntity.ID) long id,
+			@RequestParam Optional&lt;String[]&gt; filter,
+			@RequestParam Optional&lt;String[]&gt; sort,
+			@RequestParam Optional&lt;Integer&gt; page,
+			@RequestParam Optional&lt;Integer&gt; size
+			) {
+		
+<span class="fc" id="L168">		Utility.LOG.trace(&quot;TaskController.getAllHelpers called.&quot;);</span>
+		
+<span class="fc" id="L170">		EntitySpecification&lt;UserEntity&gt; specification = null;</span>
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">		if (filter.isPresent()) {</span>
+<span class="nc" id="L172">			specification = new EntitySpecification&lt;UserEntity&gt;(filter.get());</span>
+		}
+		
+<span class="fc" id="L175">		Pageable pageable = SortBuilder.buildPageable(sort, page, size);</span>
+		
+<span class="fc" id="L177">		return service.getAllHelpers(id, specification, pageable);</span>
+		
+	}
+	
+	/**
+	 * Change the state of the task.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param state - the new state.
+	 * @return The task after state was changed.
+	 */
+	@PutMapping(&quot;/{&quot; + TaskEntity.ID + &quot;}/changeState/{&quot; + TaskEntity.STATE + &quot;}&quot;)
+	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
+	public ResponseEntity&lt;TaskEntity&gt; changeState(
+			@PathVariable(value = TaskEntity.ID) long id,
+			@PathVariable(value = TaskEntity.STATE) int state) {
+		
+<span class="fc" id="L194">		Utility.LOG.trace(&quot;TaskController.changeState called.&quot;);</span>
+		
+<span class="fc" id="L196">		TaskEntity updatedEntity = service.changeState(id, state);</span>
+<span class="fc" id="L197">		return ResponseEntity.ok().body(updatedEntity);</span>
+		
+	}
+	
+	/**
+	 * Adds a user to the helpers that are working on the task.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param helperId - the user's identifier.
+	 * @return The task after the user was added.
+	 */
+	@PutMapping(&quot;/{&quot; + TaskEntity.ID + &quot;}/assignHelper/{&quot; + TaskEntity.HELPER_USERS + &quot;}&quot;)
+	@RolesAllowed({ &quot;administrator&quot; })
+	public ResponseEntity&lt;TaskEntity&gt; addHelper(
+			@PathVariable(value = TaskEntity.ID) long id,
+			@PathVariable(value = TaskEntity.HELPER_USERS) long helperId) {
+		
+<span class="fc" id="L214">		Utility.LOG.trace(&quot;TaskController.addHelper called.&quot;);</span>
+		
+<span class="fc" id="L216">		TaskEntity updatedEntity = service.addHelper(id, helperId);</span>
+<span class="fc" id="L217">		return ResponseEntity.ok().body(updatedEntity);</span>
+		
+	}
+	
+	/**
+	 * Removes a user from the helpers that are working on the task.
+	 * 
+	 * @param id - the task's identifier.
+	 * @param helperId - the user's identifier.
+	 * @return The task after the user was removed.
+	 */
+	@PutMapping(&quot;/{&quot; + TaskEntity.ID + &quot;}/removeHelper/{&quot; + TaskEntity.HELPER_USERS + &quot;}&quot;)
+	@RolesAllowed({ &quot;administrator&quot; })
+	public ResponseEntity&lt;TaskEntity&gt; removeHelper(
+			@PathVariable(value = TaskEntity.ID) long id,
+			@PathVariable(value = TaskEntity.HELPER_USERS) long helperId) {
+		
+<span class="fc" id="L234">		Utility.LOG.trace(&quot;TaskController.removeHelper called.&quot;);</span>
+		
+<span class="fc" id="L236">		TaskEntity updatedEntity = service.removeHelper(id, helperId);</span>
+<span class="fc" id="L237">		return ResponseEntity.ok().body(updatedEntity);</span>
+		
+	}
+	
+	@PostMapping(&quot;/autoContact&quot;)
+	@RolesAllowed(&quot;administrator&quot;)
+	public ResponseEntity&lt;TaskEntity&gt; create(
+			@Valid @RequestBody TaskEntity entity,
+			HttpServletRequest request, 
+			HttpServletResponse response) {
+		
+<span class="fc" id="L248">		Utility.LOG.trace(&quot;NotificationController.create called.&quot;);</span>
+		
+<span class="fc" id="L250">		KeycloakAuthenticationToken authToken = (KeycloakAuthenticationToken) request.getUserPrincipal();</span>
+<span class="fc" id="L251">		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();</span>
+		
+<span class="fc" id="L253">		String subject = token.getSubject();</span>
+<span class="fc" id="L254">		UserEntity contact = userService.me(subject);</span>
+<span class="fc" id="L255">		entity.setContactUser(contact);</span>
+		
+<span class="fc" id="L257">		TaskEntity createdEntity = service.create(entity);</span>
+<span class="fc" id="L258">		return ResponseEntity.ok().body(createdEntity);</span>
+		
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

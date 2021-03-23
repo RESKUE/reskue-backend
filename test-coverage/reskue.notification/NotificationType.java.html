@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NotificationType.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue.notification</a> &gt; <span class="el_source">NotificationType.java</span></div><h1>NotificationType.java</h1><pre class="source lang-java linenums">package reskue.notification;
+
+/**
+ * 
+ * All notification types used.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
+
+<span class="nc" id="L14">public enum NotificationType {</span>
+	
+<span class="nc" id="L16">	/**</span>
+	 * The type of the notification is not defined.
+	 */
+<span class="nc" id="L19">	UNDEFINED(0),</span>
+	
+<span class="nc" id="L21">	/**</span>
+	 * The notification is a normal notification.
+	 */
+<span class="nc" id="L24">	NORMAL(1),</span>
+	
+<span class="nc" id="L26">	/**</span>
+	 * The notification is an alarm.
+	 */
+<span class="nc" id="L29">	ALARM(2),</span>
+	
+<span class="nc" id="L31">	/**</span>
+	 * The notification signals that an alarm is over.
+	 */
+<span class="nc" id="L34">	ALARM_OVER(3);</span>
+	
+	public final int type;
+	
+<span class="nc" id="L38">	private NotificationType(int type) {</span>
+<span class="nc" id="L39">		this.type = type;</span>
+<span class="nc" id="L40">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

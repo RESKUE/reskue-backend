@@ -57,8 +57,8 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	@ManyToMany()
 	@JoinTable(
 			name = "usergroup_users",
-			joinColumns = @JoinColumn(name = "usergroup_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
+			joinColumns = @JoinColumn(name = "usergroup_id", referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = BaseEntity.ID)
 	)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
@@ -73,8 +73,8 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(
 			name = "notification_receivers",
-			joinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "notification_id", referencedColumnName = "id")
+			joinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = "notification_id", referencedColumnName = BaseEntity.ID)
 	)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)

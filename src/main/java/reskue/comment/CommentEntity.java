@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -96,11 +95,9 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	@OneToMany()
 	@JoinTable(
 			name = "comment_media",
-			joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id")
+			joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = BaseEntity.ID)
 	)
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
-	@JsonIdentityReference(alwaysAsId = true)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";
 	public List<MediaEntity> getMedia() { return this.media; }
@@ -110,7 +107,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	 * The author of the comment.
 	 */
 	@ManyToOne()
-	@JoinColumn(name = "comment_author_id", referencedColumnName = "id")
+	@JoinColumn(name = "comment_author_id", referencedColumnName = BaseEntity.ID)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private UserEntity author = null;
@@ -142,14 +139,14 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	 *  - createdAt
 	 *  - updatedAt
 	 *  If both a task and a cultural asset are given the related entity is not changed
-	 * @throws JsonProcessingException 
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws JsonMappingException 
+	 * @throws JsonProcessingException if the JSON string can not be processed
+	 * @throws SecurityException if the JSON string can not be processed
+	 * @throws NoSuchMethodException if the JSON string can not be processed
+	 * @throws InvocationTargetException if the JSON string can not be processed
+	 * @throws IllegalArgumentException if the JSON string can not be processed
+	 * @throws IllegalAccessException if the JSON string can not be processed
+	 * @throws InstantiationException if the JSON string can not be processed
+	 * @throws JsonMappingException if the JSON string can not be processed
 	 */
 	@Override
 	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {

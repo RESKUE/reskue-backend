@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NotificationService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue.notification</a> &gt; <span class="el_source">NotificationService.java</span></div><h1>NotificationService.java</h1><pre class="source lang-java linenums">package reskue.notification;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import kueres.base.BaseService;
+import kueres.event.EventType;
+import kueres.eventbus.EventConsumer;
+import kueres.utility.Utility;
+import reskue.culturalasset.CulturalAssetService;
+
+/**
+ * 
+ * The NotificationService provides services needed by the NotificationController.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Feb 25, 2021
+ *
+ */
+
+@Service
+<span class="fc" id="L25">public class NotificationService extends BaseService&lt;NotificationEntity, NotificationRepository&gt;{</span>
+	
+	/**
+	 * The CulturalAssetService needed to update the endangered state.
+	 */
+	@Autowired
+	protected CulturalAssetService culturalAssetService;
+	
+	/**
+	 * Set this EventSubscribers identifier and routing.
+	 */
+	@Override
+	@PostConstruct
+	public void init() {
+<span class="fc" id="L39">		this.identifier = NotificationController.ROUTE;</span>
+<span class="fc" id="L40">		this.routingKey = NotificationController.ROUTE;</span>
+<span class="fc" id="L41">	}</span>
+	
+	/**
+	 * Create a NotificationEntity.
+	 * This can update the endangered state based on the type of notification created.
+	 * 
+	 * @param entity - the notification that should be created. This notification can not have an identifier.
+	 * @return The created notification. This contains the notification's identifier.
+	 */
+	@Override
+	public NotificationEntity create(NotificationEntity entity) {
+		
+<span class="fc" id="L53">		Utility.LOG.trace(&quot;NotificationService.create called.&quot;);</span>
+		
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">		if (entity.getEntity() != null) {</span>
+			
+<span class="nc bnc" id="L57" title="All 2 branches missed.">			if (entity.getType() == NotificationType.ALARM.type) {</span>
+				
+<span class="nc" id="L59">				culturalAssetService.updateIsEndangered(entity.getEntity(), 1);</span>
+				
+			}
+<span class="nc bnc" id="L62" title="All 2 branches missed.">			if (entity.getType() == NotificationType.ALARM_OVER.type) {</span>
+				
+<span class="nc" id="L64">				culturalAssetService.updateIsEndangered(entity.getEntity(), 0);	</span>
+				
+			}
+			
+		}
+		
+<span class="fc" id="L70">		NotificationEntity savedEntity = repository.save(entity);</span>
+		
+<span class="fc" id="L72">		EventConsumer.sendEvent(&quot;NotificationService.create&quot;, EventType.CREATE.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(savedEntity));</span>
+		
+<span class="fc" id="L74">		return savedEntity;</span>
+		
+	}
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>
