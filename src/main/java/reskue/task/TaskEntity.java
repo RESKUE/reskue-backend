@@ -150,8 +150,6 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = BaseEntity.ID),
 			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = BaseEntity.ID)
 	)
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
-	@JsonIdentityReference(alwaysAsId = true)
 	private List<MediaEntity> media = new ArrayList<MediaEntity>();
 	public static final String MEDIA = "media";
 	public List<MediaEntity> getMedia() { return this.media; }
