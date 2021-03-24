@@ -41,6 +41,12 @@ npm install
 ```
 npm run update
 ```
+> NOTE: You have to be logged into the Fraunhofers GitLab Docker Registry for this.
+> This can be done with:
+> ```
+> docker login gitlab-ext.iosb.fraunhofer.de:4567
+> ```
+
 5. Create enviroment files for development and/or production mode
 ```
 Production mode:
