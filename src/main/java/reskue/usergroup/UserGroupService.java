@@ -2,15 +2,9 @@ package reskue.usergroup;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,12 +41,6 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	protected UserService userService;
 	
 	/**
-	 * The EntityManager needed to create a CriteriaBuilder.
-	 */
-	@PersistenceContext
-	private EntityManager em;
-	
-	/**
 	 * Set this EventSubscribers identifier and routing.
 	 */
 	@Override
@@ -70,8 +58,7 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
-	public Page<UserEntity> getAllUsers(long id, EntitySpecification<UserEntity> specification, Pageable pageable) {
+	public Page<UserEntity> getAllUsers(Long id, EntitySpecification<UserEntity> specification, Pageable pageable) {
 
 		Utility.LOG.trace("UserGroupService.getAllUsers called.");
 
@@ -79,13 +66,9 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 		List<UserEntity> users = entity.getUsers();
 
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
-			Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
 
-			users = users.stream().filter(
-					(Predicate<? super UserEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
+			users = users.stream().filter(specification.toPredicate(UserEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<UserEntity> page = new PageImpl<UserEntity>(users, pageable, users.size());
@@ -105,8 +88,7 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
-	public Page<NotificationEntity> getNotifications(long[] ids, EntitySpecification<NotificationEntity> specification,
+	public Page<NotificationEntity> getNotifications(Long[] ids, EntitySpecification<NotificationEntity> specification,
 			Pageable pageable) {
 
 		Utility.LOG.trace("UserGroupService.getNotifications called.");
@@ -125,14 +107,8 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 		receivedNotifications = receivedNotifications.stream().distinct().collect(Collectors.toList());
 
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<NotificationEntity> criteriaQuery = criteriaBuilder.createQuery(NotificationEntity.class);
-			Root<NotificationEntity> root = criteriaQuery.from(NotificationEntity.class);
 
-			receivedNotifications = receivedNotifications.stream()
-					.filter((Predicate<? super NotificationEntity>) specification.toPredicate(root, criteriaQuery,
-							criteriaBuilder))
-					.collect(Collectors.toList());
+			receivedNotifications = receivedNotifications.stream().filter(specification.toPredicate(NotificationEntity.class)).collect(Collectors.toList());
 		}
 
 		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(receivedNotifications, pageable,
@@ -152,7 +128,7 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	 * @param userId - the user's identifier.
 	 * @return The user group after the user was added.
 	 */
-	public UserGroupEntity addUser(long id, long userId) {
+	public UserGroupEntity addUser(Long id, Long userId) {
 
 		Utility.LOG.trace("UserGroupService.addUser called.");
 
@@ -185,7 +161,7 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	 * @param userId - the user's identifier.
 	 * @return The user group after the user was removed.
 	 */
-	public UserGroupEntity removeUser(long id, long userId) {
+	public UserGroupEntity removeUser(Long id, Long userId) {
 
 		Utility.LOG.trace("UserGroupService.removeUser called.");
 

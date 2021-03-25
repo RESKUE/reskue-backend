@@ -2,15 +2,9 @@ package reskue.culturalasset;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -61,12 +55,6 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 */
 	@Autowired
 	protected TaskRepository taskRepository;
-
-	/**
-	 * The EntityManager needed to create a CriteriaBuilder.
-	 */
-	@PersistenceContext
-	private EntityManager em;
 
 	/**
 	 * Set this EventSubscribers identifier and routing.
@@ -157,7 +145,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @throws JsonMappingException if the JSON string can not be processed
 	 */
 	//@Override
-	public CulturalAssetEntity update(long id, String detailsJSON) throws ResourceNotFoundException, JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
+	public CulturalAssetEntity update(Long id, String detailsJSON) throws ResourceNotFoundException, JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 
 		Utility.LOG.trace("CulturalAssetService.update called.");
 
@@ -245,7 +233,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 *                                   specified identifier.
 	 */
 	@Override
-	public CulturalAssetEntity delete(long id) throws ResourceNotFoundException {
+	public CulturalAssetEntity delete(Long id) throws ResourceNotFoundException {
 
 		Utility.LOG.trace("CulturalAssetService.delete called.");
 
@@ -274,7 +262,6 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param pageable      - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
 	public Page<CulturalAssetEntity> findInRadius(double radius, double longitude, double latitude,
 			EntitySpecification<CulturalAssetEntity> specification, Pageable pageable) {
 
@@ -285,12 +272,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 				.collect(Collectors.toList());
 
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<CulturalAssetEntity> criteriaQuery = criteriaBuilder.createQuery(CulturalAssetEntity.class);
-			Root<CulturalAssetEntity> root = criteriaQuery.from(CulturalAssetEntity.class);
 
-			entities = entities.stream().filter((Predicate<? super CulturalAssetEntity>) specification.toPredicate(root,
-					criteriaQuery, criteriaBuilder)).collect(Collectors.toList());
+			entities = entities.stream().filter(specification.toPredicate(CulturalAssetEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<CulturalAssetEntity> page = new PageImpl<CulturalAssetEntity>(entities, pageable, entities.size());
@@ -310,8 +294,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param pageable      - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
-	public Page<TaskEntity> getAllTasks(long id, EntitySpecification<TaskEntity> specification, Pageable pageable) {
+	public Page<TaskEntity> getAllTasks(Long id, EntitySpecification<TaskEntity> specification, Pageable pageable) {
 
 		Utility.LOG.trace("CulturalAssetService.getAllTasks called.");
 
@@ -319,13 +302,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		List<TaskEntity> tasks = entity.getTasks();
 
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<TaskEntity> criteriaQuery = criteriaBuilder.createQuery(TaskEntity.class);
-			Root<TaskEntity> root = criteriaQuery.from(TaskEntity.class);
 
-			tasks = tasks.stream().filter(
-					(Predicate<? super TaskEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
+			tasks = tasks.stream().filter(specification.toPredicate(TaskEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<TaskEntity> page = new PageImpl<TaskEntity>(tasks, pageable, tasks.size());
@@ -345,22 +324,17 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
-	public Page<CommentEntity> getAllComments(long id, EntitySpecification<CommentEntity> specification,
+	public Page<CommentEntity> getAllComments(Long id, EntitySpecification<CommentEntity> specification,
 			Pageable pageable) {
 
 		CulturalAssetEntity entity = this.findById(id);
 
 		List<CommentEntity> comments = entity.getComments();
 
-		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<CommentEntity> criteriaQuery = criteriaBuilder.createQuery(CommentEntity.class);
-			Root<CommentEntity> root = criteriaQuery.from(CommentEntity.class);		
+		if (specification != null) {	
 			
-			comments = comments.stream().filter(
-					(Predicate<? super CommentEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
+			comments = comments.stream().filter(specification.toPredicate(CommentEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<CommentEntity> page = new PageImpl<CommentEntity>(comments, pageable, comments.size());
@@ -379,8 +353,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param pageable      - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
-	public Page<CulturalAssetEntity> getAllChildren(long id, EntitySpecification<CulturalAssetEntity> specification,
+	public Page<CulturalAssetEntity> getAllChildren(Long id, EntitySpecification<CulturalAssetEntity> specification,
 			Pageable pageable) {
 
 		Utility.LOG.trace("CulturalAssetService.getAllChildren called.");
@@ -389,12 +362,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		List<CulturalAssetEntity> children = entity.getCulturalAssetChildren();
 
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<CulturalAssetEntity> criteriaQuery = criteriaBuilder.createQuery(CulturalAssetEntity.class);
-			Root<CulturalAssetEntity> root = criteriaQuery.from(CulturalAssetEntity.class);
 
-			children = children.stream().filter((Predicate<? super CulturalAssetEntity>) specification.toPredicate(root,
-					criteriaQuery, criteriaBuilder)).collect(Collectors.toList());
+			children = children.stream().filter(specification.toPredicate(CulturalAssetEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<CulturalAssetEntity> page = new PageImpl<CulturalAssetEntity>(children, pageable, children.size());
@@ -414,8 +384,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param pageable      - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
-	public Page<NotificationEntity> getAllNotifications(long id, EntitySpecification<NotificationEntity> specification,
+	public Page<NotificationEntity> getAllNotifications(Long id, EntitySpecification<NotificationEntity> specification,
 			Pageable pageable) {
 
 		Utility.LOG.trace("CulturalAssetService.getAllNotifications called.");
@@ -424,12 +393,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		List<NotificationEntity> notifications = entity.getNotifications();
 
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<NotificationEntity> criteriaQuery = criteriaBuilder.createQuery(NotificationEntity.class);
-			Root<NotificationEntity> root = criteriaQuery.from(NotificationEntity.class);
 
-			notifications = notifications.stream().filter((Predicate<? super NotificationEntity>) specification
-					.toPredicate(root, criteriaQuery, criteriaBuilder)).collect(Collectors.toList());
+			notifications = notifications.stream().filter(specification.toPredicate(NotificationEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(notifications, pageable, notifications.size());
@@ -449,7 +415,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param latitude  - the latitude of the point.
 	 * @return The result as a double.
 	 */
-	public double getDistance(long id, double longitude, double latitude) {
+	public double getDistance(Long id, double longitude, double latitude) {
 
 		Utility.LOG.trace("CulturalAssetService.getDistance called.");
 
@@ -473,7 +439,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param childId - the child's identifier.
 	 * @return The cultural asset after the child was added.
 	 */
-	public CulturalAssetEntity addCulturalAssetChild(long id, long childId) {
+	public CulturalAssetEntity addCulturalAssetChild(Long id, Long childId) {
 
 		Utility.LOG.trace("CulturalAssetService.addCulturalAssetChild called.");
 
@@ -508,7 +474,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param childId - the child's identifier.
 	 * @return The cultural asset after the child was removed.
 	 */
-	public CulturalAssetEntity removeCulturalAssetChild(long id, long childId) {
+	public CulturalAssetEntity removeCulturalAssetChild(Long id, Long childId) {
 
 		Utility.LOG.trace("CulturalAssetService.removeCulturalAssetChild called.");
 
@@ -535,7 +501,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param parentId - the parent's identifier.
 	 * @return The cultural asset after the parent was set.
 	 */
-	public CulturalAssetEntity setCulturalAssetParent(long id, long parentId) {
+	public CulturalAssetEntity setCulturalAssetParent(Long id, Long parentId) {
 
 		Utility.LOG.trace("CulturalAssetService.setCulturalAssetParent called.");
 
@@ -569,7 +535,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param id - the cultural asset's identifier.
 	 * @return The cultural asset after the parent was removed.
 	 */
-	public CulturalAssetEntity removeCulturalAssetParent(long id) {
+	public CulturalAssetEntity removeCulturalAssetParent(Long id) {
 
 		Utility.LOG.trace("CulturalAssetService.removeCulturalAssetParent called.");
 

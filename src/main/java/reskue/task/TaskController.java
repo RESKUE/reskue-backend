@@ -81,7 +81,7 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	@GetMapping("/{" + TaskEntity.ID + "}/comments")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<CommentEntity> getAllComments(
-			@PathVariable(value = TaskEntity.ID) long id,
+			@PathVariable(value = TaskEntity.ID) Long id,
 			@RequestParam Optional<String[]> filter, 
 			@RequestParam Optional<String[]> sort,
 			@RequestParam Optional<Integer> page, 
@@ -119,7 +119,7 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	@GetMapping("/{" + TaskEntity.ID + "}/subtasks")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<SubtaskEntity> getAllSubtasks(
-			@PathVariable(value = TaskEntity.ID) long id,
+			@PathVariable(value = TaskEntity.ID) Long id,
 			@RequestParam Optional<String[]> filter,
 			@RequestParam Optional<String[]> sort,
 			@RequestParam Optional<Integer> page,
@@ -158,7 +158,7 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	@GetMapping("/{" + TaskEntity.ID + "}/helpers")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<UserEntity> getAllHelpers(
-			@PathVariable(value = TaskEntity.ID) long id,
+			@PathVariable(value = TaskEntity.ID) Long id,
 			@RequestParam Optional<String[]> filter,
 			@RequestParam Optional<String[]> sort,
 			@RequestParam Optional<Integer> page,
@@ -188,7 +188,7 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	@PutMapping("/{" + TaskEntity.ID + "}/changeState/{" + TaskEntity.STATE + "}")
 	@RolesAllowed({ "administrator", "helper" })
 	public ResponseEntity<TaskEntity> changeState(
-			@PathVariable(value = TaskEntity.ID) long id,
+			@PathVariable(value = TaskEntity.ID) Long id,
 			@PathVariable(value = TaskEntity.STATE) int state) {
 		
 		Utility.LOG.trace("TaskController.changeState called.");
@@ -208,8 +208,8 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	@PutMapping("/{" + TaskEntity.ID + "}/assignHelper/{" + TaskEntity.HELPER_USERS + "}")
 	@RolesAllowed({ "administrator" })
 	public ResponseEntity<TaskEntity> addHelper(
-			@PathVariable(value = TaskEntity.ID) long id,
-			@PathVariable(value = TaskEntity.HELPER_USERS) long helperId) {
+			@PathVariable(value = TaskEntity.ID) Long id,
+			@PathVariable(value = TaskEntity.HELPER_USERS) Long helperId) {
 		
 		Utility.LOG.trace("TaskController.addHelper called.");
 		
@@ -228,8 +228,8 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	@PutMapping("/{" + TaskEntity.ID + "}/removeHelper/{" + TaskEntity.HELPER_USERS + "}")
 	@RolesAllowed({ "administrator" })
 	public ResponseEntity<TaskEntity> removeHelper(
-			@PathVariable(value = TaskEntity.ID) long id,
-			@PathVariable(value = TaskEntity.HELPER_USERS) long helperId) {
+			@PathVariable(value = TaskEntity.ID) Long id,
+			@PathVariable(value = TaskEntity.HELPER_USERS) Long helperId) {
 		
 		Utility.LOG.trace("TaskController.removeHelper called.");
 		

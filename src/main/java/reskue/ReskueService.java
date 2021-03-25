@@ -1,14 +1,7 @@
 package reskue;
 
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,6 +12,7 @@ import kueres.event.EventType;
 import kueres.eventbus.EventConsumer;
 import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
+import kueres.utility.Utility;
 
 /**
  * 
@@ -34,12 +28,6 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 		extends BaseService<E, R> {
 	
 	/**
-	 * The EntityManager needed to create a CriteriaBuilder.
-	 */
-	@PersistenceContext
-	private EntityManager em;
-	
-	/**
 	 * Get all media of the services ReskueEntity-type.
 	 * 
 	 * @param id - the entity's identifier.
@@ -47,21 +35,16 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
-	public Page<MediaEntity> getAllMedia(long id, EntitySpecification<MediaEntity> specification, Pageable pageable) {
+	public Page<MediaEntity> getAllMedia(Long id, EntitySpecification<MediaEntity> specification, Pageable pageable) {
 
 		E entity = this.findById(id);
-
-		List<MediaEntity> media = entity.getMedia();
 		
+		List<MediaEntity> media = entity.getMedia();
+		Utility.LOG.info("media: {}", EventConsumer.writeObjectAsJSON(media));
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<MediaEntity> criteriaQuery = criteriaBuilder.createQuery(MediaEntity.class);
-			Root<MediaEntity> root = criteriaQuery.from(MediaEntity.class);
-
-			media = media.stream().filter(
-					(Predicate<? super MediaEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
+			
+			media = media.stream().filter(specification.toPredicate(MediaEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<MediaEntity> page = new PageImpl<MediaEntity>(media, pageable, media.size());

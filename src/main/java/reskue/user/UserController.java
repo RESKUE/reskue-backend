@@ -72,7 +72,7 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 	@GetMapping("/{" + UserEntity.ID + "}/contactTasks")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<TaskEntity> getTasksWhereUserIsContact(
-			@PathVariable(value = UserEntity.ID) long id,
+			@PathVariable(value = UserEntity.ID) Long id,
 			@RequestParam Optional<String[]> filter,
 			@RequestParam Optional<String[]> sort,
 			@RequestParam Optional<Integer> page,
@@ -111,7 +111,7 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 	@GetMapping("/{" + UserEntity.ID + "}/helperTasks")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<TaskEntity> getTasksWhereUserIsHelper(
-			@PathVariable(value = UserEntity.ID) long id,
+			@PathVariable(value = UserEntity.ID) Long id,
 			@RequestParam Optional<String[]> filter,
 			@RequestParam Optional<String[]> sort,
 			@RequestParam Optional<Integer> page,
@@ -150,7 +150,7 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 	@GetMapping("/{" + UserEntity.ID + "}/userComments")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<CommentEntity> getCommentsByUser(
-			@PathVariable(value = UserEntity.ID) long id,
+			@PathVariable(value = UserEntity.ID) Long id,
 			@RequestParam Optional<String[]> filter,
 			@RequestParam Optional<String[]> sort,
 			@RequestParam Optional<Integer> page,
@@ -189,7 +189,7 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 	@GetMapping("/{" + UserEntity.ID + "}/userGroups")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<UserGroupEntity> getUserGroupsForUser(
-			@PathVariable(value = UserEntity.ID) long id,
+			@PathVariable(value = UserEntity.ID) Long id,
 			@RequestParam Optional<String[]> filter,
 			@RequestParam Optional<String[]> sort,
 			@RequestParam Optional<Integer> page,
@@ -228,7 +228,7 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 	@GetMapping("/{" + UserEntity.ID + "}/sendNotifications")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<NotificationEntity> getNotificationsSendByUser(
-			@PathVariable(value = UserEntity.ID) long id,
+			@PathVariable(value = UserEntity.ID) Long id,
 			@RequestParam Optional<String[]> filter,
 			@RequestParam Optional<String[]> sort,
 			@RequestParam Optional<Integer> page,

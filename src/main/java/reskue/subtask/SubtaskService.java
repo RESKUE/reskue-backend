@@ -39,7 +39,7 @@ public class SubtaskService extends BaseService<SubtaskEntity, SubtaskRepository
 	 * @param state - the new state of the subtask.
 	 * @return The subtask after the state was changed.
 	 */
-	public SubtaskEntity changeState(long id, int state) {
+	public SubtaskEntity changeState(Long id, int state) {
 		
 		Utility.LOG.trace("SubtaskService.changeState called.");
 		

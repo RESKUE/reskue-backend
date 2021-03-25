@@ -1,15 +1,9 @@
 package reskue.user;
 
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -38,12 +32,6 @@ import reskue.usergroup.UserGroupEntity;
 
 @Service
 public class UserService extends BaseService<UserEntity, UserRepository>{
-	
-	/**
-	 * The EntityManager needed to create a CriteriaBuilder.
-	 */
-	@PersistenceContext
-	private EntityManager em;
 	
 	/**
 	 * Set this EventSubscribers identifier and routing.
@@ -83,8 +71,7 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
-	public Page<TaskEntity> getTasksWhereUserIsContact(long id, EntitySpecification<TaskEntity> specification,
+	public Page<TaskEntity> getTasksWhereUserIsContact(Long id, EntitySpecification<TaskEntity> specification,
 			Pageable pageable) {
 		
 		Utility.LOG.trace("UserService.getTasksWhereUserIsContact called.");
@@ -93,13 +80,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		List<TaskEntity> contactTasks = entity.getTaskContact();
 	
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<TaskEntity> criteriaQuery = criteriaBuilder.createQuery(TaskEntity.class);
-			Root<TaskEntity> root = criteriaQuery.from(TaskEntity.class);
 
-			contactTasks = contactTasks.stream().filter(
-					(Predicate<? super TaskEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
+			contactTasks = contactTasks.stream().filter(specification.toPredicate(TaskEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<TaskEntity> page = new PageImpl<TaskEntity>(contactTasks, pageable, contactTasks.size());
@@ -118,8 +101,7 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
-	public Page<TaskEntity> getTasksWhereUserIsHelper(long id, EntitySpecification<TaskEntity> specification,
+	public Page<TaskEntity> getTasksWhereUserIsHelper(Long id, EntitySpecification<TaskEntity> specification,
 			Pageable pageable) {
 		
 		Utility.LOG.trace("UserService.getTasksWhereUserIsHelper called.");
@@ -128,13 +110,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		List<TaskEntity> helperTasks = entity.getTaskHelper();
 	
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<TaskEntity> criteriaQuery = criteriaBuilder.createQuery(TaskEntity.class);
-			Root<TaskEntity> root = criteriaQuery.from(TaskEntity.class);
 
-			helperTasks = helperTasks.stream().filter(
-					(Predicate<? super TaskEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
+			helperTasks = helperTasks.stream().filter(specification.toPredicate(TaskEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<TaskEntity> page = new PageImpl<TaskEntity>(helperTasks, pageable, helperTasks.size());
@@ -153,8 +131,7 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
-	public Page<CommentEntity> getCommentsByUser(long id, EntitySpecification<CommentEntity> specification,
+	public Page<CommentEntity> getCommentsByUser(Long id, EntitySpecification<CommentEntity> specification,
 			Pageable pageable) {
 		
 		Utility.LOG.trace("UserService.getCommentsByUser called.");		
@@ -163,13 +140,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		List<CommentEntity> authorComments = entity.getCommentAuthor();
 	
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<CommentEntity> criteriaQuery = criteriaBuilder.createQuery(CommentEntity.class);
-			Root<CommentEntity> root = criteriaQuery.from(CommentEntity.class);
 
-			authorComments = authorComments.stream().filter(
-					(Predicate<? super CommentEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
+			authorComments = authorComments.stream().filter(specification.toPredicate(CommentEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<CommentEntity> page = new PageImpl<CommentEntity>(authorComments, pageable, authorComments.size());
@@ -188,8 +161,7 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
-	public Page<UserGroupEntity> getUserGroupsForUser(long id, EntitySpecification<UserGroupEntity> specification,
+	public Page<UserGroupEntity> getUserGroupsForUser(Long id, EntitySpecification<UserGroupEntity> specification,
 			Pageable pageable) {
 		
 		Utility.LOG.trace("UserService.getUserGroupsForUser called.");				
@@ -198,13 +170,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		List<UserGroupEntity> userGroups = entity.getUserGroups();
 	
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<UserGroupEntity> criteriaQuery = criteriaBuilder.createQuery(UserGroupEntity.class);
-			Root<UserGroupEntity> root = criteriaQuery.from(UserGroupEntity.class);
 
-			userGroups = userGroups.stream().filter(
-					(Predicate<? super UserGroupEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
+			userGroups = userGroups.stream().filter(specification.toPredicate(UserGroupEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<UserGroupEntity> page = new PageImpl<UserGroupEntity>(userGroups, pageable, userGroups.size());
@@ -223,8 +191,7 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
-	public Page<NotificationEntity> getNotificationsSendByUser(long id, EntitySpecification<NotificationEntity> specification,
+	public Page<NotificationEntity> getNotificationsSendByUser(Long id, EntitySpecification<NotificationEntity> specification,
 			Pageable pageable) {
 		
 		Utility.LOG.trace("UserService.getNotificationsSendByUser called.");	
@@ -233,13 +200,9 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		List<NotificationEntity> senderNotifiactions = entity.getNotificationSender();
 	
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<NotificationEntity> criteriaQuery = criteriaBuilder.createQuery(NotificationEntity.class);
-			Root<NotificationEntity> root = criteriaQuery.from(NotificationEntity.class);
 
-			senderNotifiactions = senderNotifiactions.stream().filter(
-					(Predicate<? super NotificationEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
+			senderNotifiactions = senderNotifiactions.stream().filter(specification.toPredicate(NotificationEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(senderNotifiactions, pageable, senderNotifiactions.size());
