@@ -1,20 +1,23 @@
 package reskue.notification;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.stream.Collectors;
+
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kueres.base.BaseController;
+import kueres.base.BaseEntity;
 import kueres.utility.Utility;
 import reskue.user.UserEntity;
 import reskue.user.UserService;
@@ -46,10 +49,9 @@ public class NotificationController
 	
 	@PostMapping("/autoSender")
 	@RolesAllowed("administrator")
-	public ResponseEntity<NotificationEntity> create(
-			@Valid @RequestBody NotificationEntity entity,
+	public ResponseEntity<NotificationEntity> createAutoSender(
 			HttpServletRequest request, 
-			HttpServletResponse response) {
+			HttpServletResponse response) throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		
 		Utility.LOG.trace("NotificationController.create called.");
 		
@@ -58,10 +60,16 @@ public class NotificationController
 		
 		String subject = token.getSubject();
 		UserEntity sender = userService.me(subject);
+		
+		String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+		
+		Class<NotificationEntity> entityClass = this.service.getEntityClass();
+		NotificationEntity entity = entityClass.getDeclaredConstructor().newInstance();
+		entity = BaseEntity.createEntityFromJSON(body, entity.getUpdateableFields(), entityClass);
 		entity.setSender(sender);
 		
-		NotificationEntity createdEntity = service.create(entity);
-		return ResponseEntity.ok().body(createdEntity);
+		NotificationEntity created = this.service.create(entity);
+		return ResponseEntity.ok().body(created);
 		
 	}
 
