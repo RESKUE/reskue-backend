@@ -46,16 +46,16 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 				CulturalAssetEntity.DESCRIPTION,
 				CulturalAssetEntity.PRIORITY,
 				CulturalAssetEntity.IS_ENDANGERED,
-				CulturalAssetEntity.LABEL,
 				CulturalAssetEntity.ADDRESS,
+				CulturalAssetEntity.LABEL,
 				CulturalAssetEntity.LONGITUDE,
 				CulturalAssetEntity.LATITUDE,
+				CulturalAssetEntity.MEDIA,
 				CulturalAssetEntity.TASKS,
 				CulturalAssetEntity.COMMENTS,
-				CulturalAssetEntity.MEDIA,
 				CulturalAssetEntity.NOTIFICATIONS,
-				CulturalAssetEntity.CULTURAL_ASSET_PARENT,
-				CulturalAssetEntity.CULTURAL_ASSET_CHILDREN
+				CulturalAssetEntity.CULTURAL_ASSET_CHILDREN,
+				CulturalAssetEntity.CULTURAL_ASSET_PARENT
 		};
 	}
 	
@@ -224,14 +224,6 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 			this.setIsEndangered(details.getIsEndangered());				
 		}
 		
-		if (this.containsFields(json, CulturalAssetEntity.COMMENTS)) {			
-			this.setComments(details.getComments());			
-		}
-		
-		if (this.containsFields(json, CulturalAssetEntity.MEDIA)) {			
-			this.setMedia(details.getMedia());			
-		}
-				
 		if (this.containsFields(json, CulturalAssetEntity.ADDRESS)) {
 			this.setAddress(details.getAddress());
 		}
@@ -247,21 +239,29 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		if (this.containsFields(json, CulturalAssetEntity.LATITUDE)) {
 			this.setLatitude(details.getLatitude());
 		}
-
+		
+		if (this.containsFields(json, CulturalAssetEntity.MEDIA)) {			
+			this.setMedia(details.getMedia());			
+		}
+		
 		if (this.containsFields(json, CulturalAssetEntity.TASKS)) {
 			this.setTasks(details.getTasks());
+		}
+		
+		if (this.containsFields(json, CulturalAssetEntity.COMMENTS)) {			
+			this.setComments(details.getComments());			
 		}
 		
 		if (this.containsFields(json, CulturalAssetEntity.NOTIFICATIONS)) {
 			this.setNotifications(details.getNotifications());
 		}
 		
-		if (this.containsFields(json, CulturalAssetEntity.CULTURAL_ASSET_PARENT)) {
-			this.setCulturalAssetParent(details.getCulturalAssetParent());
-		}
-		
 		if (this.containsFields(json, CulturalAssetEntity.CULTURAL_ASSET_CHILDREN)) {
 			this.setCulturalAssetChildren(details.getCulturalAssetChildren());
+		}
+		
+		if (this.containsFields(json, CulturalAssetEntity.CULTURAL_ASSET_PARENT)) {
+			this.setCulturalAssetParent(details.getCulturalAssetParent());
 		}
 		
 	}

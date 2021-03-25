@@ -33,10 +33,10 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	@Override
 	public String[] getUpdateableFields() {
 		return new String[] {
-			SubtaskEntity.TASK,
-			SubtaskEntity.STATE,
 			SubtaskEntity.TEXT,
-			SubtaskEntity.IS_REQUIRED
+			SubtaskEntity.IS_REQUIRED,
+			SubtaskEntity.STATE,
+			SubtaskEntity.TASK
 		};
 	}
 	
@@ -83,19 +83,21 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 		
 		SubtaskEntity details = SubtaskEntity.createEntityFromJSON(json, this.getUpdateableFields(), SubtaskEntity.class);
 		
-		if (this.containsFields(json, SubtaskEntity.TASK)) {
-			this.setTask(details.getTask());
+		if (this.containsFields(json, SubtaskEntity.TEXT)) {
+			this.setText(details.getText());
+		}
+		
+		if (this.containsFields(json, SubtaskEntity.IS_REQUIRED)) {
+			this.setIsRequired(isRequired);
 		}
 		
 		if (this.containsFields(json, SubtaskEntity.STATE)) {
 			this.setState(details.getState());
 		}
 		
-		if (this.containsFields(json, SubtaskEntity.TEXT)) {
-			this.setText(details.getText());
+		if (this.containsFields(json, SubtaskEntity.TASK)) {
+			this.setTask(details.getTask());
 		}
-		
-		this.setIsRequired(isRequired);
 
 	}
 

@@ -49,13 +49,13 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 				TaskEntity.PRIORITY,
 				TaskEntity.IS_ENDANGERED,
 				TaskEntity.STATE,
-				TaskEntity.CULTURAL_ASSET,
+				TaskEntity.RECOMMENDED_HELPER_USERS,
+				TaskEntity.MEDIA,
 				TaskEntity.COMMENTS,
 				TaskEntity.SUBTASKS,
+				TaskEntity.CULTURAL_ASSET,
 				TaskEntity.CONTACT_USER,
 				TaskEntity.HELPER_USERS,
-				TaskEntity.RECOMMENDED_HELPER_USERS,
-				TaskEntity.MEDIA
 		};
 	}
 	
@@ -176,24 +176,28 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 			this.setIsEndangered(details.getIsEndangered());	
 		}
 		
-		if (this.containsFields(json, TaskEntity.COMMENTS)) {
-			this.setComments(details.getComments());
+		if (this.containsFields(json, TaskEntity.STATE)) {
+			this.setState(details.getState());
+		}
+		
+		if (this.containsFields(json, TaskEntity.RECOMMENDED_HELPER_USERS)) {
+			this.setRecommendedHelperUsers(details.getRecommendedHelperUsers());
 		}
 		
 		if (this.containsFields(json, TaskEntity.MEDIA)) {
 			this.setMedia(details.getMedia());
 		}
 		
-		if (this.containsFields(json, TaskEntity.STATE)) {
-			this.setState(details.getState());
-		}
-		
-		if (this.containsFields(json, TaskEntity.CULTURAL_ASSET)) {
-			this.setCulturalAsset(details.getCulturalAsset());
+		if (this.containsFields(json, TaskEntity.COMMENTS)) {
+			this.setComments(details.getComments());
 		}
 		
 		if (this.containsFields(json, TaskEntity.SUBTASKS)) {
 			this.setSubtasks(details.getSubtasks());
+		}
+		
+		if (this.containsFields(json, TaskEntity.CULTURAL_ASSET)) {
+			this.setCulturalAsset(details.getCulturalAsset());
 		}
 		
 		if (this.containsFields(json, TaskEntity.CONTACT_USER)) {
@@ -202,10 +206,6 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 		
 		if (this.containsFields(json, TaskEntity.HELPER_USERS)) {
 			this.setHelperUsers(details.getHelperUsers());
-		}
-		
-		if (this.containsFields(json, TaskEntity.RECOMMENDED_HELPER_USERS)) {
-			this.setRecommendedHelperUsers(details.getRecommendedHelperUsers());
 		}
 		
 	}

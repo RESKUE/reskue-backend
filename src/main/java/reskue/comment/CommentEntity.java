@@ -41,11 +41,11 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	@Override
 	public String[] getUpdateableFields() {
 		return new String[] {
+			CommentEntity.TEXT,
 			CommentEntity.COMMENT_CULTURAL_ASSET,
 			CommentEntity.COMMENT_TASK,
-			CommentEntity.TEXT,
-			CommentEntity.MEDIA,
 			CommentEntity.AUTHOR,
+			CommentEntity.MEDIA,
 		};
 	}
 	
@@ -154,6 +154,12 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 		
 		CommentEntity details = CommentEntity.createEntityFromJSON(json, this.getUpdateableFields(), CommentEntity.class);
 		
+		if (this.containsFields(json, CommentEntity.TEXT)) {			
+			this.setText(details.getText());			
+		}
+		
+		this.setUpdatedAt(new Date());
+		
 		if (this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &&
 				!this.containsFields(json, CommentEntity.COMMENT_TASK)) {
 			
@@ -174,15 +180,9 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 			
 		}
 		
-		if (this.containsFields(json, CommentEntity.TEXT)) {			
-			this.setText(details.getText());			
-		}
-		
 		if (this.containsFields(json, CommentEntity.MEDIA)) {			
 			this.setMedia(details.getMedia());			
 		}
-		
-		this.setUpdatedAt(new Date());
 		
 	}
 

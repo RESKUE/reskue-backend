@@ -42,9 +42,9 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 			NotificationEntity.TITLE,
 			NotificationEntity.MESSAGE,
 			NotificationEntity.TYPE,
+			NotificationEntity.ENTITY,
 			NotificationEntity.SENDER,
-			NotificationEntity.RECEIVERS,
-			NotificationEntity.ENTITY
+			NotificationEntity.RECEIVERS
 		};
 	}
 	
