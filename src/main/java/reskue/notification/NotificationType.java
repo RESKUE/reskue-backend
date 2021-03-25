@@ -10,7 +10,6 @@ package reskue.notification;
  *
  */
 
-
 public enum NotificationType {
 	
 	/**

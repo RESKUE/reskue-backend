@@ -51,7 +51,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	/**
 	 * The name of the user.
 	 */
-	@Column(name = "name", nullable = false)
+	@Column(name = "name", nullable = true)
 	private String name = "unnamed";
 	public static final String NAME = "name";
 	public String getName() { return this.name; }

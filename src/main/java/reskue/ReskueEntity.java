@@ -35,8 +35,8 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	/**
 	 * The description of the entity.
 	 */
-	@Column(name = "description", nullable = false, columnDefinition="TEXT")
-	private String description = "";
+	@Column(name = "description", nullable = true, columnDefinition="TEXT")
+	private String description = null;
 	public static final String DESCRIPTION = "description";
 	public String getDescription() { return this.description; }
 	public void setDescription(String description) { this.description = description; }

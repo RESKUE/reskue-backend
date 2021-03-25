@@ -52,8 +52,8 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	/**
 	 * The text of the comment.
 	 */
-	@Column(name = "text", nullable = false, columnDefinition="TEXT")
-	private String text = "";
+	@Column(name = "text", nullable = true, columnDefinition="TEXT")
+	private String text = "uncommented";
 	public static final String TEXT = "text";
 	public String getText() { return this.text; }
 	public void setText(String text) { this.text = text; }
@@ -139,7 +139,9 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	 *  - author
 	 *  - createdAt
 	 *  - updatedAt
+	 *  
 	 *  If both a task and a cultural asset are given the related entity is not changed
+	 *  
 	 * @throws JsonProcessingException if the JSON string can not be processed
 	 * @throws SecurityException if the JSON string can not be processed
 	 * @throws NoSuchMethodException if the JSON string can not be processed

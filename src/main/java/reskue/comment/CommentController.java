@@ -54,9 +54,27 @@ public class CommentController extends BaseController<CommentEntity, CommentRepo
 	 */
 	public static final String ROUTE = "/comment";
 	
+	/**
+	 * The UserService needed to get the user for the automatic comment author.
+	 */
 	@Autowired
 	private UserService userService;
 	
+	/**
+	 * Creates a comment and automatically sets the author to the user that send the create request.
+	 * 
+	 * @param request - the request send by the user.
+	 * @param response - the response.
+	 * @return - the created comment with the author.
+	 * 
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws IOException
+	 */
 	@PostMapping("/autoAuthor")
 	@RolesAllowed("administrator")
 	public ResponseEntity<CommentEntity> createAutoAuthor(

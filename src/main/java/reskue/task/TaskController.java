@@ -61,9 +61,27 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	 */
 	public static final String ROUTE = "/task";
 	
+	/**
+	 * The UserService needed to get the user for the automatic task contact.
+	 */
 	@Autowired
 	private UserService userService;
 	
+	/**
+	 * Creates a task and automatically sets the contact to the user that send the create request.
+	 * 
+	 * @param request - the request send by the user.
+	 * @param response - the response.
+	 * @return - the created task with the contact.
+	 * 
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws IOException
+	 */
 	@PostMapping("/autoContact")
 	@RolesAllowed("administrator")
 	public ResponseEntity<TaskEntity> createAutoContact(

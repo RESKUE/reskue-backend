@@ -51,8 +51,8 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	/**
 	 * The title of the notification.
 	 */
-	@Column(name = "title", nullable = false)
-	private String title = "Title";
+	@Column(name = "title", nullable = true)
+	private String title = "untitled";
 	public static final String TITLE = "title";
 	public String getTitle() { return this.title; }
 	public void setTitle(String title) { this.title = title; }
@@ -60,8 +60,8 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	/**
 	 * The message of the notification.
 	 */
-	@Column(name = "message", nullable = false, columnDefinition="TEXT")
-	private String message = "";
+	@Column(name = "message", nullable = true, columnDefinition="TEXT")
+	private String message = null;
 	public static final String MESSAGE = "message";
 	public String getMessage() { return this.message; }
 	public void setMessage(String message) { this.message = message; }
@@ -122,6 +122,9 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public List<UserGroupEntity> getReceivers() { return this.receivers; }
 	public void setReceivers(List<UserGroupEntity> receivers) { this.receivers = receivers; }
 	
+	/**
+	 * Updating notifications is not supported.
+	 */
 	@Override
 	public void applyPatch(String json) {
 		

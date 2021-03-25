@@ -53,6 +53,13 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 	 */
 	public static final String ROUTE = "/user";
 	
+	/**
+	 * Gets the current user that sends the requests.
+	 * 
+	 * @param request - the request send by the user.
+	 * @param response - the response.
+	 * @return - the current user.
+	 */
 	@GetMapping("/me")
 	@RolesAllowed({"administrator", "helper"})
 	public ResponseEntity<UserEntity> me(HttpServletRequest request, HttpServletResponse response) {

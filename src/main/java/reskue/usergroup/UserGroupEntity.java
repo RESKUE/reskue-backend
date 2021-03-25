@@ -44,7 +44,7 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	/**
 	 * The name of the user group.
 	 */
-	@Column(name = "name", nullable = false)
+	@Column(name = "name", nullable = true)
 	private String name = "unnamed";
 	public static final String NAME = "name";
 	public String getName() { return this.name; }

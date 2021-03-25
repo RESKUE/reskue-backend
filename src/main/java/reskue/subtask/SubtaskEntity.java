@@ -43,8 +43,8 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	/**
 	 * The text of the subtask.
 	 */
-	@Column(name = "text", nullable = false, columnDefinition="TEXT")
-	private String text = "";
+	@Column(name = "text", nullable = true, columnDefinition="TEXT")
+	private String text = "undescribed";
 	public static final String TEXT = "text";
 	public String getText() { return this.text; }
 	public void setText(String text) { this.text = text; }
