@@ -41,7 +41,7 @@ import reskue.task.TaskEntity;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -88,7 +88,9 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		
 		EntitySpecification<CulturalAssetEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<CulturalAssetEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -96,6 +98,27 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		return service.findInRadius(radius, longitude, latitude, specification, pageable);
 		
 	}
+	
+	/**
+	 * Calculate the distance between a given point and the cultural asset.
+	 * 
+	 * @param id - the cultural asset's identifier.
+	 * @param longitude - the longitude of the given point
+	 * @param latitude - the latitude of the given point
+	 * @return The result in meters as a double
+	 */
+	@GetMapping("/{" + CulturalAssetEntity.ID + "}/distance")
+	@RolesAllowed({ "administrator", "helper" })
+	public double getDistance(
+			@PathVariable(value = CulturalAssetEntity.ID) Long id,
+			@RequestParam double longitude,
+			@RequestParam double latitude) {
+		
+		Utility.LOG.trace("CulturalAssetController.getDistance called.");
+		
+		return service.getDistance(id, longitude, latitude);
+		
+	}	
 	
 	/**
 	 * Find all tasks of the cultural asset.
@@ -127,7 +150,9 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		
 		EntitySpecification<TaskEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<TaskEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -165,7 +190,9 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		
 		EntitySpecification<CommentEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<CommentEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -204,7 +231,9 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		
 		EntitySpecification<CulturalAssetEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<CulturalAssetEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -243,7 +272,9 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		
 		EntitySpecification<NotificationEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<NotificationEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -251,27 +282,6 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		return service.getAllNotifications(id, specification, pageable);
 		
 	}
-	
-	/**
-	 * Calculate the distance between a given point and the cultural asset.
-	 * 
-	 * @param id - the cultural asset's identifier.
-	 * @param longitude - the longitude of the given point
-	 * @param latitude - the latitude of the given point
-	 * @return The result in meters as a double
-	 */
-	@GetMapping("/{" + CulturalAssetEntity.ID + "}/distance")
-	@RolesAllowed({ "administrator", "helper" })
-	public double getDistance(
-			@PathVariable(value = CulturalAssetEntity.ID) Long id,
-			@RequestParam double longitude,
-			@RequestParam double latitude) {
-		
-		Utility.LOG.trace("CulturalAssetController.getDistance called.");
-		
-		return service.getDistance(id, longitude, latitude);
-		
-	}	
 	
 	/**
 	 * Adds a child to the cultural asset.
@@ -289,6 +299,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		Utility.LOG.trace("CulturalAssetController.addCulturalAssetChild called.");
 		
 		CulturalAssetEntity updatedEntity = service.addCulturalAssetChild(id, childId);
+		
 		return ResponseEntity.ok().body(updatedEntity);
 		
 	}
@@ -309,6 +320,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		Utility.LOG.trace("CulturalAssetController.removeCulturalAssetChild called.");
 		
 		CulturalAssetEntity updatedEntity = service.removeCulturalAssetChild(id, childId);
+		
 		return ResponseEntity.ok().body(updatedEntity);
 		
 	}
@@ -329,6 +341,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		Utility.LOG.trace("CulturalAssetController.setCulturalAssetParent called.");
 		
 		CulturalAssetEntity updatedEntity = service.setCulturalAssetParent(id, parentId);
+		
 		return ResponseEntity.ok().body(updatedEntity);
 		
 	}
@@ -347,6 +360,7 @@ public class CulturalAssetController extends ReskueController<CulturalAssetEntit
 		Utility.LOG.trace("CulturalAssetController.removeCulturalAssetParent called.");
 		
 		CulturalAssetEntity updatedEntity = service.removeCulturalAssetParent(id);
+		
 		return ResponseEntity.ok().body(updatedEntity);
 		
 	}

@@ -30,7 +30,7 @@ import reskue.user.UserEntity;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -49,6 +49,33 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	}
 	
 	/**
+	 * The text of the comment.
+	 */
+	@Column(name = "text", nullable = false, columnDefinition="TEXT")
+	private String text = "";
+	public static final String TEXT = "text";
+	public String getText() { return this.text; }
+	public void setText(String text) { this.text = text; }
+	
+	/**
+	 * The time when the comment was created.
+	 */
+	@Column(name = "createdAt", nullable = false)
+	private Date createdAt = new Date();
+	public static final String CREATED_AT = "createdAt";
+	public Date getCreatedAt() { return this.createdAt; }
+	public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+	
+	/**
+	 * The last time the comment was changed.
+	 */
+	@Column(name = "updatedAt", nullable = false)
+	private Date updatedAt = new Date();
+	public static final String UPDATED_AT = "updatedAt";
+	public Date getUpdatedAt() { return this.updatedAt; }
+	public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }
+	
+	/**
 	 * The cultural asset the comment belongs to if it belongs to a cultural asset.
 	 */
 	@ManyToOne()
@@ -59,7 +86,7 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
-	private CulturalAssetEntity commentCulturalAsset = null;
+	private CulturalAssetEntity commentCulturalAsset = null;	
 	public static final String COMMENT_CULTURAL_ASSET = "commentCulturalAsset";
 	public CulturalAssetEntity getCommentCulturalAsset() { return this.commentCulturalAsset; }
 	public void setCommentCulturalAsset(CulturalAssetEntity commentCulturalAsset) { this.commentCulturalAsset = commentCulturalAsset; }
@@ -81,13 +108,16 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	public void setCommentTask(TaskEntity commentTask) { this.commentTask = commentTask; }
 	
 	/**
-	 * The text of the comment.
+	 * The author of the comment.
 	 */
-	@Column(name = "text", nullable = false, columnDefinition="TEXT")
-	private String text = "";
-	public static final String TEXT = "text";
-	public String getText() { return this.text; }
-	public void setText(String text) { this.text = text; }
+	@ManyToOne()
+	@JoinColumn(name = "comment_author_id", referencedColumnName = BaseEntity.ID)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+	private UserEntity author = null;
+	public static final String AUTHOR = "author";
+	public UserEntity getAuthor() { return this.author; }
+	public void setAuthor(UserEntity author) { this.author = author; }
 	
 	/**
 	 * The list of media associated with the comment.
@@ -102,36 +132,6 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	public static final String MEDIA = "media";
 	public List<MediaEntity> getMedia() { return this.media; }
 	public void setMedia(List<MediaEntity> media) { this.media = media; }
-	
-	/**
-	 * The author of the comment.
-	 */
-	@ManyToOne()
-	@JoinColumn(name = "comment_author_id", referencedColumnName = BaseEntity.ID)
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
-	@JsonIdentityReference(alwaysAsId = true)
-	private UserEntity author = null;
-	public static final String AUTHOR = "author";
-	public UserEntity getAuthor() { return this.author; }
-	public void setAuthor(UserEntity author) { this.author = author; }
-	
-	/**
-	 * The time when the comment was created.
-	 */
-	@Column(name = "createdAt", nullable = false)
-	private Date createdAt = new Date();
-	public static final String CREATED_AT = "createdAt";
-	public Date getCreatedAt() { return this.createdAt; }
-	public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
-	
-	/**
-	 * The last time the comment was changed.
-	 */
-	@Column(name = "updatedAt", nullable = false)
-	private Date updatedAt = new Date();
-	public static final String UPDATED_AT = "updatedAt";
-	public Date getUpdatedAt() { return this.updatedAt; }
-	public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }
 
 	/**
 	 * Doesnt allow changes to:
@@ -155,24 +155,32 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 		
 		if (this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &&
 				!this.containsFields(json, CommentEntity.COMMENT_TASK)) {
+			
 			this.setCommentCulturalAsset(details.getCommentCulturalAsset());
 			this.setCommentTask(null);
+			
 		} else if (this.containsFields(json, CommentEntity.COMMENT_TASK) &&
 				!this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET)) {
+			
 			this.setCommentTask(details.getCommentTask());
 			this.setCommentCulturalAsset(null);
+			
 		} else if (!this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &&
 				!this.containsFields(json, CommentEntity.COMMENT_TASK)) {
+			
 			this.setCommentCulturalAsset(null);
 			this.setCommentTask(null);
+			
 		}
 		
-		if (this.containsFields(json, CommentEntity.TEXT)) {
-			this.setText(details.getText());
+		if (this.containsFields(json, CommentEntity.TEXT)) {			
+			this.setText(details.getText());			
 		}
-		if (this.containsFields(json, CommentEntity.MEDIA)) {
-			this.setMedia(details.getMedia());
+		
+		if (this.containsFields(json, CommentEntity.MEDIA)) {			
+			this.setMedia(details.getMedia());			
 		}
+		
 		this.setUpdatedAt(new Date());
 		
 	}

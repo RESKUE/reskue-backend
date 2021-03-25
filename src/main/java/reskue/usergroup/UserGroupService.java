@@ -27,7 +27,7 @@ import reskue.user.UserService;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -139,10 +139,14 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 
 		// if the user is already a user
 		if (newUsers.contains(user)) {
+			
 			return entity;
+			
 		} else {
+			
 			newUsers.add(user);
 			entity.setUsers(newUsers);
+			
 		}
 
 		final UserGroupEntity updatedEntity = repository.save(entity);
@@ -172,10 +176,14 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 
 		// if the user is actually a user
 		if (newUsers.contains(user)) {
+			
 			newUsers.remove(user);
 			entity.setUsers(newUsers);
+			
 		} else {
+			
 			return entity;
+			
 		}
 
 		final UserGroupEntity updatedEntity = repository.save(entity);

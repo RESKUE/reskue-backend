@@ -34,7 +34,7 @@ import reskue.user.UserEntity;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -69,15 +69,27 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	public void setState(int state) { this.state = state; }
 	
 	/**
-	 * The cultural asset the task belongs to.
+	 * The recommended number of helpers that are needed to complete the task.
 	 */
-	@ManyToOne()
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
-	@JsonIdentityReference(alwaysAsId = true)
-	private CulturalAssetEntity culturalAsset = null;
-	public static final String CULTURAL_ASSET = "culturalAsset";
-	public CulturalAssetEntity getCulturalAsset() { return this.culturalAsset; }
-	public void setCulturalAsset(CulturalAssetEntity culturalAsset) { this.culturalAsset = culturalAsset; }
+	@Column(name = "recommendedHelperUsers", nullable = false)
+	private int recommendedHelperUsers = 1;
+	public static final String RECOMMENDED_HELPER_USERS = "recommendedHelperUsers";
+	public int getRecommendedHelperUsers() { return this.recommendedHelperUsers; }
+	public void setRecommendedHelperUsers(int recommendedHelperUsers) { this.recommendedHelperUsers = recommendedHelperUsers; }
+	
+	/**
+	 * The list of media associated with the entity.
+	 */
+	@OneToMany()
+	@JoinTable(
+			name = "task_media",
+			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = BaseEntity.ID)
+	)
+	private List<MediaEntity> media = new ArrayList<MediaEntity>();
+	public static final String MEDIA = "media";
+	public List<MediaEntity> getMedia() { return this.media; }
+	public void setMedia(List<MediaEntity> media) { this.media = media; }
 	
 	/**
 	 * The list of comments associated with the task.
@@ -106,6 +118,17 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	public void setSubtasks(List<SubtaskEntity> subtasks) { this.subtasks = subtasks; }
 	
 	/**
+	 * The cultural asset the task belongs to.
+	 */
+	@ManyToOne()
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+	private CulturalAssetEntity culturalAsset = null;
+	public static final String CULTURAL_ASSET = "culturalAsset";
+	public CulturalAssetEntity getCulturalAsset() { return this.culturalAsset; }
+	public void setCulturalAsset(CulturalAssetEntity culturalAsset) { this.culturalAsset = culturalAsset; }
+	
+	/**
 	 * The user that is the contact of the task.
 	 */
 	@ManyToOne()
@@ -132,29 +155,6 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	public List<UserEntity> getHelperUsers() { return this.helperUsers; }
 	public void setHelperUsers(List<UserEntity> helperUsers) { this.helperUsers = helperUsers; }
 	
-	/**
-	 * The recommended number of helpers that are needed to complete the task.
-	 */
-	@Column(name = "recommendedHelperUsers", nullable = false)
-	private int recommendedHelperUsers = 1;
-	public static final String RECOMMENDED_HELPER_USERS = "recommendedHelperUsers";
-	public int getRecommendedHelperUsers() { return this.recommendedHelperUsers; }
-	public void setRecommendedHelperUsers(int recommendedHelperUsers) { this.recommendedHelperUsers = recommendedHelperUsers; }
-
-	/**
-	 * The list of media associated with the entity.
-	 */
-	@OneToMany()
-	@JoinTable(
-			name = "task_media",
-			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = BaseEntity.ID),
-			inverseJoinColumns = @JoinColumn(name = "media_id", referencedColumnName = BaseEntity.ID)
-	)
-	private List<MediaEntity> media = new ArrayList<MediaEntity>();
-	public static final String MEDIA = "media";
-	public List<MediaEntity> getMedia() { return this.media; }
-	public void setMedia(List<MediaEntity> media) { this.media = media; }
-	
 	@Override
 	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		
@@ -163,18 +163,23 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 		if (this.containsFields(json, TaskEntity.NAME)) {
 			this.setName(details.getName());
 		}
+		
 		if (this.containsFields(json, TaskEntity.DESCRIPTION)) {
 			this.setDescription(details.getDescription());
 		}
+		
 		if (this.containsFields(json, TaskEntity.PRIORITY)) {
 			this.setPriority(details.getPriority());
 		}
+		
 		if (this.containsFields(json, TaskEntity.IS_ENDANGERED)) {
 			this.setIsEndangered(details.getIsEndangered());	
 		}
+		
 		if (this.containsFields(json, TaskEntity.COMMENTS)) {
 			this.setComments(details.getComments());
 		}
+		
 		if (this.containsFields(json, TaskEntity.MEDIA)) {
 			this.setMedia(details.getMedia());
 		}
@@ -182,18 +187,23 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 		if (this.containsFields(json, TaskEntity.STATE)) {
 			this.setState(details.getState());
 		}
+		
 		if (this.containsFields(json, TaskEntity.CULTURAL_ASSET)) {
 			this.setCulturalAsset(details.getCulturalAsset());
 		}
+		
 		if (this.containsFields(json, TaskEntity.SUBTASKS)) {
 			this.setSubtasks(details.getSubtasks());
 		}
+		
 		if (this.containsFields(json, TaskEntity.CONTACT_USER)) {
 			this.setContactUser(details.getContactUser());
 		}
+		
 		if (this.containsFields(json, TaskEntity.HELPER_USERS)) {
 			this.setHelperUsers(details.getHelperUsers());
 		}
+		
 		if (this.containsFields(json, TaskEntity.RECOMMENDED_HELPER_USERS)) {
 			this.setRecommendedHelperUsers(details.getRecommendedHelperUsers());
 		}

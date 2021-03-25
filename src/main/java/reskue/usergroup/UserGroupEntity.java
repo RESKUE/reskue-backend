@@ -27,7 +27,7 @@ import reskue.user.UserEntity;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -91,6 +91,7 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 		if (this.containsFields(json, UserGroupEntity.NAME)) {
 			this.setName(details.getName());
 		}
+		
 		if (this.containsFields(json, UserGroupEntity.USERS)) {
 			this.setUsers(details.getUsers());
 		}

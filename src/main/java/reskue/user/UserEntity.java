@@ -33,7 +33,7 @@ import reskue.usergroup.UserGroupEntity;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -68,6 +68,28 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	public void setKeycloakId(String keycloakId) { this.keycloakId = keycloakId; }
 	
 	/**
+	 * The list of comments that the user is an author of.
+	 */
+	@OneToMany(mappedBy = "author")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+	private List<CommentEntity> commentAuthor = new ArrayList<CommentEntity>();
+	public static final String COMMENT_AUTHOR = "commentAuthor";
+	public List<CommentEntity> getCommentAuthor() { return this.commentAuthor; }
+	public void setCommentAuthor(List<CommentEntity> commentAuthor) { this.commentAuthor = commentAuthor; }
+	
+	/**
+	 * The list of notifications that the user has send.
+	 */
+	@OneToMany(mappedBy = "sender", cascade = CascadeType.MERGE)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+	private List<NotificationEntity> notificationSender = new ArrayList<NotificationEntity>();
+	public static final String NOTIFICATION_SENDER = "notificationSender";
+	public List<NotificationEntity> getNotificationSender() { return this.notificationSender; }
+	public void setNotificationSender(List<NotificationEntity> notificationSender) { this.notificationSender = notificationSender; }
+	
+	/**
 	 * The list of tasks that the user is a contact of.
 	 */
 	@OneToMany(mappedBy = "contactUser")
@@ -94,17 +116,6 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	public void setTaskHelper(List<TaskEntity> taskHelper) { this.taskHelper = taskHelper; }
 	
 	/**
-	 * The list of comments that the user is an author of.
-	 */
-	@OneToMany(mappedBy = "author")
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
-	@JsonIdentityReference(alwaysAsId = true)
-	private List<CommentEntity> commentAuthor = new ArrayList<CommentEntity>();
-	public static final String COMMENT_AUTHOR = "commentAuthor";
-	public List<CommentEntity> getCommentAuthor() { return this.commentAuthor; }
-	public void setCommentAuthor(List<CommentEntity> commentAuthor) { this.commentAuthor = commentAuthor; }
-	
-	/**
 	 * The list of user groups that the user is a part of.
 	 */
 	@ManyToMany()
@@ -120,17 +131,6 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	public List<UserGroupEntity> getUserGroups() { return this.userGroups; }
 	public void setUserGroups(List<UserGroupEntity> userGroups) { this.userGroups = userGroups; }
 	
-	/**
-	 * The list of notifications that the user has send.
-	 */
-	@OneToMany(mappedBy = "sender", cascade = CascadeType.MERGE)
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
-	@JsonIdentityReference(alwaysAsId = true)
-	private List<NotificationEntity> notificationSender = new ArrayList<NotificationEntity>();
-	public static final String NOTIFICATION_SENDER = "notificationSender";
-	public List<NotificationEntity> getNotificationSender() { return this.notificationSender; }
-	public void setNotificationSender(List<NotificationEntity> notificationSender) { this.notificationSender = notificationSender; }
-	
 	@Override
 	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		
@@ -139,6 +139,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 		if (this.containsFields(json, UserEntity.NAME)) {
 			this.setName(details.getName());
 		}
+		
 		if (this.containsFields(json, UserEntity.USER_GROUPS)) {
 			this.setUserGroups(details.getUserGroups());
 		}

@@ -27,7 +27,7 @@ import reskue.user.UserService;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -178,10 +178,14 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		
 		//if the helper is already a helper
 		if(newHelpers.contains(helper)) {
+			
 			return entity;
+			
 		} else {
+			
 			newHelpers.add(helper);
 			entity.setHelperUsers(newHelpers);
+			
 		}
 		
 		final TaskEntity updatedEntity = repository.save(entity);
@@ -209,10 +213,14 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		
 		//if the helper is actually a helper
 		if(newHelpers.contains(helper)) {
+			
 			newHelpers.remove(helper);
 			entity.setHelperUsers(newHelpers);
+			
 		} else {
+			
 			return entity;
+			
 		}
 		
 		final TaskEntity updatedEntity = repository.save(entity);

@@ -26,7 +26,7 @@ import reskue.usergroup.UserGroupEntity;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -54,9 +54,11 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 		List<UserEntity> userEntities = this.repository.findAll();
 		
 		for (UserEntity userEntity : userEntities) {
+			
 			if (userEntity.getKeycloakId().equals(keycloakId)) {
 				return userEntity;
 			}
+			
 		}
 		
 		return null;

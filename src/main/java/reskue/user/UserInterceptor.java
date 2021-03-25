@@ -48,9 +48,12 @@ public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 		List<UserEntity> userEntities = this.repository.findAll();
 		
 		for (UserEntity userEntity : userEntities) {
+			
 			if (userEntity.getKeycloakId().equals(subject)) {
+				
 				exists = true;
 				break;
+				
 			}
 		}
 		
@@ -69,7 +72,9 @@ public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
+		
 	    registry.addInterceptor(this.userInterceptor);
+	    
 	}
 
 }

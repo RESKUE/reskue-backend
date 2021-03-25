@@ -23,7 +23,7 @@ import reskue.task.TaskEntity;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -39,26 +39,6 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 			SubtaskEntity.IS_REQUIRED
 		};
 	}
-	
-	/**
-	 * The task the subtask belongs to.
-	 */
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
-	@JsonIdentityReference(alwaysAsId = true)
-	private TaskEntity task = null;
-	public static final String TASK = "task";
-	public TaskEntity getTask() { return this.task; }
-	public void setTask(TaskEntity task) { this.task = task; }
-	
-	/**
-	 * The state of the subtask.
-	 */
-	@Column(name = "state", nullable = false)
-	private int state = 0;
-	public static final String STATE = "state";
-	public int getState() { return this.state; }
-	public void setState(int state) { this.state = state; }
 	
 	/**
 	 * The text of the subtask.
@@ -77,6 +57,26 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 	public static final String IS_REQUIRED = "isRequired";
 	public boolean getIsRequired() { return this.isRequired; }
 	public void setIsRequired(boolean isRequired) { this.isRequired = isRequired; }
+	
+	/**
+	 * The state of the subtask.
+	 */
+	@Column(name = "state", nullable = false)
+	private int state = 0;
+	public static final String STATE = "state";
+	public int getState() { return this.state; }
+	public void setState(int state) { this.state = state; }
+	
+	/**
+	 * The task the subtask belongs to.
+	 */
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+	private TaskEntity task = null;
+	public static final String TASK = "task";
+	public TaskEntity getTask() { return this.task; }
+	public void setTask(TaskEntity task) { this.task = task; }
 
 	@Override
 	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
@@ -86,12 +86,15 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 		if (this.containsFields(json, SubtaskEntity.TASK)) {
 			this.setTask(details.getTask());
 		}
+		
 		if (this.containsFields(json, SubtaskEntity.STATE)) {
 			this.setState(details.getState());
 		}
+		
 		if (this.containsFields(json, SubtaskEntity.TEXT)) {
 			this.setText(details.getText());
 		}
+		
 		this.setIsRequired(isRequired);
 
 	}

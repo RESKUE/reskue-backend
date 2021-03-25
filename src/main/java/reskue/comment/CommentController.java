@@ -39,7 +39,7 @@ import reskue.user.UserService;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -54,6 +54,27 @@ public class CommentController extends BaseController<CommentEntity, CommentRepo
 	
 	@Autowired
 	private UserService userService;
+	
+	@PostMapping("/autoAuthor")
+	@RolesAllowed("administrator")
+	public ResponseEntity<CommentEntity> create(
+			@Valid @RequestBody CommentEntity entity,
+			HttpServletRequest request, 
+			HttpServletResponse response) {
+		
+		Utility.LOG.trace("NotificationController.create called.");
+		
+		KeycloakAuthenticationToken authToken = (KeycloakAuthenticationToken) request.getUserPrincipal();
+		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();
+		
+		String subject = token.getSubject();
+		UserEntity author = userService.me(subject);
+		entity.setAuthor(author);
+		
+		CommentEntity createdEntity = service.create(entity);
+		return ResponseEntity.ok().body(createdEntity);
+		
+	}
 	
 	/**
 	 * Find all media of the comment.
@@ -85,33 +106,14 @@ public class CommentController extends BaseController<CommentEntity, CommentRepo
 		
 		EntitySpecification<MediaEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<MediaEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
 
 		return service.getAllMedia(id, specification, pageable);
-		
-	}
-	
-	@PostMapping("/autoAuthor")
-	@RolesAllowed("administrator")
-	public ResponseEntity<CommentEntity> create(
-			@Valid @RequestBody CommentEntity entity,
-			HttpServletRequest request, 
-			HttpServletResponse response) {
-		
-		Utility.LOG.trace("NotificationController.create called.");
-		
-		KeycloakAuthenticationToken authToken = (KeycloakAuthenticationToken) request.getUserPrincipal();
-		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();
-		
-		String subject = token.getSubject();
-		UserEntity author = userService.me(subject);
-		entity.setAuthor(author);
-		
-		CommentEntity createdEntity = service.create(entity);
-		return ResponseEntity.ok().body(createdEntity);
 		
 	}
 

@@ -46,7 +46,7 @@ import reskue.user.UserService;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -61,6 +61,27 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	
 	@Autowired
 	private UserService userService;
+	
+	@PostMapping("/autoContact")
+	@RolesAllowed("administrator")
+	public ResponseEntity<TaskEntity> create(
+			@Valid @RequestBody TaskEntity entity,
+			HttpServletRequest request, 
+			HttpServletResponse response) {
+		
+		Utility.LOG.trace("NotificationController.create called.");
+		
+		KeycloakAuthenticationToken authToken = (KeycloakAuthenticationToken) request.getUserPrincipal();
+		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();
+		
+		String subject = token.getSubject();
+		UserEntity contact = userService.me(subject);
+		entity.setContactUser(contact);
+		
+		TaskEntity createdEntity = service.create(entity);
+		return ResponseEntity.ok().body(createdEntity);
+		
+	}
 	
 	/**
 	 * Find all comments of the task.
@@ -91,7 +112,9 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 		
 		EntitySpecification<CommentEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<CommentEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -130,7 +153,9 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 		
 		EntitySpecification<SubtaskEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<SubtaskEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -169,7 +194,9 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 		
 		EntitySpecification<UserEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<UserEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -235,27 +262,6 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 		
 		TaskEntity updatedEntity = service.removeHelper(id, helperId);
 		return ResponseEntity.ok().body(updatedEntity);
-		
-	}
-	
-	@PostMapping("/autoContact")
-	@RolesAllowed("administrator")
-	public ResponseEntity<TaskEntity> create(
-			@Valid @RequestBody TaskEntity entity,
-			HttpServletRequest request, 
-			HttpServletResponse response) {
-		
-		Utility.LOG.trace("NotificationController.create called.");
-		
-		KeycloakAuthenticationToken authToken = (KeycloakAuthenticationToken) request.getUserPrincipal();
-		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();
-		
-		String subject = token.getSubject();
-		UserEntity contact = userService.me(subject);
-		entity.setContactUser(contact);
-		
-		TaskEntity createdEntity = service.create(entity);
-		return ResponseEntity.ok().body(createdEntity);
 		
 	}
 

@@ -36,7 +36,7 @@ import reskue.task.TaskRepository;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -80,41 +80,52 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		Utility.LOG.trace("CulturalAssetService.create called.");
 
 		if (entity.getLongitude() != null && entity.getLatitude() != null) {
+			
 			if (entity.getAddress() == null) {
+				
 				entity.setAddress(locationService
 						.coordinatesToAddress(new double[] { entity.getLongitude(), entity.getLatitude() }));
+				
 			}
 		} else if (entity.getAddress() != null) {
+			
 			if (entity.getLongitude() == null && entity.getLatitude() == null) {
+				
 				double[] updatedCoordinates = locationService.addressToCoordinates(entity.getAddress());
 				entity.setLongitude(updatedCoordinates[0]);
 				entity.setLatitude(updatedCoordinates[1]);
+				
 			}
 		}
 
 		if (entity.getLongitude() != null && entity.getLatitude() != null) {
+			
 			entity.setLocationId(locationService.addPOI(entity.getName(),
 					new double[] { entity.getLongitude(), entity.getLatitude() }));
+			
 		}
 
 		CulturalAssetEntity savedEntity = this.repository.save(entity);
 
 		if (entity.getCulturalAssetParent() != null) {
+			
 			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());
 			this.addConnection(savedEntity, parent);
 			this.repository.save(parent);
 			
 		}
 
-		// Warum gibt es hier ein oder?
 		if (entity.getCulturalAssetChildren() != null || !entity.getCulturalAssetChildren().isEmpty()) {
+			
 			List<CulturalAssetEntity> children = entity.getCulturalAssetChildren().stream()
 					.map((CulturalAssetEntity child) -> {
 						return this.findById(child.getId());					
 					}).collect(Collectors.toList());			
-			children.stream().forEach((CulturalAssetEntity child) -> {				
+			children.stream().forEach((CulturalAssetEntity child) -> {
+				
 				this.addConnection(child, savedEntity);
 				this.repository.save(child);
+				
 			});
 
 		}
@@ -144,7 +155,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @throws InstantiationException if the JSON string can not be processed
 	 * @throws JsonMappingException if the JSON string can not be processed
 	 */
-	//@Override
+	@Override
 	public CulturalAssetEntity update(Long id, String detailsJSON) throws ResourceNotFoundException, JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 
 		Utility.LOG.trace("CulturalAssetService.update called.");
@@ -156,42 +167,59 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		entity.applyPatch(detailsJSON);
 		
 		if (entity.getCulturalAssetParent() != null) {
+			
 			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());
 			this.removeConnection(entity, parent);
 			this.repository.save(parent);
+			
 		}
 
 		if (entity.getCulturalAssetChildren() != null) {
+			
 			List<CulturalAssetEntity> children = entity.getCulturalAssetChildren().stream().map((CulturalAssetEntity child) -> {
 				return this.findById(child.getId());
 			}).collect(Collectors.toList());
+			
 			children.stream().forEach((CulturalAssetEntity child) -> {
 				this.removeConnection(child, entity);
 				this.repository.save(child);
 			});
+			
 		}
 
 		if (details.getAddress() != null || details.getLongitude() != null || details.getLatitude() != null) {
 
 			if (entity.getLongitude() != null && entity.getLatitude() != null) {
+				
 				if (entity.getAddress() == null) {
+					
 					entity.setAddress(locationService
 							.coordinatesToAddress(new double[] { entity.getLongitude(), entity.getLatitude() }));
+					
 				}
+				
 			} else if (entity.getAddress() != null) {
+				
 				if (entity.getLongitude() == null && entity.getLatitude() == null) {
+					
 					double[] updatedCoordinates = locationService.addressToCoordinates(entity.getAddress());
 					entity.setLongitude(updatedCoordinates[0]);
 					entity.setLatitude(updatedCoordinates[1]);
+					
 				}
 			}
 
 			if (entity.getLongitude() != null && entity.getLatitude() != null) {
+				
 				if (entity.getLocationId() != null) {
+					
 					locationService.removePOI(entity.getLocationId());
+					
 				}
+				
 				entity.setLocationId(locationService.addPOI(entity.getName(),
 						new double[] { entity.getLongitude(), entity.getLatitude() }));
+				
 			}
 
 		}
@@ -199,17 +227,20 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		final CulturalAssetEntity savedEntity = this.repository.save(entity);
 		
 		if (entity.getCulturalAssetParent() != null) {
+			
 			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());
 			this.addConnection(savedEntity, parent);
 			this.repository.save(parent);
+			
 		}
 
-		// Warum gibt es hier ein oder?
 		if (entity.getCulturalAssetChildren() != null || !entity.getCulturalAssetChildren().isEmpty()) {
+			
 			List<CulturalAssetEntity> children = entity.getCulturalAssetChildren().stream()
 					.map((CulturalAssetEntity child) -> {
 						return this.findById(child.getId());					
-					}).collect(Collectors.toList());			
+					}).collect(Collectors.toList());
+			
 			children.stream().forEach((CulturalAssetEntity child) -> {				
 				this.addConnection(child, savedEntity);
 				this.repository.save(child);
@@ -242,7 +273,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		this.repository.delete(entity);
 
 		if (entity.getLocationId() != null) {
+			
 			locationService.removePOI(entity.getLocationId());
+			
 		}
 
 		EventConsumer.sendEvent("CulturalAssetService.delete", EventType.DELETE.type, this.getIdentifier(),
@@ -283,6 +316,31 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 				EventConsumer.writeObjectAsJSON(page));
 
 		return page;
+
+	}
+	
+	/**
+	 * Get the distance between a point and the cultural asset.
+	 * 
+	 * @param id        - the cultural asset's identifier.
+	 * @param longitude - the longitude of the point.
+	 * @param latitude  - the latitude of the point.
+	 * @return The result as a double.
+	 */
+	public double getDistance(Long id, double longitude, double latitude) {
+
+		Utility.LOG.trace("CulturalAssetService.getDistance called.");
+
+		CulturalAssetEntity entity = this.findById(id);
+
+		double[] entityLocation = new double[] { entity.getLongitude(), entity.getLatitude() };
+
+		double distance = locationService.calculateDistance(entityLocation, new double[] { longitude, latitude });
+
+		EventConsumer.sendEvent("CulturalAssetService.getDistance", EventType.READ.type, this.getIdentifier(),
+				EventConsumer.writeObjectAsJSON(distance));
+
+		return distance;
 
 	}
 
@@ -404,31 +462,6 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 				EventConsumer.writeObjectAsJSON(page));
 
 		return page;
-
-	}
-
-	/**
-	 * Get the distance between a point and the cultural asset.
-	 * 
-	 * @param id        - the cultural asset's identifier.
-	 * @param longitude - the longitude of the point.
-	 * @param latitude  - the latitude of the point.
-	 * @return The result as a double.
-	 */
-	public double getDistance(Long id, double longitude, double latitude) {
-
-		Utility.LOG.trace("CulturalAssetService.getDistance called.");
-
-		CulturalAssetEntity entity = this.findById(id);
-
-		double[] entityLocation = new double[] { entity.getLongitude(), entity.getLatitude() };
-
-		double distance = locationService.calculateDistance(entityLocation, new double[] { longitude, latitude });
-
-		EventConsumer.sendEvent("CulturalAssetService.getDistance", EventType.READ.type, this.getIdentifier(),
-				EventConsumer.writeObjectAsJSON(distance));
-
-		return distance;
 
 	}
 
@@ -570,10 +603,12 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 		// if the new child is already a child
 		if (!newChildren.contains(child)) {
+			
 			newChildren.add(child);
 			parent.setCulturalAssetChildren(newChildren);
 			child.setCulturalAssetParent(parent);
 			this.updateLevels(child, parent.getLevel() + 1);
+			
 		}
 
 	}
@@ -593,10 +628,12 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 		// if the child is actually a child
 		if (newChildren.contains(child)) {
+			
 			newChildren.remove(child);
 			parent.setCulturalAssetChildren(newChildren);
 			child.setCulturalAssetParent(null);
 			this.updateLevels(child, 0);
+			
 		}
 
 	}
@@ -644,6 +681,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 			List<CulturalAssetEntity> children = entity.getCulturalAssetChildren();
 
 			if (!children.isEmpty()) {
+				
 				children.stream().forEach((CulturalAssetEntity nextEntity) -> {
 					this.testHeightError(nextEntity);
 				});
@@ -670,6 +708,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		List<CulturalAssetEntity> children = entity.getCulturalAssetChildren();
 
 		if (!children.isEmpty()) {
+			
 			children.stream().forEach((CulturalAssetEntity nextEntity) -> {
 				this.updateLevels(nextEntity, level + 1);
 			});
@@ -695,6 +734,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		List<TaskEntity> tasks = entity.getTasks();
 
 		if (!tasks.isEmpty()) {
+			
 			tasks.stream().forEach((TaskEntity task) -> {
 				task.setIsEndangered(state);
 				taskRepository.save(task);
@@ -703,6 +743,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		}
 
 		if (!children.isEmpty()) {
+			
 			children.stream().forEach((CulturalAssetEntity nextEntity) -> {
 				this.updateIsEndangered(nextEntity, state);
 			});

@@ -29,7 +29,7 @@ import reskue.usergroup.UserGroupEntity;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -74,7 +74,28 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public static final String TYPE = "type";
 	public int getType() { return this.type; }
 	public void setType(int type) { this.type = type; }
-
+	
+	/**
+	 * The time when the notification was created.
+	 */
+	@Column(name = "sentAt", nullable = false)
+	private Date sentAt = new Date();
+	public static final String SENT_AT = "sentAt";
+	public Date getSentAt() { return this.sentAt; }
+	public void setSentAt(Date sentAt) { this.sentAt = sentAt; }
+	
+	/**
+	 * The cultural asset that the notification refers to.
+	 * This potentially marks the cultural asset as endangered.
+	 */
+	@ManyToOne()
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
+	@JsonIdentityReference(alwaysAsId = true)
+	private CulturalAssetEntity entity = null;
+	public static final String ENTITY = "entity";
+	public CulturalAssetEntity getEntity() { return this.entity; }
+	public void setEntity(CulturalAssetEntity entity) { this.entity = entity; }
+	
 	/**
 	 * The user that send the notification.
 	 */
@@ -101,31 +122,12 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	public List<UserGroupEntity> getReceivers() { return this.receivers; }
 	public void setReceivers(List<UserGroupEntity> receivers) { this.receivers = receivers; }
 	
-	/**
-	 * The time when the notification was created.
-	 */
-	@Column(name = "sentAt", nullable = false)
-	private Date sentAt = new Date();
-	public static final String SENT_AT = "sentAt";
-	public Date getSentAt() { return this.sentAt; }
-	public void setSentAt(Date sentAt) { this.sentAt = sentAt; }
-	
-	/**
-	 * The cultural asset that the notification refers to.
-	 * This potentially marks the cultural asset as endangered.
-	 */
-	@ManyToOne()
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
-	@JsonIdentityReference(alwaysAsId = true)
-	private CulturalAssetEntity entity = null;
-	public static final String ENTITY = "entity";
-	public CulturalAssetEntity getEntity() { return this.entity; }
-	public void setEntity(CulturalAssetEntity entity) { this.entity = entity; }
-	
 	@Override
 	public void applyPatch(String json) {
+		
 		Utility.LOG.error("NotificationEntities can not be updated");
 		throw new UnsupportedOperationException("NotificationEntities can not be updated!");
+		
 	}
 
 }

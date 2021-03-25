@@ -32,7 +32,7 @@ import reskue.user.UserEntity;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -75,7 +75,9 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 		
 		EntitySpecification<UserEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<UserEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -114,7 +116,9 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 		
 		EntitySpecification<NotificationEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<NotificationEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -141,7 +145,7 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 			@PathVariable(value = UserEntity.ID + "_user") Long userId) {
 		
 		Utility.LOG.trace("UserGroupController.addUser called.");
-		Utility.LOG.info("user group id: {}, user id: {}", id, userId);
+		
 		UserGroupEntity updatedEntity = service.addUser(id, userId);
 		return ResponseEntity.ok().body(updatedEntity);
 		

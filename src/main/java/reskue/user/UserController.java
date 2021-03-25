@@ -40,7 +40,7 @@ import reskue.usergroup.UserGroupEntity;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -52,6 +52,21 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 	 * The API route for UserEntities.
 	 */
 	public static final String ROUTE = "/user";
+	
+	@GetMapping("/me")
+	@RolesAllowed({"administrator", "helper"})
+	public ResponseEntity<UserEntity> me(HttpServletRequest request, HttpServletResponse response) {
+		
+		KeycloakAuthenticationToken authToken = (KeycloakAuthenticationToken) request.getUserPrincipal();
+		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();
+		
+		String subject = token.getSubject();
+		
+		UserEntity userEntity = this.service.me(subject);
+		
+		return ResponseEntity.ok().body(userEntity);
+		
+	}
 	
 	/**
 	 * Find all tasks that the user is a contact of.
@@ -83,7 +98,9 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 		
 		EntitySpecification<TaskEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<TaskEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -122,7 +139,9 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 		
 		EntitySpecification<TaskEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<TaskEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -161,7 +180,9 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 		
 		EntitySpecification<CommentEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<CommentEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -200,7 +221,9 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 		
 		EntitySpecification<UserGroupEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<UserGroupEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -239,27 +262,14 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 		
 		EntitySpecification<NotificationEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<NotificationEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
 		
 		return service.getNotificationsSendByUser(id, specification, pageable);
-		
-	}
-	
-	@GetMapping("/me")
-	@RolesAllowed({"administrator", "helper"})
-	public ResponseEntity<UserEntity> me(HttpServletRequest request, HttpServletResponse response) {
-		
-		KeycloakAuthenticationToken authToken = (KeycloakAuthenticationToken) request.getUserPrincipal();
-		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();
-		
-		String subject = token.getSubject();
-		
-		UserEntity userEntity = this.service.me(subject);
-		
-		return ResponseEntity.ok().body(userEntity);
 		
 	}
 
