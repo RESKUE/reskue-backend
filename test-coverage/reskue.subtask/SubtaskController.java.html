@@ -43,7 +43,7 @@ import kueres.utility.Utility;
 	@PutMapping(&quot;/{&quot; + SubtaskEntity.ID + &quot;}/changeState/{&quot; + SubtaskEntity.STATE + &quot;}&quot;)
 	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
 	public ResponseEntity&lt;SubtaskEntity&gt; changeState(
-			@PathVariable(value = SubtaskEntity.ID) long id,
+			@PathVariable(value = SubtaskEntity.ID) Long id,
 			@PathVariable(value = SubtaskEntity.STATE) int state) {
 		
 <span class="fc" id="L49">		Utility.LOG.trace(&quot;SubtaskController.changeState called.&quot;);</span>

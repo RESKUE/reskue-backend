@@ -2,7 +2,6 @@
   "name": "reskue-backend",
   "version": "0.0.1-SNAPSHOT",
   "description": "The backend for the RESKUE project",
-  "main": "index.js",
   "scripts": {
     "start:prod": "docker-compose -f docker-compose.prod.yml --env-file prod.env up",
     "start:prod:d": "docker-compose -f docker-compose.prod.yml --env-file prod.env up -d",
@@ -19,7 +18,7 @@
     "test:newman": "newman run RESKUE.tests.json",
     "test:dump": "java -jar ./src/main/resources/lib/jacococli.jar dump --address localhost --port 36320 --destfile ./target/jacoco-it.exec",
     "test:report": "java -jar ./src/main/resources/lib/jacococli.jar report ./target/jacoco-it.exec --classfiles ./target/classes/reskue --sourcefiles ./src/main/java/ --html ./target/jacoco-report",
-    "test:export": "cp -r target/jacoco-report/ test-coverage",
+    "test:export": "rm -rf test-coverage && cp -r target/jacoco-report/ test-coverage",
     "docs": "npm run docs:generate && npm run docs:export",
     "docs:generate": "mvn javadoc:javadoc",
     "docs:export": "rm -rf docs && cp -r target/site/apidocs/ docs/"

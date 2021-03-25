@@ -116,7 +116,7 @@ import reskue.task.TaskEntity;
 	@GetMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/tasks&quot;)
 	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
 	public Page&lt;TaskEntity&gt; getAllTasks(
-			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@PathVariable(value = CulturalAssetEntity.ID) Long id,
 			@RequestParam Optional&lt;String[]&gt; filter,
 			@RequestParam Optional&lt;String[]&gt; sort,
 			@RequestParam Optional&lt;Integer&gt; page,
@@ -155,7 +155,7 @@ import reskue.task.TaskEntity;
 	@GetMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/comments&quot;)
 	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
 	public Page&lt;CommentEntity&gt; getAllComments(
-			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@PathVariable(value = CulturalAssetEntity.ID) Long id,
 			@RequestParam Optional&lt;String[]&gt; filter, 
 			@RequestParam Optional&lt;String[]&gt; sort,
 			@RequestParam Optional&lt;Integer&gt; page, 
@@ -193,7 +193,7 @@ import reskue.task.TaskEntity;
 	@GetMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/children&quot;)
 	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
 	public Page&lt;CulturalAssetEntity&gt; getAllChildren(
-			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@PathVariable(value = CulturalAssetEntity.ID) Long id,
 			@RequestParam Optional&lt;String[]&gt; filter,
 			@RequestParam Optional&lt;String[]&gt; sort,
 			@RequestParam Optional&lt;Integer&gt; page,
@@ -232,7 +232,7 @@ import reskue.task.TaskEntity;
 	@GetMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/notifications&quot;)
 	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
 	public Page&lt;NotificationEntity&gt; getAllNotifications(
-			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@PathVariable(value = CulturalAssetEntity.ID) Long id,
 			@RequestParam Optional&lt;String[]&gt; filter,
 			@RequestParam Optional&lt;String[]&gt; sort,
 			@RequestParam Optional&lt;Integer&gt; page,
@@ -263,7 +263,7 @@ import reskue.task.TaskEntity;
 	@GetMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/distance&quot;)
 	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
 	public double getDistance(
-			@PathVariable(value = CulturalAssetEntity.ID) long id,
+			@PathVariable(value = CulturalAssetEntity.ID) Long id,
 			@RequestParam double longitude,
 			@RequestParam double latitude) {
 		
@@ -283,8 +283,8 @@ import reskue.task.TaskEntity;
 	@PutMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/addChild/{&quot; + CulturalAssetEntity.CULTURAL_ASSET_CHILDREN + &quot;}&quot;)
 	@RolesAllowed( &quot;administrator&quot; )
 	public ResponseEntity&lt;CulturalAssetEntity&gt; addCulturalAssetChild(
-			@PathVariable(value = CulturalAssetEntity.ID) long id,
-			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_CHILDREN) long childId) {
+			@PathVariable(value = CulturalAssetEntity.ID) Long id,
+			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_CHILDREN) Long childId) {
 		
 <span class="fc" id="L289">		Utility.LOG.trace(&quot;CulturalAssetController.addCulturalAssetChild called.&quot;);</span>
 		
@@ -303,8 +303,8 @@ import reskue.task.TaskEntity;
 	@PutMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/removeChild/{&quot; + CulturalAssetEntity.CULTURAL_ASSET_CHILDREN + &quot;}&quot;)
 	@RolesAllowed( &quot;administrator&quot; )
 	public ResponseEntity&lt;CulturalAssetEntity&gt; removeCulturalAssetChild(
-			@PathVariable(value = CulturalAssetEntity.ID) long id,
-			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_CHILDREN) long childId) {
+			@PathVariable(value = CulturalAssetEntity.ID) Long id,
+			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_CHILDREN) Long childId) {
 		
 <span class="fc" id="L309">		Utility.LOG.trace(&quot;CulturalAssetController.removeCulturalAssetChild called.&quot;);</span>
 		
@@ -323,8 +323,8 @@ import reskue.task.TaskEntity;
 	@PutMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/setParent/{&quot; + CulturalAssetEntity.CULTURAL_ASSET_PARENT + &quot;}&quot;)
 	@RolesAllowed( &quot;administrator&quot; )
 	public ResponseEntity&lt;CulturalAssetEntity&gt; setCulturalAssetParent(
-			@PathVariable(value = CulturalAssetEntity.ID) long id,
-			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_PARENT) long parentId) {
+			@PathVariable(value = CulturalAssetEntity.ID) Long id,
+			@PathVariable(value = CulturalAssetEntity.CULTURAL_ASSET_PARENT) Long parentId) {
 		
 <span class="fc" id="L329">		Utility.LOG.trace(&quot;CulturalAssetController.setCulturalAssetParent called.&quot;);</span>
 		
@@ -342,7 +342,7 @@ import reskue.task.TaskEntity;
 	@PutMapping(&quot;/{&quot; + CulturalAssetEntity.ID + &quot;}/removeParent&quot;)
 	@RolesAllowed( &quot;administrator&quot; )
 	public ResponseEntity&lt;CulturalAssetEntity&gt; removeCulturalAssetParent(
-			@PathVariable(value = CulturalAssetEntity.ID) long id) {
+			@PathVariable(value = CulturalAssetEntity.ID) Long id) {
 		
 <span class="fc" id="L347">		Utility.LOG.trace(&quot;CulturalAssetController.removeCulturalAssetParent called.&quot;);</span>
 		

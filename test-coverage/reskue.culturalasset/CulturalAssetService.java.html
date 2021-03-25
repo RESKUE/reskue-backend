@@ -2,15 +2,9 @@
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,7 +41,7 @@ import reskue.task.TaskRepository;
  */
 
 @Service
-<span class="fc" id="L50">public class CulturalAssetService extends ReskueService&lt;CulturalAssetEntity, CulturalAssetRepository&gt; {</span>
+<span class="fc" id="L44">public class CulturalAssetService extends ReskueService&lt;CulturalAssetEntity, CulturalAssetRepository&gt; {</span>
 
 	/**
 	 * The LocationService needed to save cultural assets in the FROST server.
@@ -63,20 +57,14 @@ import reskue.task.TaskRepository;
 	protected TaskRepository taskRepository;
 
 	/**
-	 * The EntityManager needed to create a CriteriaBuilder.
-	 */
-	@PersistenceContext
-	private EntityManager em;
-
-	/**
 	 * Set this EventSubscribers identifier and routing.
 	 */
 	@Override
 	@PostConstruct
 	public void init() {
-<span class="fc" id="L77">		this.identifier = CulturalAssetController.ROUTE;</span>
-<span class="fc" id="L78">		this.routingKey = CulturalAssetController.ROUTE;</span>
-<span class="fc" id="L79">	}</span>
+<span class="fc" id="L65">		this.identifier = CulturalAssetController.ROUTE;</span>
+<span class="fc" id="L66">		this.routingKey = CulturalAssetController.ROUTE;</span>
+<span class="fc" id="L67">	}</span>
 
 	/**
 	 * Create a CulturalAssetEntity.
@@ -89,52 +77,52 @@ import reskue.task.TaskRepository;
 	@Override
 	public CulturalAssetEntity create(CulturalAssetEntity entity) {
 
-<span class="fc" id="L92">		Utility.LOG.trace(&quot;CulturalAssetService.create called.&quot;);</span>
+<span class="fc" id="L80">		Utility.LOG.trace(&quot;CulturalAssetService.create called.&quot;);</span>
 
-<span class="pc bpc" id="L94" title="2 of 4 branches missed.">		if (entity.getLongitude() != null &amp;&amp; entity.getLatitude() != null) {</span>
-<span class="pc bpc" id="L95" title="1 of 2 branches missed.">			if (entity.getAddress() == null) {</span>
-<span class="nc" id="L96">				entity.setAddress(locationService</span>
-<span class="nc" id="L97">						.coordinatesToAddress(new double[] { entity.getLongitude(), entity.getLatitude() }));</span>
+<span class="pc bpc" id="L82" title="2 of 4 branches missed.">		if (entity.getLongitude() != null &amp;&amp; entity.getLatitude() != null) {</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">			if (entity.getAddress() == null) {</span>
+<span class="nc" id="L84">				entity.setAddress(locationService</span>
+<span class="nc" id="L85">						.coordinatesToAddress(new double[] { entity.getLongitude(), entity.getLatitude() }));</span>
 			}
-<span class="nc bnc" id="L99" title="All 2 branches missed.">		} else if (entity.getAddress() != null) {</span>
-<span class="nc bnc" id="L100" title="All 4 branches missed.">			if (entity.getLongitude() == null &amp;&amp; entity.getLatitude() == null) {</span>
-<span class="nc" id="L101">				double[] updatedCoordinates = locationService.addressToCoordinates(entity.getAddress());</span>
-<span class="nc" id="L102">				entity.setLongitude(updatedCoordinates[0]);</span>
-<span class="nc" id="L103">				entity.setLatitude(updatedCoordinates[1]);</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">		} else if (entity.getAddress() != null) {</span>
+<span class="nc bnc" id="L88" title="All 4 branches missed.">			if (entity.getLongitude() == null &amp;&amp; entity.getLatitude() == null) {</span>
+<span class="nc" id="L89">				double[] updatedCoordinates = locationService.addressToCoordinates(entity.getAddress());</span>
+<span class="nc" id="L90">				entity.setLongitude(updatedCoordinates[0]);</span>
+<span class="nc" id="L91">				entity.setLatitude(updatedCoordinates[1]);</span>
 			}
 		}
 
-<span class="pc bpc" id="L107" title="2 of 4 branches missed.">		if (entity.getLongitude() != null &amp;&amp; entity.getLatitude() != null) {</span>
-<span class="fc" id="L108">			entity.setLocationId(locationService.addPOI(entity.getName(),</span>
-<span class="fc" id="L109">					new double[] { entity.getLongitude(), entity.getLatitude() }));</span>
+<span class="pc bpc" id="L95" title="2 of 4 branches missed.">		if (entity.getLongitude() != null &amp;&amp; entity.getLatitude() != null) {</span>
+<span class="fc" id="L96">			entity.setLocationId(locationService.addPOI(entity.getName(),</span>
+<span class="fc" id="L97">					new double[] { entity.getLongitude(), entity.getLatitude() }));</span>
 		}
 
-<span class="fc" id="L112">		CulturalAssetEntity savedEntity = this.repository.save(entity);</span>
+<span class="fc" id="L100">		CulturalAssetEntity savedEntity = this.repository.save(entity);</span>
 
-<span class="fc bfc" id="L114" title="All 2 branches covered.">		if (entity.getCulturalAssetParent() != null) {</span>
-<span class="fc" id="L115">			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());</span>
-<span class="fc" id="L116">			this.addConnection(savedEntity, parent);</span>
-<span class="fc" id="L117">			this.repository.save(parent);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">		if (entity.getCulturalAssetParent() != null) {</span>
+<span class="fc" id="L103">			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());</span>
+<span class="fc" id="L104">			this.addConnection(savedEntity, parent);</span>
+<span class="fc" id="L105">			this.repository.save(parent);</span>
 			
 		}
 
 		// Warum gibt es hier ein oder?
-<span class="pc bpc" id="L122" title="3 of 4 branches missed.">		if (entity.getCulturalAssetChildren() != null || !entity.getCulturalAssetChildren().isEmpty()) {</span>
-<span class="fc" id="L123">			List&lt;CulturalAssetEntity&gt; children = entity.getCulturalAssetChildren().stream()</span>
-<span class="fc" id="L124">					.map((CulturalAssetEntity child) -&gt; {</span>
-<span class="fc" id="L125">						return this.findById(child.getId());					</span>
-<span class="fc" id="L126">					}).collect(Collectors.toList());			</span>
-<span class="fc" id="L127">			children.stream().forEach((CulturalAssetEntity child) -&gt; {				</span>
-<span class="fc" id="L128">				this.addConnection(child, savedEntity);</span>
-<span class="fc" id="L129">				this.repository.save(child);</span>
-<span class="fc" id="L130">			});</span>
+<span class="pc bpc" id="L110" title="3 of 4 branches missed.">		if (entity.getCulturalAssetChildren() != null || !entity.getCulturalAssetChildren().isEmpty()) {</span>
+<span class="fc" id="L111">			List&lt;CulturalAssetEntity&gt; children = entity.getCulturalAssetChildren().stream()</span>
+<span class="fc" id="L112">					.map((CulturalAssetEntity child) -&gt; {</span>
+<span class="fc" id="L113">						return this.findById(child.getId());					</span>
+<span class="fc" id="L114">					}).collect(Collectors.toList());			</span>
+<span class="fc" id="L115">			children.stream().forEach((CulturalAssetEntity child) -&gt; {				</span>
+<span class="fc" id="L116">				this.addConnection(child, savedEntity);</span>
+<span class="fc" id="L117">				this.repository.save(child);</span>
+<span class="fc" id="L118">			});</span>
 
 		}
 
-<span class="fc" id="L134">		EventConsumer.sendEvent(&quot;CulturalAssetService.create&quot;, EventType.CREATE.type, this.getIdentifier(),</span>
-<span class="fc" id="L135">				EventConsumer.writeObjectAsJSON(savedEntity));</span>
+<span class="fc" id="L122">		EventConsumer.sendEvent(&quot;CulturalAssetService.create&quot;, EventType.CREATE.type, this.getIdentifier(),</span>
+<span class="fc" id="L123">				EventConsumer.writeObjectAsJSON(savedEntity));</span>
 
-<span class="fc" id="L137">		return savedEntity;</span>
+<span class="fc" id="L125">		return savedEntity;</span>
 
 	}
 
@@ -143,96 +131,96 @@ import reskue.task.TaskRepository;
 	 * will not be changed.
 	 * 
 	 * @param id      - the cultural asset's identifier.
-	 * @param details - the updated data.
+	 * @param detailsJSON - the updated data in JSON format.
 	 * @return The updated cultural asset.
 	 * @throws ResourceNotFoundException if there is no cultural asset with the
 	 *                                   specified identifier.
-	 * @throws JsonProcessingException 
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws JsonMappingException 
+	 * @throws JsonProcessingException if the JSON string can not be processed
+	 * @throws SecurityException if the JSON string can not be processed
+	 * @throws NoSuchMethodException if the JSON string can not be processed
+	 * @throws InvocationTargetException if the JSON string can not be processed
+	 * @throws IllegalArgumentException if the JSON string can not be processed
+	 * @throws IllegalAccessException if the JSON string can not be processed
+	 * @throws InstantiationException if the JSON string can not be processed
+	 * @throws JsonMappingException if the JSON string can not be processed
 	 */
 	//@Override
-	public CulturalAssetEntity update(long id, String detailsJSON) throws ResourceNotFoundException, JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
+	public CulturalAssetEntity update(Long id, String detailsJSON) throws ResourceNotFoundException, JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 
-<span class="fc" id="L162">		Utility.LOG.trace(&quot;CulturalAssetService.update called.&quot;);</span>
+<span class="fc" id="L150">		Utility.LOG.trace(&quot;CulturalAssetService.update called.&quot;);</span>
 
-<span class="fc" id="L164">		CulturalAssetEntity details = CulturalAssetEntity.createEntityFromJSON(detailsJSON, new CulturalAssetEntity().getUpdateableFields(), CulturalAssetEntity.class);</span>
+<span class="fc" id="L152">		CulturalAssetEntity details = CulturalAssetEntity.createEntityFromJSON(detailsJSON, new CulturalAssetEntity().getUpdateableFields(), CulturalAssetEntity.class);</span>
 		
-<span class="fc" id="L166">		CulturalAssetEntity entity = this.findById(id);</span>
+<span class="fc" id="L154">		CulturalAssetEntity entity = this.findById(id);</span>
 
-<span class="fc" id="L168">		entity.applyPatch(detailsJSON);</span>
+<span class="fc" id="L156">		entity.applyPatch(detailsJSON);</span>
 		
-<span class="pc bpc" id="L170" title="1 of 2 branches missed.">		if (entity.getCulturalAssetParent() != null) {</span>
-<span class="fc" id="L171">			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());</span>
-<span class="fc" id="L172">			this.removeConnection(entity, parent);</span>
-<span class="fc" id="L173">			this.repository.save(parent);</span>
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">		if (entity.getCulturalAssetParent() != null) {</span>
+<span class="fc" id="L159">			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());</span>
+<span class="fc" id="L160">			this.removeConnection(entity, parent);</span>
+<span class="fc" id="L161">			this.repository.save(parent);</span>
 		}
 
-<span class="pc bpc" id="L176" title="1 of 2 branches missed.">		if (entity.getCulturalAssetChildren() != null) {</span>
-<span class="fc" id="L177">			List&lt;CulturalAssetEntity&gt; children = entity.getCulturalAssetChildren().stream().map((CulturalAssetEntity child) -&gt; {</span>
-<span class="fc" id="L178">				return this.findById(child.getId());</span>
-<span class="fc" id="L179">			}).collect(Collectors.toList());</span>
-<span class="fc" id="L180">			children.stream().forEach((CulturalAssetEntity child) -&gt; {</span>
-<span class="fc" id="L181">				this.removeConnection(child, entity);</span>
-<span class="fc" id="L182">				this.repository.save(child);</span>
-<span class="fc" id="L183">			});</span>
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">		if (entity.getCulturalAssetChildren() != null) {</span>
+<span class="fc" id="L165">			List&lt;CulturalAssetEntity&gt; children = entity.getCulturalAssetChildren().stream().map((CulturalAssetEntity child) -&gt; {</span>
+<span class="fc" id="L166">				return this.findById(child.getId());</span>
+<span class="fc" id="L167">			}).collect(Collectors.toList());</span>
+<span class="fc" id="L168">			children.stream().forEach((CulturalAssetEntity child) -&gt; {</span>
+<span class="fc" id="L169">				this.removeConnection(child, entity);</span>
+<span class="fc" id="L170">				this.repository.save(child);</span>
+<span class="fc" id="L171">			});</span>
 		}
 
-<span class="pc bpc" id="L186" title="5 of 6 branches missed.">		if (details.getAddress() != null || details.getLongitude() != null || details.getLatitude() != null) {</span>
+<span class="pc bpc" id="L174" title="5 of 6 branches missed.">		if (details.getAddress() != null || details.getLongitude() != null || details.getLatitude() != null) {</span>
 
-<span class="pc bpc" id="L188" title="2 of 4 branches missed.">			if (entity.getLongitude() != null &amp;&amp; entity.getLatitude() != null) {</span>
-<span class="pc bpc" id="L189" title="1 of 2 branches missed.">				if (entity.getAddress() == null) {</span>
-<span class="nc" id="L190">					entity.setAddress(locationService</span>
-<span class="nc" id="L191">							.coordinatesToAddress(new double[] { entity.getLongitude(), entity.getLatitude() }));</span>
+<span class="pc bpc" id="L176" title="2 of 4 branches missed.">			if (entity.getLongitude() != null &amp;&amp; entity.getLatitude() != null) {</span>
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">				if (entity.getAddress() == null) {</span>
+<span class="nc" id="L178">					entity.setAddress(locationService</span>
+<span class="nc" id="L179">							.coordinatesToAddress(new double[] { entity.getLongitude(), entity.getLatitude() }));</span>
 				}
-<span class="nc bnc" id="L193" title="All 2 branches missed.">			} else if (entity.getAddress() != null) {</span>
-<span class="nc bnc" id="L194" title="All 4 branches missed.">				if (entity.getLongitude() == null &amp;&amp; entity.getLatitude() == null) {</span>
-<span class="nc" id="L195">					double[] updatedCoordinates = locationService.addressToCoordinates(entity.getAddress());</span>
-<span class="nc" id="L196">					entity.setLongitude(updatedCoordinates[0]);</span>
-<span class="nc" id="L197">					entity.setLatitude(updatedCoordinates[1]);</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">			} else if (entity.getAddress() != null) {</span>
+<span class="nc bnc" id="L182" title="All 4 branches missed.">				if (entity.getLongitude() == null &amp;&amp; entity.getLatitude() == null) {</span>
+<span class="nc" id="L183">					double[] updatedCoordinates = locationService.addressToCoordinates(entity.getAddress());</span>
+<span class="nc" id="L184">					entity.setLongitude(updatedCoordinates[0]);</span>
+<span class="nc" id="L185">					entity.setLatitude(updatedCoordinates[1]);</span>
 				}
 			}
 
-<span class="pc bpc" id="L201" title="2 of 4 branches missed.">			if (entity.getLongitude() != null &amp;&amp; entity.getLatitude() != null) {</span>
-<span class="fc bfc" id="L202" title="All 2 branches covered.">				if (entity.getLocationId() != null) {</span>
-<span class="fc" id="L203">					locationService.removePOI(entity.getLocationId());</span>
+<span class="pc bpc" id="L189" title="2 of 4 branches missed.">			if (entity.getLongitude() != null &amp;&amp; entity.getLatitude() != null) {</span>
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">				if (entity.getLocationId() != null) {</span>
+<span class="fc" id="L191">					locationService.removePOI(entity.getLocationId());</span>
 				}
-<span class="fc" id="L205">				entity.setLocationId(locationService.addPOI(entity.getName(),</span>
-<span class="fc" id="L206">						new double[] { entity.getLongitude(), entity.getLatitude() }));</span>
+<span class="fc" id="L193">				entity.setLocationId(locationService.addPOI(entity.getName(),</span>
+<span class="fc" id="L194">						new double[] { entity.getLongitude(), entity.getLatitude() }));</span>
 			}
 
 		}
 
-<span class="fc" id="L211">		final CulturalAssetEntity savedEntity = this.repository.save(entity);</span>
+<span class="fc" id="L199">		final CulturalAssetEntity savedEntity = this.repository.save(entity);</span>
 		
-<span class="pc bpc" id="L213" title="1 of 2 branches missed.">		if (entity.getCulturalAssetParent() != null) {</span>
-<span class="fc" id="L214">			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());</span>
-<span class="fc" id="L215">			this.addConnection(savedEntity, parent);</span>
-<span class="fc" id="L216">			this.repository.save(parent);</span>
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">		if (entity.getCulturalAssetParent() != null) {</span>
+<span class="fc" id="L202">			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());</span>
+<span class="fc" id="L203">			this.addConnection(savedEntity, parent);</span>
+<span class="fc" id="L204">			this.repository.save(parent);</span>
 		}
 
 		// Warum gibt es hier ein oder?
-<span class="pc bpc" id="L220" title="3 of 4 branches missed.">		if (entity.getCulturalAssetChildren() != null || !entity.getCulturalAssetChildren().isEmpty()) {</span>
-<span class="fc" id="L221">			List&lt;CulturalAssetEntity&gt; children = entity.getCulturalAssetChildren().stream()</span>
-<span class="fc" id="L222">					.map((CulturalAssetEntity child) -&gt; {</span>
-<span class="fc" id="L223">						return this.findById(child.getId());					</span>
-<span class="fc" id="L224">					}).collect(Collectors.toList());			</span>
-<span class="fc" id="L225">			children.stream().forEach((CulturalAssetEntity child) -&gt; {				</span>
-<span class="fc" id="L226">				this.addConnection(child, savedEntity);</span>
-<span class="fc" id="L227">				this.repository.save(child);</span>
-<span class="fc" id="L228">			});</span>
+<span class="pc bpc" id="L208" title="3 of 4 branches missed.">		if (entity.getCulturalAssetChildren() != null || !entity.getCulturalAssetChildren().isEmpty()) {</span>
+<span class="fc" id="L209">			List&lt;CulturalAssetEntity&gt; children = entity.getCulturalAssetChildren().stream()</span>
+<span class="fc" id="L210">					.map((CulturalAssetEntity child) -&gt; {</span>
+<span class="fc" id="L211">						return this.findById(child.getId());					</span>
+<span class="fc" id="L212">					}).collect(Collectors.toList());			</span>
+<span class="fc" id="L213">			children.stream().forEach((CulturalAssetEntity child) -&gt; {				</span>
+<span class="fc" id="L214">				this.addConnection(child, savedEntity);</span>
+<span class="fc" id="L215">				this.repository.save(child);</span>
+<span class="fc" id="L216">			});</span>
 			
 		}
 
-<span class="fc" id="L232">		EventConsumer.sendEvent(&quot;CulturalAssetService.update&quot;, EventType.UPDATE.type, this.getIdentifier(),</span>
-<span class="fc" id="L233">				EventConsumer.writeObjectAsJSON(savedEntity));</span>
+<span class="fc" id="L220">		EventConsumer.sendEvent(&quot;CulturalAssetService.update&quot;, EventType.UPDATE.type, this.getIdentifier(),</span>
+<span class="fc" id="L221">				EventConsumer.writeObjectAsJSON(savedEntity));</span>
 
-<span class="fc" id="L235">		return savedEntity;</span>
+<span class="fc" id="L223">		return savedEntity;</span>
 
 	}
 
@@ -245,22 +233,22 @@ import reskue.task.TaskRepository;
 	 *                                   specified identifier.
 	 */
 	@Override
-	public CulturalAssetEntity delete(long id) throws ResourceNotFoundException {
+	public CulturalAssetEntity delete(Long id) throws ResourceNotFoundException {
 
-<span class="fc" id="L250">		Utility.LOG.trace(&quot;CulturalAssetService.delete called.&quot;);</span>
+<span class="fc" id="L238">		Utility.LOG.trace(&quot;CulturalAssetService.delete called.&quot;);</span>
 
-<span class="fc" id="L252">		CulturalAssetEntity entity = this.repository.findById(id)</span>
-<span class="pc" id="L253">				.orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND));</span>
-<span class="fc" id="L254">		this.repository.delete(entity);</span>
+<span class="fc" id="L240">		CulturalAssetEntity entity = this.repository.findById(id)</span>
+<span class="pc" id="L241">				.orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND));</span>
+<span class="fc" id="L242">		this.repository.delete(entity);</span>
 
-<span class="fc bfc" id="L256" title="All 2 branches covered.">		if (entity.getLocationId() != null) {</span>
-<span class="fc" id="L257">			locationService.removePOI(entity.getLocationId());</span>
+<span class="pc bpc" id="L244" title="1 of 2 branches missed.">		if (entity.getLocationId() != null) {</span>
+<span class="fc" id="L245">			locationService.removePOI(entity.getLocationId());</span>
 		}
 
-<span class="fc" id="L260">		EventConsumer.sendEvent(&quot;CulturalAssetService.delete&quot;, EventType.DELETE.type, this.getIdentifier(),</span>
-<span class="fc" id="L261">				EventConsumer.writeObjectAsJSON(entity));</span>
+<span class="fc" id="L248">		EventConsumer.sendEvent(&quot;CulturalAssetService.delete&quot;, EventType.DELETE.type, this.getIdentifier(),</span>
+<span class="fc" id="L249">				EventConsumer.writeObjectAsJSON(entity));</span>
 
-<span class="fc" id="L263">		return entity;</span>
+<span class="fc" id="L251">		return entity;</span>
 
 	}
 
@@ -274,31 +262,27 @@ import reskue.task.TaskRepository;
 	 * @param pageable      - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings(&quot;unchecked&quot;)
 	public Page&lt;CulturalAssetEntity&gt; findInRadius(double radius, double longitude, double latitude,
 			EntitySpecification&lt;CulturalAssetEntity&gt; specification, Pageable pageable) {
 
-<span class="fc" id="L281">		Utility.LOG.trace(&quot;CulturalAssetService.findInRadius called.&quot;);</span>
+<span class="fc" id="L268">		Utility.LOG.trace(&quot;CulturalAssetService.findInRadius called.&quot;);</span>
 
-<span class="fc" id="L283">		List&lt;String&gt; entityIds = locationService.findInRadius(radius, new double[] { longitude, latitude });</span>
-<span class="fc" id="L284">		List&lt;CulturalAssetEntity&gt; entities = entityIds.stream().map(this.repository::findByLocationId)</span>
-<span class="fc" id="L285">				.collect(Collectors.toList());</span>
+<span class="fc" id="L270">		List&lt;String&gt; entityIds = locationService.findInRadius(radius, new double[] { longitude, latitude });</span>
+<span class="fc" id="L271">		List&lt;CulturalAssetEntity&gt; entities = entityIds.stream().map(this.repository::findByLocationId)</span>
+<span class="fc" id="L272">				.collect(Collectors.toList());</span>
 
-<span class="pc bpc" id="L287" title="1 of 2 branches missed.">		if (specification != null) {</span>
-<span class="nc" id="L288">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
-<span class="nc" id="L289">			CriteriaQuery&lt;CulturalAssetEntity&gt; criteriaQuery = criteriaBuilder.createQuery(CulturalAssetEntity.class);</span>
-<span class="nc" id="L290">			Root&lt;CulturalAssetEntity&gt; root = criteriaQuery.from(CulturalAssetEntity.class);</span>
+<span class="pc bpc" id="L274" title="1 of 2 branches missed.">		if (specification != null) {</span>
 
-<span class="nc" id="L292">			entities = entities.stream().filter((Predicate&lt;? super CulturalAssetEntity&gt;) specification.toPredicate(root,</span>
-<span class="nc" id="L293">					criteriaQuery, criteriaBuilder)).collect(Collectors.toList());</span>
+<span class="nc" id="L276">			entities = entities.stream().filter(specification.toPredicate(CulturalAssetEntity.class)).collect(Collectors.toList());</span>
+			
 		}
 
-<span class="fc" id="L296">		Page&lt;CulturalAssetEntity&gt; page = new PageImpl&lt;CulturalAssetEntity&gt;(entities, pageable, entities.size());</span>
+<span class="fc" id="L280">		Page&lt;CulturalAssetEntity&gt; page = new PageImpl&lt;CulturalAssetEntity&gt;(entities, pageable, entities.size());</span>
 
-<span class="fc" id="L298">		EventConsumer.sendEvent(&quot;CulturalAssetService.findInRadius&quot;, EventType.READ.type, this.getIdentifier(),</span>
-<span class="fc" id="L299">				EventConsumer.writeObjectAsJSON(page));</span>
+<span class="fc" id="L282">		EventConsumer.sendEvent(&quot;CulturalAssetService.findInRadius&quot;, EventType.READ.type, this.getIdentifier(),</span>
+<span class="fc" id="L283">				EventConsumer.writeObjectAsJSON(page));</span>
 
-<span class="fc" id="L301">		return page;</span>
+<span class="fc" id="L285">		return page;</span>
 
 	}
 
@@ -310,30 +294,25 @@ import reskue.task.TaskRepository;
 	 * @param pageable      - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings(&quot;unchecked&quot;)
-	public Page&lt;TaskEntity&gt; getAllTasks(long id, EntitySpecification&lt;TaskEntity&gt; specification, Pageable pageable) {
+	public Page&lt;TaskEntity&gt; getAllTasks(Long id, EntitySpecification&lt;TaskEntity&gt; specification, Pageable pageable) {
 
-<span class="fc" id="L316">		Utility.LOG.trace(&quot;CulturalAssetService.getAllTasks called.&quot;);</span>
+<span class="fc" id="L299">		Utility.LOG.trace(&quot;CulturalAssetService.getAllTasks called.&quot;);</span>
 
-<span class="fc" id="L318">		CulturalAssetEntity entity = this.findById(id);</span>
-<span class="fc" id="L319">		List&lt;TaskEntity&gt; tasks = entity.getTasks();</span>
+<span class="fc" id="L301">		CulturalAssetEntity entity = this.findById(id);</span>
+<span class="fc" id="L302">		List&lt;TaskEntity&gt; tasks = entity.getTasks();</span>
 
-<span class="pc bpc" id="L321" title="1 of 2 branches missed.">		if (specification != null) {</span>
-<span class="nc" id="L322">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
-<span class="nc" id="L323">			CriteriaQuery&lt;TaskEntity&gt; criteriaQuery = criteriaBuilder.createQuery(TaskEntity.class);</span>
-<span class="nc" id="L324">			Root&lt;TaskEntity&gt; root = criteriaQuery.from(TaskEntity.class);</span>
+<span class="pc bpc" id="L304" title="1 of 2 branches missed.">		if (specification != null) {</span>
 
-<span class="nc" id="L326">			tasks = tasks.stream().filter(</span>
-<span class="nc" id="L327">					(Predicate&lt;? super TaskEntity&gt;) specification.toPredicate(root, criteriaQuery, criteriaBuilder))</span>
-<span class="nc" id="L328">					.collect(Collectors.toList());</span>
+<span class="nc" id="L306">			tasks = tasks.stream().filter(specification.toPredicate(TaskEntity.class)).collect(Collectors.toList());</span>
+			
 		}
 
-<span class="fc" id="L331">		Page&lt;TaskEntity&gt; page = new PageImpl&lt;TaskEntity&gt;(tasks, pageable, tasks.size());</span>
+<span class="fc" id="L310">		Page&lt;TaskEntity&gt; page = new PageImpl&lt;TaskEntity&gt;(tasks, pageable, tasks.size());</span>
 
-<span class="fc" id="L333">		EventConsumer.sendEvent(&quot;CulturalAssetService.getAllTasks&quot;, EventType.READ.type, this.getIdentifier(),</span>
-<span class="fc" id="L334">				EventConsumer.writeObjectAsJSON(page));</span>
+<span class="fc" id="L312">		EventConsumer.sendEvent(&quot;CulturalAssetService.getAllTasks&quot;, EventType.READ.type, this.getIdentifier(),</span>
+<span class="fc" id="L313">				EventConsumer.writeObjectAsJSON(page));</span>
 
-<span class="fc" id="L336">		return page;</span>
+<span class="fc" id="L315">		return page;</span>
 
 	}
 	
@@ -345,29 +324,24 @@ import reskue.task.TaskRepository;
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings(&quot;unchecked&quot;)
-	public Page&lt;CommentEntity&gt; getAllComments(long id, EntitySpecification&lt;CommentEntity&gt; specification,
+	public Page&lt;CommentEntity&gt; getAllComments(Long id, EntitySpecification&lt;CommentEntity&gt; specification,
 			Pageable pageable) {
 
-<span class="fc" id="L352">		CulturalAssetEntity entity = this.findById(id);</span>
+<span class="fc" id="L330">		CulturalAssetEntity entity = this.findById(id);</span>
 
-<span class="fc" id="L354">		List&lt;CommentEntity&gt; comments = entity.getComments();</span>
+<span class="fc" id="L332">		List&lt;CommentEntity&gt; comments = entity.getComments();</span>
 
-<span class="pc bpc" id="L356" title="1 of 2 branches missed.">		if (specification != null) {</span>
-<span class="nc" id="L357">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
-<span class="nc" id="L358">			CriteriaQuery&lt;CommentEntity&gt; criteriaQuery = criteriaBuilder.createQuery(CommentEntity.class);</span>
-<span class="nc" id="L359">			Root&lt;CommentEntity&gt; root = criteriaQuery.from(CommentEntity.class);		</span>
+<span class="pc bpc" id="L334" title="1 of 2 branches missed.">		if (specification != null) {	</span>
 			
-<span class="nc" id="L361">			comments = comments.stream().filter(</span>
-<span class="nc" id="L362">					(Predicate&lt;? super CommentEntity&gt;) specification.toPredicate(root, criteriaQuery, criteriaBuilder))</span>
-<span class="nc" id="L363">					.collect(Collectors.toList());</span>
+<span class="nc" id="L336">			comments = comments.stream().filter(specification.toPredicate(CommentEntity.class)).collect(Collectors.toList());</span>
+			
 		}
 
-<span class="fc" id="L366">		Page&lt;CommentEntity&gt; page = new PageImpl&lt;CommentEntity&gt;(comments, pageable, comments.size());</span>
+<span class="fc" id="L340">		Page&lt;CommentEntity&gt; page = new PageImpl&lt;CommentEntity&gt;(comments, pageable, comments.size());</span>
 		
-<span class="fc" id="L368">		EventConsumer.sendEvent(&quot;CulturalAssetService.getAllComments&quot;, EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));</span>
+<span class="fc" id="L342">		EventConsumer.sendEvent(&quot;CulturalAssetService.getAllComments&quot;, EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));</span>
 
-<span class="fc" id="L370">		return page;</span>
+<span class="fc" id="L344">		return page;</span>
 		
 	}
 
@@ -379,30 +353,26 @@ import reskue.task.TaskRepository;
 	 * @param pageable      - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings(&quot;unchecked&quot;)
-	public Page&lt;CulturalAssetEntity&gt; getAllChildren(long id, EntitySpecification&lt;CulturalAssetEntity&gt; specification,
+	public Page&lt;CulturalAssetEntity&gt; getAllChildren(Long id, EntitySpecification&lt;CulturalAssetEntity&gt; specification,
 			Pageable pageable) {
 
-<span class="fc" id="L386">		Utility.LOG.trace(&quot;CulturalAssetService.getAllChildren called.&quot;);</span>
+<span class="fc" id="L359">		Utility.LOG.trace(&quot;CulturalAssetService.getAllChildren called.&quot;);</span>
 
-<span class="fc" id="L388">		CulturalAssetEntity entity = this.findById(id);</span>
-<span class="fc" id="L389">		List&lt;CulturalAssetEntity&gt; children = entity.getCulturalAssetChildren();</span>
+<span class="fc" id="L361">		CulturalAssetEntity entity = this.findById(id);</span>
+<span class="fc" id="L362">		List&lt;CulturalAssetEntity&gt; children = entity.getCulturalAssetChildren();</span>
 
-<span class="pc bpc" id="L391" title="1 of 2 branches missed.">		if (specification != null) {</span>
-<span class="nc" id="L392">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
-<span class="nc" id="L393">			CriteriaQuery&lt;CulturalAssetEntity&gt; criteriaQuery = criteriaBuilder.createQuery(CulturalAssetEntity.class);</span>
-<span class="nc" id="L394">			Root&lt;CulturalAssetEntity&gt; root = criteriaQuery.from(CulturalAssetEntity.class);</span>
+<span class="pc bpc" id="L364" title="1 of 2 branches missed.">		if (specification != null) {</span>
 
-<span class="nc" id="L396">			children = children.stream().filter((Predicate&lt;? super CulturalAssetEntity&gt;) specification.toPredicate(root,</span>
-<span class="nc" id="L397">					criteriaQuery, criteriaBuilder)).collect(Collectors.toList());</span>
+<span class="nc" id="L366">			children = children.stream().filter(specification.toPredicate(CulturalAssetEntity.class)).collect(Collectors.toList());</span>
+			
 		}
 
-<span class="fc" id="L400">		Page&lt;CulturalAssetEntity&gt; page = new PageImpl&lt;CulturalAssetEntity&gt;(children, pageable, children.size());</span>
+<span class="fc" id="L370">		Page&lt;CulturalAssetEntity&gt; page = new PageImpl&lt;CulturalAssetEntity&gt;(children, pageable, children.size());</span>
 
-<span class="fc" id="L402">		EventConsumer.sendEvent(&quot;CulturalAssetService.getAllChildren&quot;, EventType.READ.type, this.getIdentifier(),</span>
-<span class="fc" id="L403">				EventConsumer.writeObjectAsJSON(page));</span>
+<span class="fc" id="L372">		EventConsumer.sendEvent(&quot;CulturalAssetService.getAllChildren&quot;, EventType.READ.type, this.getIdentifier(),</span>
+<span class="fc" id="L373">				EventConsumer.writeObjectAsJSON(page));</span>
 
-<span class="fc" id="L405">		return page;</span>
+<span class="fc" id="L375">		return page;</span>
 
 	}
 
@@ -414,30 +384,26 @@ import reskue.task.TaskRepository;
 	 * @param pageable      - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings(&quot;unchecked&quot;)
-	public Page&lt;NotificationEntity&gt; getAllNotifications(long id, EntitySpecification&lt;NotificationEntity&gt; specification,
+	public Page&lt;NotificationEntity&gt; getAllNotifications(Long id, EntitySpecification&lt;NotificationEntity&gt; specification,
 			Pageable pageable) {
 
-<span class="fc" id="L421">		Utility.LOG.trace(&quot;CulturalAssetService.getAllNotifications called.&quot;);</span>
+<span class="fc" id="L390">		Utility.LOG.trace(&quot;CulturalAssetService.getAllNotifications called.&quot;);</span>
 
-<span class="fc" id="L423">		CulturalAssetEntity entity = this.findById(id);</span>
-<span class="fc" id="L424">		List&lt;NotificationEntity&gt; notifications = entity.getNotifications();</span>
+<span class="fc" id="L392">		CulturalAssetEntity entity = this.findById(id);</span>
+<span class="fc" id="L393">		List&lt;NotificationEntity&gt; notifications = entity.getNotifications();</span>
 
-<span class="pc bpc" id="L426" title="1 of 2 branches missed.">		if (specification != null) {</span>
-<span class="nc" id="L427">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
-<span class="nc" id="L428">			CriteriaQuery&lt;NotificationEntity&gt; criteriaQuery = criteriaBuilder.createQuery(NotificationEntity.class);</span>
-<span class="nc" id="L429">			Root&lt;NotificationEntity&gt; root = criteriaQuery.from(NotificationEntity.class);</span>
+<span class="pc bpc" id="L395" title="1 of 2 branches missed.">		if (specification != null) {</span>
 
-<span class="nc" id="L431">			notifications = notifications.stream().filter((Predicate&lt;? super NotificationEntity&gt;) specification</span>
-<span class="nc" id="L432">					.toPredicate(root, criteriaQuery, criteriaBuilder)).collect(Collectors.toList());</span>
+<span class="nc" id="L397">			notifications = notifications.stream().filter(specification.toPredicate(NotificationEntity.class)).collect(Collectors.toList());</span>
+			
 		}
 
-<span class="fc" id="L435">		Page&lt;NotificationEntity&gt; page = new PageImpl&lt;NotificationEntity&gt;(notifications, pageable, notifications.size());</span>
+<span class="fc" id="L401">		Page&lt;NotificationEntity&gt; page = new PageImpl&lt;NotificationEntity&gt;(notifications, pageable, notifications.size());</span>
 
-<span class="fc" id="L437">		EventConsumer.sendEvent(&quot;CulturalAssetService.getAllNotifications&quot;, EventType.READ.type, this.getIdentifier(),</span>
-<span class="fc" id="L438">				EventConsumer.writeObjectAsJSON(page));</span>
+<span class="fc" id="L403">		EventConsumer.sendEvent(&quot;CulturalAssetService.getAllNotifications&quot;, EventType.READ.type, this.getIdentifier(),</span>
+<span class="fc" id="L404">				EventConsumer.writeObjectAsJSON(page));</span>
 
-<span class="fc" id="L440">		return page;</span>
+<span class="fc" id="L406">		return page;</span>
 
 	}
 
@@ -449,20 +415,20 @@ import reskue.task.TaskRepository;
 	 * @param latitude  - the latitude of the point.
 	 * @return The result as a double.
 	 */
-	public double getDistance(long id, double longitude, double latitude) {
+	public double getDistance(Long id, double longitude, double latitude) {
 
-<span class="fc" id="L454">		Utility.LOG.trace(&quot;CulturalAssetService.getDistance called.&quot;);</span>
+<span class="fc" id="L420">		Utility.LOG.trace(&quot;CulturalAssetService.getDistance called.&quot;);</span>
 
-<span class="fc" id="L456">		CulturalAssetEntity entity = this.findById(id);</span>
+<span class="fc" id="L422">		CulturalAssetEntity entity = this.findById(id);</span>
 
-<span class="fc" id="L458">		double[] entityLocation = new double[] { entity.getLongitude(), entity.getLatitude() };</span>
+<span class="fc" id="L424">		double[] entityLocation = new double[] { entity.getLongitude(), entity.getLatitude() };</span>
 
-<span class="fc" id="L460">		double distance = locationService.calculateDistance(entityLocation, new double[] { longitude, latitude });</span>
+<span class="fc" id="L426">		double distance = locationService.calculateDistance(entityLocation, new double[] { longitude, latitude });</span>
 
-<span class="fc" id="L462">		EventConsumer.sendEvent(&quot;CulturalAssetService.getDistance&quot;, EventType.READ.type, this.getIdentifier(),</span>
-<span class="fc" id="L463">				EventConsumer.writeObjectAsJSON(distance));</span>
+<span class="fc" id="L428">		EventConsumer.sendEvent(&quot;CulturalAssetService.getDistance&quot;, EventType.READ.type, this.getIdentifier(),</span>
+<span class="fc" id="L429">				EventConsumer.writeObjectAsJSON(distance));</span>
 
-<span class="fc" id="L465">		return distance;</span>
+<span class="fc" id="L431">		return distance;</span>
 
 	}
 
@@ -473,31 +439,31 @@ import reskue.task.TaskRepository;
 	 * @param childId - the child's identifier.
 	 * @return The cultural asset after the child was added.
 	 */
-	public CulturalAssetEntity addCulturalAssetChild(long id, long childId) {
+	public CulturalAssetEntity addCulturalAssetChild(Long id, Long childId) {
 
-<span class="fc" id="L478">		Utility.LOG.trace(&quot;CulturalAssetService.addCulturalAssetChild called.&quot;);</span>
+<span class="fc" id="L444">		Utility.LOG.trace(&quot;CulturalAssetService.addCulturalAssetChild called.&quot;);</span>
 
-<span class="fc" id="L480">		CulturalAssetEntity parent = this.findById(id);</span>
-<span class="fc" id="L481">		CulturalAssetEntity child = this.findById(childId);</span>
-<span class="fc" id="L482">		CulturalAssetEntity updatedEntity = parent;</span>
+<span class="fc" id="L446">		CulturalAssetEntity parent = this.findById(id);</span>
+<span class="fc" id="L447">		CulturalAssetEntity child = this.findById(childId);</span>
+<span class="fc" id="L448">		CulturalAssetEntity updatedEntity = parent;</span>
 
-<span class="fc" id="L484">		this.addConnection(child, parent);</span>
+<span class="fc" id="L450">		this.addConnection(child, parent);</span>
 
-<span class="pc bpc" id="L486" title="2 of 4 branches missed.">		if (this.testLoopError(child) || this.testHeightError(child)) {</span>
+<span class="pc bpc" id="L452" title="2 of 4 branches missed.">		if (this.testLoopError(child) || this.testHeightError(child)) {</span>
 
-<span class="nc" id="L488">			this.removeConnection(child, parent);</span>
+<span class="nc" id="L454">			this.removeConnection(child, parent);</span>
 
-<span class="nc" id="L490">		} else {</span>
+<span class="nc" id="L456">		} else {</span>
 
-<span class="fc" id="L492">			updatedEntity = this.repository.save(parent);</span>
-<span class="fc" id="L493">			this.repository.save(child);</span>
+<span class="fc" id="L458">			updatedEntity = this.repository.save(parent);</span>
+<span class="fc" id="L459">			this.repository.save(child);</span>
 
 		}
 
-<span class="fc" id="L497">		EventConsumer.sendEvent(&quot;CulturalAssetService.addCulturalAssetChild&quot;, EventType.UPDATE.type,</span>
-<span class="fc" id="L498">				this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));</span>
+<span class="fc" id="L463">		EventConsumer.sendEvent(&quot;CulturalAssetService.addCulturalAssetChild&quot;, EventType.UPDATE.type,</span>
+<span class="fc" id="L464">				this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));</span>
 
-<span class="fc" id="L500">		return updatedEntity;</span>
+<span class="fc" id="L466">		return updatedEntity;</span>
 
 	}
 
@@ -508,23 +474,23 @@ import reskue.task.TaskRepository;
 	 * @param childId - the child's identifier.
 	 * @return The cultural asset after the child was removed.
 	 */
-	public CulturalAssetEntity removeCulturalAssetChild(long id, long childId) {
+	public CulturalAssetEntity removeCulturalAssetChild(Long id, Long childId) {
 
-<span class="fc" id="L513">		Utility.LOG.trace(&quot;CulturalAssetService.removeCulturalAssetChild called.&quot;);</span>
+<span class="fc" id="L479">		Utility.LOG.trace(&quot;CulturalAssetService.removeCulturalAssetChild called.&quot;);</span>
 
-<span class="fc" id="L515">		CulturalAssetEntity parent = this.findById(id);</span>
-<span class="fc" id="L516">		CulturalAssetEntity child = this.findById(childId);</span>
+<span class="fc" id="L481">		CulturalAssetEntity parent = this.findById(id);</span>
+<span class="fc" id="L482">		CulturalAssetEntity child = this.findById(childId);</span>
 
-<span class="fc" id="L518">		this.removeConnection(child, parent);</span>
+<span class="fc" id="L484">		this.removeConnection(child, parent);</span>
 
-<span class="fc" id="L520">		final CulturalAssetEntity updatedEntity = this.repository.save(parent);</span>
+<span class="fc" id="L486">		final CulturalAssetEntity updatedEntity = this.repository.save(parent);</span>
 
-<span class="fc" id="L522">		this.repository.save(child);</span>
+<span class="fc" id="L488">		this.repository.save(child);</span>
 
-<span class="fc" id="L524">		EventConsumer.sendEvent(&quot;CulturalAssetService.removeCulturalAssetChild&quot;, EventType.UPDATE.type,</span>
-<span class="fc" id="L525">				this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));</span>
+<span class="fc" id="L490">		EventConsumer.sendEvent(&quot;CulturalAssetService.removeCulturalAssetChild&quot;, EventType.UPDATE.type,</span>
+<span class="fc" id="L491">				this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));</span>
 
-<span class="fc" id="L527">		return updatedEntity;</span>
+<span class="fc" id="L493">		return updatedEntity;</span>
 
 	}
 
@@ -535,31 +501,31 @@ import reskue.task.TaskRepository;
 	 * @param parentId - the parent's identifier.
 	 * @return The cultural asset after the parent was set.
 	 */
-	public CulturalAssetEntity setCulturalAssetParent(long id, long parentId) {
+	public CulturalAssetEntity setCulturalAssetParent(Long id, Long parentId) {
 
-<span class="fc" id="L540">		Utility.LOG.trace(&quot;CulturalAssetService.setCulturalAssetParent called.&quot;);</span>
+<span class="fc" id="L506">		Utility.LOG.trace(&quot;CulturalAssetService.setCulturalAssetParent called.&quot;);</span>
 
-<span class="fc" id="L542">		CulturalAssetEntity child = this.findById(id);</span>
-<span class="fc" id="L543">		CulturalAssetEntity parent = this.findById(parentId);</span>
-<span class="fc" id="L544">		CulturalAssetEntity updatedEntity = child;</span>
+<span class="fc" id="L508">		CulturalAssetEntity child = this.findById(id);</span>
+<span class="fc" id="L509">		CulturalAssetEntity parent = this.findById(parentId);</span>
+<span class="fc" id="L510">		CulturalAssetEntity updatedEntity = child;</span>
 
-<span class="fc" id="L546">		this.addConnection(child, parent);</span>
+<span class="fc" id="L512">		this.addConnection(child, parent);</span>
 
-<span class="pc bpc" id="L548" title="2 of 4 branches missed.">		if (this.testLoopError(child) || this.testHeightError(child)) {</span>
+<span class="pc bpc" id="L514" title="2 of 4 branches missed.">		if (this.testLoopError(child) || this.testHeightError(child)) {</span>
 
-<span class="nc" id="L550">			this.removeConnection(child, parent);</span>
+<span class="nc" id="L516">			this.removeConnection(child, parent);</span>
 
-<span class="nc" id="L552">		} else {</span>
+<span class="nc" id="L518">		} else {</span>
 
-<span class="fc" id="L554">			updatedEntity = this.repository.save(child);</span>
-<span class="fc" id="L555">			this.repository.save(parent);</span>
+<span class="fc" id="L520">			updatedEntity = this.repository.save(child);</span>
+<span class="fc" id="L521">			this.repository.save(parent);</span>
 
 		}
 
-<span class="fc" id="L559">		EventConsumer.sendEvent(&quot;CulturalAssetService.setCulturalAssetParent&quot;, EventType.UPDATE.type,</span>
-<span class="fc" id="L560">				this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));</span>
+<span class="fc" id="L525">		EventConsumer.sendEvent(&quot;CulturalAssetService.setCulturalAssetParent&quot;, EventType.UPDATE.type,</span>
+<span class="fc" id="L526">				this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));</span>
 
-<span class="fc" id="L562">		return updatedEntity;</span>
+<span class="fc" id="L528">		return updatedEntity;</span>
 
 	}
 
@@ -569,23 +535,23 @@ import reskue.task.TaskRepository;
 	 * @param id - the cultural asset's identifier.
 	 * @return The cultural asset after the parent was removed.
 	 */
-	public CulturalAssetEntity removeCulturalAssetParent(long id) {
+	public CulturalAssetEntity removeCulturalAssetParent(Long id) {
 
-<span class="fc" id="L574">		Utility.LOG.trace(&quot;CulturalAssetService.removeCulturalAssetParent called.&quot;);</span>
+<span class="fc" id="L540">		Utility.LOG.trace(&quot;CulturalAssetService.removeCulturalAssetParent called.&quot;);</span>
 
-<span class="fc" id="L576">		CulturalAssetEntity child = this.findById(id);</span>
-<span class="fc" id="L577">		CulturalAssetEntity parent = child.getCulturalAssetParent();</span>
+<span class="fc" id="L542">		CulturalAssetEntity child = this.findById(id);</span>
+<span class="fc" id="L543">		CulturalAssetEntity parent = child.getCulturalAssetParent();</span>
 
-<span class="fc" id="L579">		this.removeConnection(child, parent);</span>
+<span class="fc" id="L545">		this.removeConnection(child, parent);</span>
 
-<span class="fc" id="L581">		final CulturalAssetEntity updatedEntity = this.repository.save(child);</span>
+<span class="fc" id="L547">		final CulturalAssetEntity updatedEntity = this.repository.save(child);</span>
 
-<span class="fc" id="L583">		this.repository.save(parent);</span>
+<span class="fc" id="L549">		this.repository.save(parent);</span>
 
-<span class="fc" id="L585">		EventConsumer.sendEvent(&quot;CulturalAssetService.removeCulturalAssetParent&quot;, EventType.UPDATE.type,</span>
-<span class="fc" id="L586">				this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));</span>
+<span class="fc" id="L551">		EventConsumer.sendEvent(&quot;CulturalAssetService.removeCulturalAssetParent&quot;, EventType.UPDATE.type,</span>
+<span class="fc" id="L552">				this.getIdentifier(), EventConsumer.writeObjectAsJSON(updatedEntity));</span>
 
-<span class="fc" id="L588">		return updatedEntity;</span>
+<span class="fc" id="L554">		return updatedEntity;</span>
 
 	}
 
@@ -598,19 +564,19 @@ import reskue.task.TaskRepository;
 	 */
 	private void addConnection(CulturalAssetEntity child, CulturalAssetEntity parent) {
 
-<span class="fc" id="L601">		Utility.LOG.trace(&quot;CulturalAssetService.addConnection called.&quot;);</span>
+<span class="fc" id="L567">		Utility.LOG.trace(&quot;CulturalAssetService.addConnection called.&quot;);</span>
 
-<span class="fc" id="L603">		List&lt;CulturalAssetEntity&gt; newChildren = parent.getCulturalAssetChildren();</span>
+<span class="fc" id="L569">		List&lt;CulturalAssetEntity&gt; newChildren = parent.getCulturalAssetChildren();</span>
 
 		// if the new child is already a child
-<span class="fc bfc" id="L606" title="All 2 branches covered.">		if (!newChildren.contains(child)) {</span>
-<span class="fc" id="L607">			newChildren.add(child);</span>
-<span class="fc" id="L608">			parent.setCulturalAssetChildren(newChildren);</span>
-<span class="fc" id="L609">			child.setCulturalAssetParent(parent);</span>
-<span class="fc" id="L610">			this.updateLevels(child, parent.getLevel() + 1);</span>
+<span class="fc bfc" id="L572" title="All 2 branches covered.">		if (!newChildren.contains(child)) {</span>
+<span class="fc" id="L573">			newChildren.add(child);</span>
+<span class="fc" id="L574">			parent.setCulturalAssetChildren(newChildren);</span>
+<span class="fc" id="L575">			child.setCulturalAssetParent(parent);</span>
+<span class="fc" id="L576">			this.updateLevels(child, parent.getLevel() + 1);</span>
 		}
 
-<span class="fc" id="L613">	}</span>
+<span class="fc" id="L579">	}</span>
 
 	/**
 	 * Removes a connection between a parent and a child in the hierarchy of
@@ -621,19 +587,19 @@ import reskue.task.TaskRepository;
 	 */
 	private void removeConnection(CulturalAssetEntity child, CulturalAssetEntity parent) {
 
-<span class="fc" id="L624">		Utility.LOG.trace(&quot;CulturalAssetService.removeConnection called.&quot;);</span>
+<span class="fc" id="L590">		Utility.LOG.trace(&quot;CulturalAssetService.removeConnection called.&quot;);</span>
 
-<span class="fc" id="L626">		List&lt;CulturalAssetEntity&gt; newChildren = parent.getCulturalAssetChildren();</span>
+<span class="fc" id="L592">		List&lt;CulturalAssetEntity&gt; newChildren = parent.getCulturalAssetChildren();</span>
 
 		// if the child is actually a child
-<span class="fc bfc" id="L629" title="All 2 branches covered.">		if (newChildren.contains(child)) {</span>
-<span class="fc" id="L630">			newChildren.remove(child);</span>
-<span class="fc" id="L631">			parent.setCulturalAssetChildren(newChildren);</span>
-<span class="fc" id="L632">			child.setCulturalAssetParent(null);</span>
-<span class="fc" id="L633">			this.updateLevels(child, 0);</span>
+<span class="fc bfc" id="L595" title="All 2 branches covered.">		if (newChildren.contains(child)) {</span>
+<span class="fc" id="L596">			newChildren.remove(child);</span>
+<span class="fc" id="L597">			parent.setCulturalAssetChildren(newChildren);</span>
+<span class="fc" id="L598">			child.setCulturalAssetParent(null);</span>
+<span class="fc" id="L599">			this.updateLevels(child, 0);</span>
 		}
 
-<span class="fc" id="L636">	}</span>
+<span class="fc" id="L602">	}</span>
 
 	/**
 	 * Checks if a cultural asset is part of a loop in the hierarchy of cultural
@@ -644,19 +610,19 @@ import reskue.task.TaskRepository;
 	 */
 	private boolean testLoopError(CulturalAssetEntity entity) {
 
-<span class="fc" id="L647">		CulturalAssetEntity parent = entity.getCulturalAssetParent();</span>
+<span class="fc" id="L613">		CulturalAssetEntity parent = entity.getCulturalAssetParent();</span>
 
-<span class="pc bpc" id="L649" title="1 of 2 branches missed.">		for (int i = 0; i &lt; 4; i++) {</span>
+<span class="pc bpc" id="L615" title="1 of 2 branches missed.">		for (int i = 0; i &lt; 4; i++) {</span>
 
-<span class="fc bfc" id="L651" title="All 2 branches covered.">			if (parent == null) {</span>
-<span class="fc" id="L652">				return false;</span>
+<span class="fc bfc" id="L617" title="All 2 branches covered.">			if (parent == null) {</span>
+<span class="fc" id="L618">				return false;</span>
 			} else {
-<span class="fc" id="L654">				parent = parent.getCulturalAssetParent();</span>
+<span class="fc" id="L620">				parent = parent.getCulturalAssetParent();</span>
 			}
 
 		}
 
-<span class="nc" id="L659">		return true;</span>
+<span class="nc" id="L625">		return true;</span>
 
 	}
 
@@ -669,24 +635,24 @@ import reskue.task.TaskRepository;
 	 */
 	private boolean testHeightError(CulturalAssetEntity entity) {
 
-<span class="pc bpc" id="L672" title="1 of 2 branches missed.">		if (entity.getLevel() &gt;= 4) {</span>
+<span class="pc bpc" id="L638" title="1 of 2 branches missed.">		if (entity.getLevel() &gt;= 4) {</span>
 
-<span class="nc" id="L674">			return true;</span>
+<span class="nc" id="L640">			return true;</span>
 
 		} else {
 
-<span class="fc" id="L678">			List&lt;CulturalAssetEntity&gt; children = entity.getCulturalAssetChildren();</span>
+<span class="fc" id="L644">			List&lt;CulturalAssetEntity&gt; children = entity.getCulturalAssetChildren();</span>
 
-<span class="pc bpc" id="L680" title="1 of 2 branches missed.">			if (!children.isEmpty()) {</span>
-<span class="nc" id="L681">				children.stream().forEach((CulturalAssetEntity nextEntity) -&gt; {</span>
-<span class="nc" id="L682">					this.testHeightError(nextEntity);</span>
-<span class="nc" id="L683">				});</span>
+<span class="pc bpc" id="L646" title="1 of 2 branches missed.">			if (!children.isEmpty()) {</span>
+<span class="nc" id="L647">				children.stream().forEach((CulturalAssetEntity nextEntity) -&gt; {</span>
+<span class="nc" id="L648">					this.testHeightError(nextEntity);</span>
+<span class="nc" id="L649">				});</span>
 
 			}
 
 		}
 
-<span class="fc" id="L689">		return false;</span>
+<span class="fc" id="L655">		return false;</span>
 
 	}
 
@@ -699,18 +665,18 @@ import reskue.task.TaskRepository;
 	 */
 	private void updateLevels(CulturalAssetEntity entity, int level) {
 
-<span class="fc" id="L702">		entity.setLevel(level);</span>
-<span class="fc" id="L703">		this.repository.save(entity);</span>
-<span class="fc" id="L704">		List&lt;CulturalAssetEntity&gt; children = entity.getCulturalAssetChildren();</span>
+<span class="fc" id="L668">		entity.setLevel(level);</span>
+<span class="fc" id="L669">		this.repository.save(entity);</span>
+<span class="fc" id="L670">		List&lt;CulturalAssetEntity&gt; children = entity.getCulturalAssetChildren();</span>
 
-<span class="fc bfc" id="L706" title="All 2 branches covered.">		if (!children.isEmpty()) {</span>
-<span class="fc" id="L707">			children.stream().forEach((CulturalAssetEntity nextEntity) -&gt; {</span>
-<span class="fc" id="L708">				this.updateLevels(nextEntity, level + 1);</span>
-<span class="fc" id="L709">			});</span>
+<span class="fc bfc" id="L672" title="All 2 branches covered.">		if (!children.isEmpty()) {</span>
+<span class="fc" id="L673">			children.stream().forEach((CulturalAssetEntity nextEntity) -&gt; {</span>
+<span class="fc" id="L674">				this.updateLevels(nextEntity, level + 1);</span>
+<span class="fc" id="L675">			});</span>
 
 		}
 
-<span class="fc" id="L713">	}</span>
+<span class="fc" id="L679">	}</span>
 
 	/**
 	 * Updates the endangered state of the cultural asset. This also updates the
@@ -723,27 +689,27 @@ import reskue.task.TaskRepository;
 	 */
 	public void updateIsEndangered(CulturalAssetEntity entity, int state) {
 
-<span class="nc" id="L726">		entity.setIsEndangered(state);</span>
-<span class="nc" id="L727">		this.repository.save(entity);</span>
-<span class="nc" id="L728">		List&lt;CulturalAssetEntity&gt; children = entity.getCulturalAssetChildren();</span>
-<span class="nc" id="L729">		List&lt;TaskEntity&gt; tasks = entity.getTasks();</span>
+<span class="nc" id="L692">		entity.setIsEndangered(state);</span>
+<span class="nc" id="L693">		this.repository.save(entity);</span>
+<span class="nc" id="L694">		List&lt;CulturalAssetEntity&gt; children = entity.getCulturalAssetChildren();</span>
+<span class="nc" id="L695">		List&lt;TaskEntity&gt; tasks = entity.getTasks();</span>
 
-<span class="nc bnc" id="L731" title="All 2 branches missed.">		if (!tasks.isEmpty()) {</span>
-<span class="nc" id="L732">			tasks.stream().forEach((TaskEntity task) -&gt; {</span>
-<span class="nc" id="L733">				task.setIsEndangered(state);</span>
-<span class="nc" id="L734">				taskRepository.save(task);</span>
-<span class="nc" id="L735">			});</span>
-
-		}
-
-<span class="nc bnc" id="L739" title="All 2 branches missed.">		if (!children.isEmpty()) {</span>
-<span class="nc" id="L740">			children.stream().forEach((CulturalAssetEntity nextEntity) -&gt; {</span>
-<span class="nc" id="L741">				this.updateIsEndangered(nextEntity, state);</span>
-<span class="nc" id="L742">			});</span>
+<span class="nc bnc" id="L697" title="All 2 branches missed.">		if (!tasks.isEmpty()) {</span>
+<span class="nc" id="L698">			tasks.stream().forEach((TaskEntity task) -&gt; {</span>
+<span class="nc" id="L699">				task.setIsEndangered(state);</span>
+<span class="nc" id="L700">				taskRepository.save(task);</span>
+<span class="nc" id="L701">			});</span>
 
 		}
 
-<span class="nc" id="L746">	}</span>
+<span class="nc bnc" id="L705" title="All 2 branches missed.">		if (!children.isEmpty()) {</span>
+<span class="nc" id="L706">			children.stream().forEach((CulturalAssetEntity nextEntity) -&gt; {</span>
+<span class="nc" id="L707">				this.updateIsEndangered(nextEntity, state);</span>
+<span class="nc" id="L708">			});</span>
+
+		}
+
+<span class="nc" id="L712">	}</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

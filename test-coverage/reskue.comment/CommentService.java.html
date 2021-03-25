@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommentService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue.comment</a> &gt; <span class="el_source">CommentService.java</span></div><h1>CommentService.java</h1><pre class="source lang-java linenums">package reskue.comment;
 
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,13 +28,7 @@ import kueres.utility.Utility;
  */
 
 @Service
-<span class="fc" id="L37">public class CommentService extends BaseService&lt;CommentEntity, CommentRepository&gt;{</span>
-	
-	/**
-	 * The EntityManager needed to create a CriteriaBuilder.
-	 */
-	@PersistenceContext
-	private EntityManager em;
+<span class="fc" id="L31">public class CommentService extends BaseService&lt;CommentEntity, CommentRepository&gt;{</span>
 	
 	/**
 	 * Set this EventSubscribers identifier and routing.
@@ -48,9 +36,9 @@ import kueres.utility.Utility;
 	@Override
 	@PostConstruct
 	public void init() {
-<span class="fc" id="L51">		this.identifier = CommentController.ROUTE;</span>
-<span class="fc" id="L52">		this.routingKey = CommentController.ROUTE;</span>
-<span class="fc" id="L53">	}</span>
+<span class="fc" id="L39">		this.identifier = CommentController.ROUTE;</span>
+<span class="fc" id="L40">		this.routingKey = CommentController.ROUTE;</span>
+<span class="fc" id="L41">	}</span>
 	
 	/**
 	 * Get all media of the comment.
@@ -60,29 +48,24 @@ import kueres.utility.Utility;
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings(&quot;unchecked&quot;)
-	public Page&lt;MediaEntity&gt; getAllMedia(long id, EntitySpecification&lt;MediaEntity&gt; specification, Pageable pageable) {
+	public Page&lt;MediaEntity&gt; getAllMedia(Long id, EntitySpecification&lt;MediaEntity&gt; specification, Pageable pageable) {
 		
-<span class="fc" id="L66">		Utility.LOG.trace(&quot;CommentService.getAllMedia called.&quot;);</span>
+<span class="fc" id="L53">		Utility.LOG.trace(&quot;CommentService.getAllMedia called.&quot;);</span>
 
-<span class="fc" id="L68">		CommentEntity entity = this.findById(id);</span>
-<span class="fc" id="L69">		List&lt;MediaEntity&gt; media = entity.getMedia();</span>
+<span class="fc" id="L55">		CommentEntity entity = this.findById(id);</span>
+<span class="fc" id="L56">		List&lt;MediaEntity&gt; media = entity.getMedia();</span>
 
-<span class="pc bpc" id="L71" title="1 of 2 branches missed.">		if (specification != null) {</span>
-<span class="nc" id="L72">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
-<span class="nc" id="L73">			CriteriaQuery&lt;MediaEntity&gt; criteriaQuery = criteriaBuilder.createQuery(MediaEntity.class);</span>
-<span class="nc" id="L74">			Root&lt;MediaEntity&gt; root = criteriaQuery.from(MediaEntity.class);</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">		if (specification != null) {</span>
 
-<span class="nc" id="L76">			media = media.stream().filter(</span>
-<span class="nc" id="L77">					(Predicate&lt;? super MediaEntity&gt;) specification.toPredicate(root, criteriaQuery, criteriaBuilder))</span>
-<span class="nc" id="L78">					.collect(Collectors.toList());</span>
+<span class="nc" id="L60">			media = media.stream().filter(specification.toPredicate(MediaEntity.class)).collect(Collectors.toList());</span>
+			
 		}
 
-<span class="fc" id="L81">		Page&lt;MediaEntity&gt; page = new PageImpl&lt;MediaEntity&gt;(media, pageable, media.size());</span>
+<span class="fc" id="L64">		Page&lt;MediaEntity&gt; page = new PageImpl&lt;MediaEntity&gt;(media, pageable, media.size());</span>
 		
-<span class="fc" id="L83">		EventConsumer.sendEvent(&quot;CommentService.getAllMedia&quot;, EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));		</span>
+<span class="fc" id="L66">		EventConsumer.sendEvent(&quot;CommentService.getAllMedia&quot;, EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));		</span>
 
-<span class="fc" id="L85">		return page;</span>
+<span class="fc" id="L68">		return page;</span>
 		
 	}
 

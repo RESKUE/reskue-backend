@@ -72,7 +72,7 @@ import reskue.usergroup.UserGroupEntity;
 	@GetMapping(&quot;/{&quot; + UserEntity.ID + &quot;}/contactTasks&quot;)
 	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
 	public Page&lt;TaskEntity&gt; getTasksWhereUserIsContact(
-			@PathVariable(value = UserEntity.ID) long id,
+			@PathVariable(value = UserEntity.ID) Long id,
 			@RequestParam Optional&lt;String[]&gt; filter,
 			@RequestParam Optional&lt;String[]&gt; sort,
 			@RequestParam Optional&lt;Integer&gt; page,
@@ -111,7 +111,7 @@ import reskue.usergroup.UserGroupEntity;
 	@GetMapping(&quot;/{&quot; + UserEntity.ID + &quot;}/helperTasks&quot;)
 	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
 	public Page&lt;TaskEntity&gt; getTasksWhereUserIsHelper(
-			@PathVariable(value = UserEntity.ID) long id,
+			@PathVariable(value = UserEntity.ID) Long id,
 			@RequestParam Optional&lt;String[]&gt; filter,
 			@RequestParam Optional&lt;String[]&gt; sort,
 			@RequestParam Optional&lt;Integer&gt; page,
@@ -150,7 +150,7 @@ import reskue.usergroup.UserGroupEntity;
 	@GetMapping(&quot;/{&quot; + UserEntity.ID + &quot;}/userComments&quot;)
 	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
 	public Page&lt;CommentEntity&gt; getCommentsByUser(
-			@PathVariable(value = UserEntity.ID) long id,
+			@PathVariable(value = UserEntity.ID) Long id,
 			@RequestParam Optional&lt;String[]&gt; filter,
 			@RequestParam Optional&lt;String[]&gt; sort,
 			@RequestParam Optional&lt;Integer&gt; page,
@@ -189,7 +189,7 @@ import reskue.usergroup.UserGroupEntity;
 	@GetMapping(&quot;/{&quot; + UserEntity.ID + &quot;}/userGroups&quot;)
 	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
 	public Page&lt;UserGroupEntity&gt; getUserGroupsForUser(
-			@PathVariable(value = UserEntity.ID) long id,
+			@PathVariable(value = UserEntity.ID) Long id,
 			@RequestParam Optional&lt;String[]&gt; filter,
 			@RequestParam Optional&lt;String[]&gt; sort,
 			@RequestParam Optional&lt;Integer&gt; page,
@@ -228,7 +228,7 @@ import reskue.usergroup.UserGroupEntity;
 	@GetMapping(&quot;/{&quot; + UserEntity.ID + &quot;}/sendNotifications&quot;)
 	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
 	public Page&lt;NotificationEntity&gt; getNotificationsSendByUser(
-			@PathVariable(value = UserEntity.ID) long id,
+			@PathVariable(value = UserEntity.ID) Long id,
 			@RequestParam Optional&lt;String[]&gt; filter,
 			@RequestParam Optional&lt;String[]&gt; sort,
 			@RequestParam Optional&lt;Integer&gt; page,
