@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -70,7 +69,7 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	/**
 	 * The list of notifications that every user of the user group should receive.
 	 */
-	@ManyToMany(cascade = CascadeType.MERGE)
+	@ManyToMany()
 	@JoinTable(
 			name = "notification_receivers",
 			joinColumns = @JoinColumn(name = "receiver_id", referencedColumnName = BaseEntity.ID),

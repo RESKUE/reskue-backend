@@ -16,7 +16,6 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -40,23 +39,23 @@ import reskue.user.UserEntity;
  */
 
 @Entity
-<span class="fc" id="L43">public class TaskEntity extends ReskueEntity&lt;TaskEntity&gt;{</span>
+<span class="fc" id="L42">public class TaskEntity extends ReskueEntity&lt;TaskEntity&gt;{</span>
 	
 	@Override
 	public String[] getUpdateableFields() {
-<span class="fc" id="L47">		return new String[] {</span>
-<span class="fc" id="L48">				TaskEntity.NAME,</span>
-<span class="fc" id="L49">				TaskEntity.DESCRIPTION,</span>
-<span class="fc" id="L50">				TaskEntity.PRIORITY,</span>
-<span class="fc" id="L51">				TaskEntity.IS_ENDANGERED,</span>
-<span class="fc" id="L52">				TaskEntity.STATE,</span>
-<span class="fc" id="L53">				TaskEntity.CULTURAL_ASSET,</span>
-<span class="fc" id="L54">				TaskEntity.COMMENTS,</span>
-<span class="fc" id="L55">				TaskEntity.SUBTASKS,</span>
-<span class="fc" id="L56">				TaskEntity.CONTACT_USER,</span>
-<span class="fc" id="L57">				TaskEntity.HELPER_USERS,</span>
-<span class="fc" id="L58">				TaskEntity.RECOMMENDED_HELPER_USERS,</span>
-<span class="fc" id="L59">				TaskEntity.MEDIA</span>
+<span class="fc" id="L46">		return new String[] {</span>
+<span class="fc" id="L47">				TaskEntity.NAME,</span>
+<span class="fc" id="L48">				TaskEntity.DESCRIPTION,</span>
+<span class="fc" id="L49">				TaskEntity.PRIORITY,</span>
+<span class="fc" id="L50">				TaskEntity.IS_ENDANGERED,</span>
+<span class="fc" id="L51">				TaskEntity.STATE,</span>
+<span class="fc" id="L52">				TaskEntity.CULTURAL_ASSET,</span>
+<span class="fc" id="L53">				TaskEntity.COMMENTS,</span>
+<span class="fc" id="L54">				TaskEntity.SUBTASKS,</span>
+<span class="fc" id="L55">				TaskEntity.CONTACT_USER,</span>
+<span class="fc" id="L56">				TaskEntity.HELPER_USERS,</span>
+<span class="fc" id="L57">				TaskEntity.RECOMMENDED_HELPER_USERS,</span>
+<span class="fc" id="L58">				TaskEntity.MEDIA</span>
 		};
 	}
 	
@@ -64,10 +63,10 @@ import reskue.user.UserEntity;
 	 * The state of the task.
 	 */
 	@Column(name = &quot;state&quot;, nullable = false)
-<span class="fc" id="L67">	private int state = 0;</span>
+<span class="fc" id="L66">	private int state = 0;</span>
 	public static final String STATE = &quot;state&quot;;
-<span class="fc" id="L69">	public int getState() { return this.state; }</span>
-<span class="fc" id="L70">	public void setState(int state) { this.state = state; }</span>
+<span class="fc" id="L68">	public int getState() { return this.state; }</span>
+<span class="fc" id="L69">	public void setState(int state) { this.state = state; }</span>
 	
 	/**
 	 * The cultural asset the task belongs to.
@@ -75,15 +74,15 @@ import reskue.user.UserEntity;
 	@ManyToOne()
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
-<span class="fc" id="L78">	private CulturalAssetEntity culturalAsset = null;</span>
+<span class="fc" id="L77">	private CulturalAssetEntity culturalAsset = null;</span>
 	public static final String CULTURAL_ASSET = &quot;culturalAsset&quot;;
-<span class="fc" id="L80">	public CulturalAssetEntity getCulturalAsset() { return this.culturalAsset; }</span>
-<span class="fc" id="L81">	public void setCulturalAsset(CulturalAssetEntity culturalAsset) { this.culturalAsset = culturalAsset; }</span>
+<span class="fc" id="L79">	public CulturalAssetEntity getCulturalAsset() { return this.culturalAsset; }</span>
+<span class="fc" id="L80">	public void setCulturalAsset(CulturalAssetEntity culturalAsset) { this.culturalAsset = culturalAsset; }</span>
 	
 	/**
 	 * The list of comments associated with the task.
 	 */
-	@OneToMany()
+	@OneToMany(cascade = CascadeType.REMOVE)
 	@JoinTable(
 			name = &quot;task_comments&quot;,
 			joinColumns = { @JoinColumn(name = &quot;task_id&quot;, referencedColumnName = BaseEntity.ID) },
@@ -91,20 +90,20 @@ import reskue.user.UserEntity;
 	)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
-<span class="fc" id="L94">	private List&lt;CommentEntity&gt; comments = new ArrayList&lt;CommentEntity&gt;();</span>
+<span class="fc" id="L93">	private List&lt;CommentEntity&gt; comments = new ArrayList&lt;CommentEntity&gt;();</span>
 	public static final String COMMENTS = &quot;comments&quot;;
-<span class="fc" id="L96">	public List&lt;CommentEntity&gt; getComments() { return this.comments; }</span>
-<span class="fc" id="L97">	public void setComments(List&lt;CommentEntity&gt; comments) { this.comments = comments; }</span>
+<span class="fc" id="L95">	public List&lt;CommentEntity&gt; getComments() { return this.comments; }</span>
+<span class="fc" id="L96">	public void setComments(List&lt;CommentEntity&gt; comments) { this.comments = comments; }</span>
 	
 	/**
 	 * The list of subtasks associated with the task.
 	 */
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = SubtaskEntity.class)
 	@JoinColumn(name = &quot;task_id&quot;, referencedColumnName = &quot;id&quot;)
-<span class="fc" id="L104">	private List&lt;SubtaskEntity&gt; subtasks = new ArrayList&lt;SubtaskEntity&gt;();</span>
+<span class="fc" id="L103">	private List&lt;SubtaskEntity&gt; subtasks = new ArrayList&lt;SubtaskEntity&gt;();</span>
 	public static final String SUBTASKS = &quot;subtasks&quot;;
-<span class="fc" id="L106">	public List&lt;SubtaskEntity&gt; getSubtasks() { return this.subtasks; }</span>
-<span class="fc" id="L107">	public void setSubtasks(List&lt;SubtaskEntity&gt; subtasks) { this.subtasks = subtasks; }</span>
+<span class="fc" id="L105">	public List&lt;SubtaskEntity&gt; getSubtasks() { return this.subtasks; }</span>
+<span class="fc" id="L106">	public void setSubtasks(List&lt;SubtaskEntity&gt; subtasks) { this.subtasks = subtasks; }</span>
 	
 	/**
 	 * The user that is the contact of the task.
@@ -113,10 +112,10 @@ import reskue.user.UserEntity;
 	@JoinColumn(name = &quot;task_contact_id&quot;, referencedColumnName = &quot;id&quot;)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
-<span class="fc" id="L116">	private UserEntity contactUser = null;</span>
+<span class="fc" id="L115">	private UserEntity contactUser = null;</span>
 	public static final String CONTACT_USER = &quot;contactUser&quot;;
-<span class="fc" id="L118">	public UserEntity getContactUser() { return this.contactUser; }</span>
-<span class="fc" id="L119">	public void setContactUser(UserEntity contactUser) { this.contactUser = contactUser; }</span>
+<span class="fc" id="L117">	public UserEntity getContactUser() { return this.contactUser; }</span>
+<span class="fc" id="L118">	public void setContactUser(UserEntity contactUser) { this.contactUser = contactUser; }</span>
 	
 	/**
 	 * The list of users that help completing the task.
@@ -124,84 +123,82 @@ import reskue.user.UserEntity;
 	@ManyToMany()
 	@JoinTable(
 			name = &quot;task_helpers&quot;,
-			joinColumns = @JoinColumn(name = &quot;task_id&quot;, referencedColumnName = &quot;id&quot;),
-			inverseJoinColumns = @JoinColumn(name = &quot;helper_id&quot;, referencedColumnName = &quot;id&quot;)
+			joinColumns = @JoinColumn(name = &quot;task_id&quot;, referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = &quot;helper_id&quot;, referencedColumnName = BaseEntity.ID)
 	)
 	@JsonIgnoreProperties(UserEntity.TASK_HELPER)
-<span class="fc" id="L131">	private List&lt;UserEntity&gt; helperUsers = new ArrayList&lt;UserEntity&gt;();</span>
+<span class="fc" id="L130">	private List&lt;UserEntity&gt; helperUsers = new ArrayList&lt;UserEntity&gt;();</span>
 	public static final String HELPER_USERS = &quot;helperUsers&quot;;
-<span class="fc" id="L133">	public List&lt;UserEntity&gt; getHelperUsers() { return this.helperUsers; }</span>
-<span class="fc" id="L134">	public void setHelperUsers(List&lt;UserEntity&gt; helperUsers) { this.helperUsers = helperUsers; }</span>
+<span class="fc" id="L132">	public List&lt;UserEntity&gt; getHelperUsers() { return this.helperUsers; }</span>
+<span class="fc" id="L133">	public void setHelperUsers(List&lt;UserEntity&gt; helperUsers) { this.helperUsers = helperUsers; }</span>
 	
 	/**
 	 * The recommended number of helpers that are needed to complete the task.
 	 */
 	@Column(name = &quot;recommendedHelperUsers&quot;, nullable = false)
-<span class="fc" id="L140">	private int recommendedHelperUsers = 1;</span>
+<span class="fc" id="L139">	private int recommendedHelperUsers = 1;</span>
 	public static final String RECOMMENDED_HELPER_USERS = &quot;recommendedHelperUsers&quot;;
-<span class="fc" id="L142">	public int getRecommendedHelperUsers() { return this.recommendedHelperUsers; }</span>
-<span class="fc" id="L143">	public void setRecommendedHelperUsers(int recommendedHelperUsers) { this.recommendedHelperUsers = recommendedHelperUsers; }</span>
+<span class="fc" id="L141">	public int getRecommendedHelperUsers() { return this.recommendedHelperUsers; }</span>
+<span class="fc" id="L142">	public void setRecommendedHelperUsers(int recommendedHelperUsers) { this.recommendedHelperUsers = recommendedHelperUsers; }</span>
 
 	/**
 	 * The list of media associated with the entity.
 	 */
-	@OneToMany()
+	@OneToMany(cascade = CascadeType.REMOVE)
 	@JoinTable(
 			name = &quot;task_media&quot;,
-			joinColumns = @JoinColumn(name = &quot;task_id&quot;, referencedColumnName = &quot;id&quot;),
-			inverseJoinColumns = @JoinColumn(name = &quot;media_id&quot;, referencedColumnName = &quot;id&quot;)
+			joinColumns = @JoinColumn(name = &quot;task_id&quot;, referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = &quot;media_id&quot;, referencedColumnName = BaseEntity.ID)
 	)
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
-	@JsonIdentityReference(alwaysAsId = true)
-<span class="fc" id="L156">	private List&lt;MediaEntity&gt; media = new ArrayList&lt;MediaEntity&gt;();</span>
+<span class="fc" id="L153">	private List&lt;MediaEntity&gt; media = new ArrayList&lt;MediaEntity&gt;();</span>
 	public static final String MEDIA = &quot;media&quot;;
-<span class="fc" id="L158">	public List&lt;MediaEntity&gt; getMedia() { return this.media; }</span>
-<span class="fc" id="L159">	public void setMedia(List&lt;MediaEntity&gt; media) { this.media = media; }</span>
+<span class="fc" id="L155">	public List&lt;MediaEntity&gt; getMedia() { return this.media; }</span>
+<span class="fc" id="L156">	public void setMedia(List&lt;MediaEntity&gt; media) { this.media = media; }</span>
 	
 	@Override
 	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		
-<span class="fc" id="L164">		TaskEntity details = TaskEntity.createEntityFromJSON(json, this.getUpdateableFields(), TaskEntity.class);</span>
+<span class="fc" id="L161">		TaskEntity details = TaskEntity.createEntityFromJSON(json, this.getUpdateableFields(), TaskEntity.class);</span>
 		
-<span class="pc bpc" id="L166" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.NAME)) {</span>
-<span class="fc" id="L167">			this.setName(details.getName());</span>
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.NAME)) {</span>
+<span class="fc" id="L164">			this.setName(details.getName());</span>
 		}
-<span class="pc bpc" id="L169" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.DESCRIPTION)) {</span>
-<span class="fc" id="L170">			this.setDescription(details.getDescription());</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.DESCRIPTION)) {</span>
+<span class="fc" id="L167">			this.setDescription(details.getDescription());</span>
 		}
-<span class="pc bpc" id="L172" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.PRIORITY)) {</span>
-<span class="fc" id="L173">			this.setPriority(details.getPriority());</span>
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.PRIORITY)) {</span>
+<span class="fc" id="L170">			this.setPriority(details.getPriority());</span>
 		}
-<span class="pc bpc" id="L175" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.IS_ENDANGERED)) {</span>
-<span class="fc" id="L176">			this.setIsEndangered(details.getIsEndangered());	</span>
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.IS_ENDANGERED)) {</span>
+<span class="fc" id="L173">			this.setIsEndangered(details.getIsEndangered());	</span>
 		}
-<span class="pc bpc" id="L178" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.COMMENTS)) {</span>
-<span class="fc" id="L179">			this.setComments(details.getComments());</span>
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.COMMENTS)) {</span>
+<span class="fc" id="L176">			this.setComments(details.getComments());</span>
 		}
-<span class="pc bpc" id="L181" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.MEDIA)) {</span>
-<span class="fc" id="L182">			this.setMedia(details.getMedia());</span>
-		}
-		
-<span class="pc bpc" id="L185" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.STATE)) {</span>
-<span class="fc" id="L186">			this.setState(details.getState());</span>
-		}
-<span class="pc bpc" id="L188" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.CULTURAL_ASSET)) {</span>
-<span class="fc" id="L189">			this.setCulturalAsset(details.getCulturalAsset());</span>
-		}
-<span class="pc bpc" id="L191" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.SUBTASKS)) {</span>
-<span class="fc" id="L192">			this.setSubtasks(details.getSubtasks());</span>
-		}
-<span class="pc bpc" id="L194" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.CONTACT_USER)) {</span>
-<span class="fc" id="L195">			this.setContactUser(details.getContactUser());</span>
-		}
-<span class="pc bpc" id="L197" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.HELPER_USERS)) {</span>
-<span class="fc" id="L198">			this.setHelperUsers(details.getHelperUsers());</span>
-		}
-<span class="pc bpc" id="L200" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.RECOMMENDED_HELPER_USERS)) {</span>
-<span class="fc" id="L201">			this.setRecommendedHelperUsers(details.getRecommendedHelperUsers());</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.MEDIA)) {</span>
+<span class="fc" id="L179">			this.setMedia(details.getMedia());</span>
 		}
 		
-<span class="fc" id="L204">	}</span>
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.STATE)) {</span>
+<span class="fc" id="L183">			this.setState(details.getState());</span>
+		}
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.CULTURAL_ASSET)) {</span>
+<span class="fc" id="L186">			this.setCulturalAsset(details.getCulturalAsset());</span>
+		}
+<span class="pc bpc" id="L188" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.SUBTASKS)) {</span>
+<span class="fc" id="L189">			this.setSubtasks(details.getSubtasks());</span>
+		}
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.CONTACT_USER)) {</span>
+<span class="fc" id="L192">			this.setContactUser(details.getContactUser());</span>
+		}
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.HELPER_USERS)) {</span>
+<span class="fc" id="L195">			this.setHelperUsers(details.getHelperUsers());</span>
+		}
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">		if (this.containsFields(json, TaskEntity.RECOMMENDED_HELPER_USERS)) {</span>
+<span class="fc" id="L198">			this.setRecommendedHelperUsers(details.getRecommendedHelperUsers());</span>
+		}
+		
+<span class="fc" id="L201">	}</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

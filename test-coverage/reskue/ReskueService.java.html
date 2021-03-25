@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReskueService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">reskue</a> &gt; <span class="el_source">ReskueService.java</span></div><h1>ReskueService.java</h1><pre class="source lang-java linenums">package reskue;
 
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,6 +12,7 @@ import kueres.event.EventType;
 import kueres.eventbus.EventConsumer;
 import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
+import kueres.utility.Utility;
 
 /**
  * 
@@ -30,14 +24,8 @@ import kueres.query.EntitySpecification;
  *
  */
 
-<span class="fc" id="L33">public abstract class ReskueService&lt;E extends ReskueEntity&lt;E&gt;, R extends ReskueRepository&lt;E&gt;&gt;</span>
+<span class="fc" id="L27">public abstract class ReskueService&lt;E extends ReskueEntity&lt;E&gt;, R extends ReskueRepository&lt;E&gt;&gt;</span>
 		extends BaseService&lt;E, R&gt; {
-	
-	/**
-	 * The EntityManager needed to create a CriteriaBuilder.
-	 */
-	@PersistenceContext
-	private EntityManager em;
 	
 	/**
 	 * Get all media of the services ReskueEntity-type.
@@ -47,28 +35,23 @@ import kueres.query.EntitySpecification;
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings(&quot;unchecked&quot;)
-	public Page&lt;MediaEntity&gt; getAllMedia(long id, EntitySpecification&lt;MediaEntity&gt; specification, Pageable pageable) {
+	public Page&lt;MediaEntity&gt; getAllMedia(Long id, EntitySpecification&lt;MediaEntity&gt; specification, Pageable pageable) {
 
-<span class="fc" id="L53">		E entity = this.findById(id);</span>
-
-<span class="fc" id="L55">		List&lt;MediaEntity&gt; media = entity.getMedia();</span>
+<span class="fc" id="L40">		E entity = this.findById(id);</span>
 		
-<span class="pc bpc" id="L57" title="1 of 2 branches missed.">		if (specification != null) {</span>
-<span class="nc" id="L58">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
-<span class="nc" id="L59">			CriteriaQuery&lt;MediaEntity&gt; criteriaQuery = criteriaBuilder.createQuery(MediaEntity.class);</span>
-<span class="nc" id="L60">			Root&lt;MediaEntity&gt; root = criteriaQuery.from(MediaEntity.class);</span>
-
-<span class="nc" id="L62">			media = media.stream().filter(</span>
-<span class="nc" id="L63">					(Predicate&lt;? super MediaEntity&gt;) specification.toPredicate(root, criteriaQuery, criteriaBuilder))</span>
-<span class="nc" id="L64">					.collect(Collectors.toList());</span>
+<span class="fc" id="L42">		List&lt;MediaEntity&gt; media = entity.getMedia();</span>
+<span class="fc" id="L43">		Utility.LOG.info(&quot;media: {}&quot;, EventConsumer.writeObjectAsJSON(media));</span>
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">		if (specification != null) {</span>
+			
+<span class="nc" id="L46">			media = media.stream().filter(specification.toPredicate(MediaEntity.class)).collect(Collectors.toList());</span>
+			
 		}
 
-<span class="fc" id="L67">		Page&lt;MediaEntity&gt; page = new PageImpl&lt;MediaEntity&gt;(media, pageable, media.size());</span>
+<span class="fc" id="L50">		Page&lt;MediaEntity&gt; page = new PageImpl&lt;MediaEntity&gt;(media, pageable, media.size());</span>
 		
-<span class="fc" id="L69">		EventConsumer.sendEvent(&quot;ReskueService.getAllMedia&quot;, EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));</span>
+<span class="fc" id="L52">		EventConsumer.sendEvent(&quot;ReskueService.getAllMedia&quot;, EventType.READ.type, this.getIdentifier(), EventConsumer.writeObjectAsJSON(page));</span>
 
-<span class="fc" id="L71">		return page;</span>
+<span class="fc" id="L54">		return page;</span>
 		
 	}
 	

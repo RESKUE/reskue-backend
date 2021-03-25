@@ -80,7 +80,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The list of media associated with the entity.
 	 */
-	@OneToMany()
+	@OneToMany(cascade = CascadeType.REMOVE)
 	@JoinTable(
 			name = "task_media",
 			joinColumns = @JoinColumn(name = "task_id", referencedColumnName = BaseEntity.ID),
@@ -94,7 +94,7 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 	/**
 	 * The list of comments associated with the task.
 	 */
-	@OneToMany()
+	@OneToMany(cascade = CascadeType.REMOVE)
 	@JoinTable(
 			name = "task_comments",
 			joinColumns = { @JoinColumn(name = "task_id", referencedColumnName = BaseEntity.ID) },
