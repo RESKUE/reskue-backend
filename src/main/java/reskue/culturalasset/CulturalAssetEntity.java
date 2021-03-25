@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -87,7 +88,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of tasks associated with the cultural asset.
 	 */
-	@OneToMany()
+	@OneToMany(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "cultural_asset_id", referencedColumnName = "id")
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
@@ -99,7 +100,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of comments associated with the cultural asset.
 	 */
-	@OneToMany()
+	@OneToMany(cascade = CascadeType.REMOVE)
 	@JoinTable(
 			name = "cultural_asset_comments",
 			joinColumns = { @JoinColumn(name = "cultural_asset_id", referencedColumnName = BaseEntity.ID) },
@@ -170,7 +171,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of notifications associated with the cultural asset.
 	 */
-	@OneToMany()
+	@OneToMany(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "notification_entity_id", referencedColumnName = BaseEntity.ID)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
@@ -182,7 +183,7 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 	/**
 	 * The list of media associated with the entity.
 	 */
-	@OneToMany()
+	@OneToMany(cascade = CascadeType.REMOVE)
 	@JoinTable(
 			name = "cultural_asset_media",
 			joinColumns = @JoinColumn(name = "cultural_asset_id", referencedColumnName = BaseEntity.ID),

@@ -96,7 +96,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	/**
 	 * The list of comments that the user is an author of.
 	 */
-	@OneToMany(mappedBy = "author")
+	@OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<CommentEntity> commentAuthor = new ArrayList<CommentEntity>();
@@ -123,7 +123,7 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	/**
 	 * The list of notifications that the user has send.
 	 */
-	@OneToMany(mappedBy = "sender", cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "sender", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<NotificationEntity> notificationSender = new ArrayList<NotificationEntity>();
