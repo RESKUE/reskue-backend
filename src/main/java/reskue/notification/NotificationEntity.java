@@ -88,7 +88,7 @@ public class NotificationEntity extends BaseEntity<NotificationEntity> {
 	/**
 	 * The list of user groups that should receive the notification.
 	 */
-	@ManyToMany(cascade = CascadeType.MERGE)
+	@ManyToMany()
 	@JoinTable(
 			name = "notification_receivers",
 			joinColumns = @JoinColumn(name = "notification_id", referencedColumnName = BaseEntity.ID),
