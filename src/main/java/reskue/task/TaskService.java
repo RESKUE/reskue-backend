@@ -1,15 +1,9 @@
 package reskue.task;
 
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,12 +41,6 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	protected UserService userService;
 	
 	/**
-	 * The EntityManager needed to create a CriteriaBuilder.
-	 */
-	@PersistenceContext
-	private EntityManager em;
-	
-	/**
 	 * Set this EventSubscribers identifier and routing.
 	 */
 	@Override
@@ -70,7 +58,6 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
 	public Page<CommentEntity> getAllComments(long id, EntitySpecification<CommentEntity> specification,
 			Pageable pageable) {
 
@@ -78,14 +65,10 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 
 		List<CommentEntity> comments = entity.getComments();
 
-		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<CommentEntity> criteriaQuery = criteriaBuilder.createQuery(CommentEntity.class);
-			Root<CommentEntity> root = criteriaQuery.from(CommentEntity.class);		
+		if (specification != null) {	
 			
-			comments = comments.stream().filter(
-					(Predicate<? super CommentEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
+			comments = comments.stream().filter(specification.toPredicate(CommentEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<CommentEntity> page = new PageImpl<CommentEntity>(comments, pageable, comments.size());
@@ -104,7 +87,6 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
 	public Page<SubtaskEntity> getAllSubtasks(long id, EntitySpecification<SubtaskEntity> specification,
 			Pageable pageable) {	
 		
@@ -114,13 +96,9 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		List<SubtaskEntity> subtasks = entity.getSubtasks();
 
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<SubtaskEntity> criteriaQuery = criteriaBuilder.createQuery(SubtaskEntity.class);
-			Root<SubtaskEntity> root = criteriaQuery.from(SubtaskEntity.class);
 
-			subtasks = subtasks.stream().filter(
-					(Predicate<? super SubtaskEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
+			subtasks = subtasks.stream().filter(specification.toPredicate(SubtaskEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<SubtaskEntity> page = new PageImpl<SubtaskEntity>(subtasks, pageable, subtasks.size());
@@ -139,7 +117,6 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
 	public Page<UserEntity> getAllHelpers(long id, EntitySpecification<UserEntity> specification, Pageable pageable) {
 		
 		Utility.LOG.trace("TaskService.getAllHelpers called.");
@@ -148,13 +125,9 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		List<UserEntity> helpers = entity.getHelperUsers();
 
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
-			Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
 
-			helpers = helpers.stream().filter(
-					(Predicate<? super UserEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
+			helpers = helpers.stream().filter(specification.toPredicate(UserEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<UserEntity> page = new PageImpl<UserEntity>(helpers, pageable, helpers.size());

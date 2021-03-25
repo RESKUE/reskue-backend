@@ -2,15 +2,9 @@ package reskue.culturalasset;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -61,12 +55,6 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 */
 	@Autowired
 	protected TaskRepository taskRepository;
-
-	/**
-	 * The EntityManager needed to create a CriteriaBuilder.
-	 */
-	@PersistenceContext
-	private EntityManager em;
 
 	/**
 	 * Set this EventSubscribers identifier and routing.
@@ -274,7 +262,6 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param pageable      - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
 	public Page<CulturalAssetEntity> findInRadius(double radius, double longitude, double latitude,
 			EntitySpecification<CulturalAssetEntity> specification, Pageable pageable) {
 
@@ -285,12 +272,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 				.collect(Collectors.toList());
 
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<CulturalAssetEntity> criteriaQuery = criteriaBuilder.createQuery(CulturalAssetEntity.class);
-			Root<CulturalAssetEntity> root = criteriaQuery.from(CulturalAssetEntity.class);
 
-			entities = entities.stream().filter((Predicate<? super CulturalAssetEntity>) specification.toPredicate(root,
-					criteriaQuery, criteriaBuilder)).collect(Collectors.toList());
+			entities = entities.stream().filter(specification.toPredicate(CulturalAssetEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<CulturalAssetEntity> page = new PageImpl<CulturalAssetEntity>(entities, pageable, entities.size());
@@ -310,7 +294,6 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param pageable      - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
 	public Page<TaskEntity> getAllTasks(long id, EntitySpecification<TaskEntity> specification, Pageable pageable) {
 
 		Utility.LOG.trace("CulturalAssetService.getAllTasks called.");
@@ -319,13 +302,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		List<TaskEntity> tasks = entity.getTasks();
 
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<TaskEntity> criteriaQuery = criteriaBuilder.createQuery(TaskEntity.class);
-			Root<TaskEntity> root = criteriaQuery.from(TaskEntity.class);
 
-			tasks = tasks.stream().filter(
-					(Predicate<? super TaskEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
+			tasks = tasks.stream().filter(specification.toPredicate(TaskEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<TaskEntity> page = new PageImpl<TaskEntity>(tasks, pageable, tasks.size());
@@ -345,7 +324,6 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
 	public Page<CommentEntity> getAllComments(long id, EntitySpecification<CommentEntity> specification,
 			Pageable pageable) {
 
@@ -353,14 +331,10 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 		List<CommentEntity> comments = entity.getComments();
 
-		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<CommentEntity> criteriaQuery = criteriaBuilder.createQuery(CommentEntity.class);
-			Root<CommentEntity> root = criteriaQuery.from(CommentEntity.class);		
+		if (specification != null) {	
 			
-			comments = comments.stream().filter(
-					(Predicate<? super CommentEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
+			comments = comments.stream().filter(specification.toPredicate(CommentEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<CommentEntity> page = new PageImpl<CommentEntity>(comments, pageable, comments.size());
@@ -379,7 +353,6 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param pageable      - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
 	public Page<CulturalAssetEntity> getAllChildren(long id, EntitySpecification<CulturalAssetEntity> specification,
 			Pageable pageable) {
 
@@ -389,12 +362,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		List<CulturalAssetEntity> children = entity.getCulturalAssetChildren();
 
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<CulturalAssetEntity> criteriaQuery = criteriaBuilder.createQuery(CulturalAssetEntity.class);
-			Root<CulturalAssetEntity> root = criteriaQuery.from(CulturalAssetEntity.class);
 
-			children = children.stream().filter((Predicate<? super CulturalAssetEntity>) specification.toPredicate(root,
-					criteriaQuery, criteriaBuilder)).collect(Collectors.toList());
+			children = children.stream().filter(specification.toPredicate(CulturalAssetEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<CulturalAssetEntity> page = new PageImpl<CulturalAssetEntity>(children, pageable, children.size());
@@ -414,7 +384,6 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param pageable      - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
 	public Page<NotificationEntity> getAllNotifications(long id, EntitySpecification<NotificationEntity> specification,
 			Pageable pageable) {
 
@@ -424,12 +393,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		List<NotificationEntity> notifications = entity.getNotifications();
 
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<NotificationEntity> criteriaQuery = criteriaBuilder.createQuery(NotificationEntity.class);
-			Root<NotificationEntity> root = criteriaQuery.from(NotificationEntity.class);
 
-			notifications = notifications.stream().filter((Predicate<? super NotificationEntity>) specification
-					.toPredicate(root, criteriaQuery, criteriaBuilder)).collect(Collectors.toList());
+			notifications = notifications.stream().filter(specification.toPredicate(NotificationEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(notifications, pageable, notifications.size());

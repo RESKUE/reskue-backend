@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import kueres.base.BaseController;
+import kueres.eventbus.EventConsumer;
 import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
 import kueres.query.SortBuilder;
@@ -60,8 +61,11 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 
 		Utility.LOG.trace("ReskueController.getAllComments called.");
 		
+		Utility.LOG.info("id: {}", id);
+		
 		EntitySpecification<MediaEntity> specification = null;
 		if (filter.isPresent()) {
+			Utility.LOG.info("filter: {}", EventConsumer.writeObjectAsJSON(filter.get()));
 			specification = new EntitySpecification<MediaEntity>(filter.get());
 		}
 		

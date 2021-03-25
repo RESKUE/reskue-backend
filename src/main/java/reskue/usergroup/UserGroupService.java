@@ -2,15 +2,9 @@ package reskue.usergroup;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,12 +41,6 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	protected UserService userService;
 	
 	/**
-	 * The EntityManager needed to create a CriteriaBuilder.
-	 */
-	@PersistenceContext
-	private EntityManager em;
-	
-	/**
 	 * Set this EventSubscribers identifier and routing.
 	 */
 	@Override
@@ -70,7 +58,6 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
 	public Page<UserEntity> getAllUsers(long id, EntitySpecification<UserEntity> specification, Pageable pageable) {
 
 		Utility.LOG.trace("UserGroupService.getAllUsers called.");
@@ -79,13 +66,9 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 		List<UserEntity> users = entity.getUsers();
 
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
-			Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
 
-			users = users.stream().filter(
-					(Predicate<? super UserEntity>) specification.toPredicate(root, criteriaQuery, criteriaBuilder))
-					.collect(Collectors.toList());
+			users = users.stream().filter(specification.toPredicate(UserEntity.class)).collect(Collectors.toList());
+			
 		}
 
 		Page<UserEntity> page = new PageImpl<UserEntity>(users, pageable, users.size());
@@ -105,7 +88,6 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings("unchecked")
 	public Page<NotificationEntity> getNotifications(long[] ids, EntitySpecification<NotificationEntity> specification,
 			Pageable pageable) {
 
@@ -125,14 +107,8 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 		receivedNotifications = receivedNotifications.stream().distinct().collect(Collectors.toList());
 
 		if (specification != null) {
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<NotificationEntity> criteriaQuery = criteriaBuilder.createQuery(NotificationEntity.class);
-			Root<NotificationEntity> root = criteriaQuery.from(NotificationEntity.class);
 
-			receivedNotifications = receivedNotifications.stream()
-					.filter((Predicate<? super NotificationEntity>) specification.toPredicate(root, criteriaQuery,
-							criteriaBuilder))
-					.collect(Collectors.toList());
+			receivedNotifications = receivedNotifications.stream().filter(specification.toPredicate(NotificationEntity.class)).collect(Collectors.toList());
 		}
 
 		Page<NotificationEntity> page = new PageImpl<NotificationEntity>(receivedNotifications, pageable,
