@@ -20,6 +20,10 @@
 `-- test-coverage   Test coverage report
 ```
 
+## Documentation
+- JavaDoc documentation: Open docs/index.html as a website.
+- OpenAPI documentation: http://SPRING_ADDRESS/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/
+
 ## Getting started - read before doing anything
 1. Clone the master branch for use in production mode
 ```
