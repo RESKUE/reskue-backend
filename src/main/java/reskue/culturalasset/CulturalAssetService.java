@@ -652,9 +652,13 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		for (int i = 0; i < 4; i++) {
 
 			if (parent == null) {
+				
 				return false;
+				
 			} else {
+				
 				parent = parent.getCulturalAssetParent();
+				
 			}
 
 		}
