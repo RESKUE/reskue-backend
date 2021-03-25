@@ -43,7 +43,7 @@ public class SubtaskController extends BaseController<SubtaskEntity, SubtaskRepo
 	@PutMapping("/{" + SubtaskEntity.ID + "}/changeState/{" + SubtaskEntity.STATE + "}")
 	@RolesAllowed({ "administrator", "helper" })
 	public ResponseEntity<SubtaskEntity> changeState(
-			@PathVariable(value = SubtaskEntity.ID) long id,
+			@PathVariable(value = SubtaskEntity.ID) Long id,
 			@PathVariable(value = SubtaskEntity.STATE) int state) {
 		
 		Utility.LOG.trace("SubtaskController.changeState called.");

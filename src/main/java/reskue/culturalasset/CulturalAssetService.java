@@ -145,7 +145,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @throws JsonMappingException if the JSON string can not be processed
 	 */
 	//@Override
-	public CulturalAssetEntity update(long id, String detailsJSON) throws ResourceNotFoundException, JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
+	public CulturalAssetEntity update(Long id, String detailsJSON) throws ResourceNotFoundException, JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 
 		Utility.LOG.trace("CulturalAssetService.update called.");
 
@@ -233,7 +233,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 *                                   specified identifier.
 	 */
 	@Override
-	public CulturalAssetEntity delete(long id) throws ResourceNotFoundException {
+	public CulturalAssetEntity delete(Long id) throws ResourceNotFoundException {
 
 		Utility.LOG.trace("CulturalAssetService.delete called.");
 
@@ -294,7 +294,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param pageable      - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<TaskEntity> getAllTasks(long id, EntitySpecification<TaskEntity> specification, Pageable pageable) {
+	public Page<TaskEntity> getAllTasks(Long id, EntitySpecification<TaskEntity> specification, Pageable pageable) {
 
 		Utility.LOG.trace("CulturalAssetService.getAllTasks called.");
 
@@ -324,7 +324,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<CommentEntity> getAllComments(long id, EntitySpecification<CommentEntity> specification,
+	public Page<CommentEntity> getAllComments(Long id, EntitySpecification<CommentEntity> specification,
 			Pageable pageable) {
 
 		CulturalAssetEntity entity = this.findById(id);
@@ -353,7 +353,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param pageable      - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<CulturalAssetEntity> getAllChildren(long id, EntitySpecification<CulturalAssetEntity> specification,
+	public Page<CulturalAssetEntity> getAllChildren(Long id, EntitySpecification<CulturalAssetEntity> specification,
 			Pageable pageable) {
 
 		Utility.LOG.trace("CulturalAssetService.getAllChildren called.");
@@ -384,7 +384,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param pageable      - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<NotificationEntity> getAllNotifications(long id, EntitySpecification<NotificationEntity> specification,
+	public Page<NotificationEntity> getAllNotifications(Long id, EntitySpecification<NotificationEntity> specification,
 			Pageable pageable) {
 
 		Utility.LOG.trace("CulturalAssetService.getAllNotifications called.");
@@ -415,7 +415,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param latitude  - the latitude of the point.
 	 * @return The result as a double.
 	 */
-	public double getDistance(long id, double longitude, double latitude) {
+	public double getDistance(Long id, double longitude, double latitude) {
 
 		Utility.LOG.trace("CulturalAssetService.getDistance called.");
 
@@ -439,7 +439,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param childId - the child's identifier.
 	 * @return The cultural asset after the child was added.
 	 */
-	public CulturalAssetEntity addCulturalAssetChild(long id, long childId) {
+	public CulturalAssetEntity addCulturalAssetChild(Long id, Long childId) {
 
 		Utility.LOG.trace("CulturalAssetService.addCulturalAssetChild called.");
 
@@ -474,7 +474,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param childId - the child's identifier.
 	 * @return The cultural asset after the child was removed.
 	 */
-	public CulturalAssetEntity removeCulturalAssetChild(long id, long childId) {
+	public CulturalAssetEntity removeCulturalAssetChild(Long id, Long childId) {
 
 		Utility.LOG.trace("CulturalAssetService.removeCulturalAssetChild called.");
 
@@ -501,7 +501,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param parentId - the parent's identifier.
 	 * @return The cultural asset after the parent was set.
 	 */
-	public CulturalAssetEntity setCulturalAssetParent(long id, long parentId) {
+	public CulturalAssetEntity setCulturalAssetParent(Long id, Long parentId) {
 
 		Utility.LOG.trace("CulturalAssetService.setCulturalAssetParent called.");
 
@@ -535,7 +535,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param id - the cultural asset's identifier.
 	 * @return The cultural asset after the parent was removed.
 	 */
-	public CulturalAssetEntity removeCulturalAssetParent(long id) {
+	public CulturalAssetEntity removeCulturalAssetParent(Long id) {
 
 		Utility.LOG.trace("CulturalAssetService.removeCulturalAssetParent called.");
 

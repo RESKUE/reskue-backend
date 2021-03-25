@@ -48,7 +48,7 @@ public class CommentService extends BaseService<CommentEntity, CommentRepository
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<MediaEntity> getAllMedia(long id, EntitySpecification<MediaEntity> specification, Pageable pageable) {
+	public Page<MediaEntity> getAllMedia(Long id, EntitySpecification<MediaEntity> specification, Pageable pageable) {
 		
 		Utility.LOG.trace("CommentService.getAllMedia called.");
 

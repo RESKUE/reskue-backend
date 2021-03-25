@@ -64,7 +64,7 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 	@GetMapping("/{" + UserGroupEntity.ID + "}/users")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<UserEntity> getAllUsers(
-			@PathVariable(value = UserGroupEntity.ID) long id,
+			@PathVariable(value = UserGroupEntity.ID) Long id,
 			@RequestParam Optional<String[]> filter,
 			@RequestParam Optional<String[]> sort,
 			@RequestParam Optional<Integer> page,
@@ -103,7 +103,7 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 	@GetMapping("/notifications")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<NotificationEntity> getNotifications(
-			@RequestParam Optional<long[]> ids,
+			@RequestParam Optional<Long[]> ids,
 			@RequestParam Optional<String[]> filter,
 			@RequestParam Optional<String[]> sort,
 			@RequestParam Optional<Integer> page,
@@ -137,8 +137,8 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 	@PutMapping("/{" + UserGroupEntity.ID + "_user_group}/addUser/{" + UserEntity.ID + "_user}")
 	@RolesAllowed({ "administrator" })
 	public ResponseEntity<UserGroupEntity> addUser(
-			@PathVariable(value = UserGroupEntity.ID + "_user_group") long id,
-			@PathVariable(value = UserEntity.ID + "_user") long userId) {
+			@PathVariable(value = UserGroupEntity.ID + "_user_group") Long id,
+			@PathVariable(value = UserEntity.ID + "_user") Long userId) {
 		
 		Utility.LOG.trace("UserGroupController.addUser called.");
 		Utility.LOG.info("user group id: {}, user id: {}", id, userId);
@@ -157,8 +157,8 @@ public class UserGroupController extends BaseController<UserGroupEntity, UserGro
 	@PutMapping("/{" + UserGroupEntity.ID + "_user_group}/removeUser/{" + UserEntity.ID + "_user}")
 	@RolesAllowed({ "administrator" })
 	public ResponseEntity<UserGroupEntity> removeUser(
-			@PathVariable(value = UserGroupEntity.ID + "_user_group") long id,
-			@PathVariable(value = UserEntity.ID + "_user") long userId) {
+			@PathVariable(value = UserGroupEntity.ID + "_user_group") Long id,
+			@PathVariable(value = UserEntity.ID + "_user") Long userId) {
 		
 		Utility.LOG.trace("UserGroupController.removeUser called.");
 

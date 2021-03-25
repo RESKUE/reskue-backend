@@ -71,7 +71,7 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<TaskEntity> getTasksWhereUserIsContact(long id, EntitySpecification<TaskEntity> specification,
+	public Page<TaskEntity> getTasksWhereUserIsContact(Long id, EntitySpecification<TaskEntity> specification,
 			Pageable pageable) {
 		
 		Utility.LOG.trace("UserService.getTasksWhereUserIsContact called.");
@@ -101,7 +101,7 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<TaskEntity> getTasksWhereUserIsHelper(long id, EntitySpecification<TaskEntity> specification,
+	public Page<TaskEntity> getTasksWhereUserIsHelper(Long id, EntitySpecification<TaskEntity> specification,
 			Pageable pageable) {
 		
 		Utility.LOG.trace("UserService.getTasksWhereUserIsHelper called.");
@@ -131,7 +131,7 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<CommentEntity> getCommentsByUser(long id, EntitySpecification<CommentEntity> specification,
+	public Page<CommentEntity> getCommentsByUser(Long id, EntitySpecification<CommentEntity> specification,
 			Pageable pageable) {
 		
 		Utility.LOG.trace("UserService.getCommentsByUser called.");		
@@ -161,7 +161,7 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<UserGroupEntity> getUserGroupsForUser(long id, EntitySpecification<UserGroupEntity> specification,
+	public Page<UserGroupEntity> getUserGroupsForUser(Long id, EntitySpecification<UserGroupEntity> specification,
 			Pageable pageable) {
 		
 		Utility.LOG.trace("UserService.getUserGroupsForUser called.");				
@@ -191,7 +191,7 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<NotificationEntity> getNotificationsSendByUser(long id, EntitySpecification<NotificationEntity> specification,
+	public Page<NotificationEntity> getNotificationsSendByUser(Long id, EntitySpecification<NotificationEntity> specification,
 			Pageable pageable) {
 		
 		Utility.LOG.trace("UserService.getNotificationsSendByUser called.");	

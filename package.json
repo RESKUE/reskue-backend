@@ -22,7 +22,7 @@
     "test:export": "cp -r target/jacoco-report/ test-coverage",
     "docs": "npm run docs:generate && npm run docs:export",
     "docs:generate": "mvn javadoc:javadoc",
-    "docs:export": "cp -r target/site/apidocs/ docs/"
+    "docs:export": "rm -rf docs && cp -r target/site/apidocs/ docs/"
   },
   "pre-push": [
     "test",

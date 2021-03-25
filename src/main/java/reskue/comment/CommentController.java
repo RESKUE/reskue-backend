@@ -74,7 +74,7 @@ public class CommentController extends BaseController<CommentEntity, CommentRepo
 	@GetMapping("/{" + CommentEntity.ID + "}/media")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<MediaEntity> getAllMedia(
-			@PathVariable(value = ReskueEntity.ID) long id,
+			@PathVariable(value = ReskueEntity.ID) Long id,
 			@RequestParam Optional<String[]> filter,
 			@RequestParam Optional<String[]> sort,
 			@RequestParam Optional<Integer> page,

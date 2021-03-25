@@ -35,7 +35,7 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<MediaEntity> getAllMedia(long id, EntitySpecification<MediaEntity> specification, Pageable pageable) {
+	public Page<MediaEntity> getAllMedia(Long id, EntitySpecification<MediaEntity> specification, Pageable pageable) {
 
 		E entity = this.findById(id);
 		

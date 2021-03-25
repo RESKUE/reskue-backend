@@ -53,7 +53,7 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 	@GetMapping("/{" + ReskueEntity.ID + "}/media")
 	@RolesAllowed({ "administrator", "helper" })
 	public Page<MediaEntity> getAllMedia(
-			@PathVariable(value = ReskueEntity.ID) long id,
+			@PathVariable(value = ReskueEntity.ID) Long id,
 			@RequestParam Optional<String[]> filter, 
 			@RequestParam Optional<String[]> sort,
 			@RequestParam Optional<Integer> page, 

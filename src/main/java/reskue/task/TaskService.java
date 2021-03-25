@@ -58,7 +58,7 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<CommentEntity> getAllComments(long id, EntitySpecification<CommentEntity> specification,
+	public Page<CommentEntity> getAllComments(Long id, EntitySpecification<CommentEntity> specification,
 			Pageable pageable) {
 
 		TaskEntity entity = this.findById(id);
@@ -87,7 +87,7 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<SubtaskEntity> getAllSubtasks(long id, EntitySpecification<SubtaskEntity> specification,
+	public Page<SubtaskEntity> getAllSubtasks(Long id, EntitySpecification<SubtaskEntity> specification,
 			Pageable pageable) {	
 		
 		Utility.LOG.trace("TaskService.getAllSubtasks called.");
@@ -117,7 +117,7 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<UserEntity> getAllHelpers(long id, EntitySpecification<UserEntity> specification, Pageable pageable) {
+	public Page<UserEntity> getAllHelpers(Long id, EntitySpecification<UserEntity> specification, Pageable pageable) {
 		
 		Utility.LOG.trace("TaskService.getAllHelpers called.");
 		
@@ -145,7 +145,7 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	 * @param state - the new state of the task.
 	 * @return The task after the state was changed.
 	 */
-	public TaskEntity changeState(long id, int state) {
+	public TaskEntity changeState(Long id, int state) {
 		
 		Utility.LOG.trace("TaskService.changeState called.");
 		
@@ -168,7 +168,7 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	 * @param helperId - the helper user's identifier.
 	 * @return The task after the helper user was added.
 	 */
-	public TaskEntity addHelper(long id, long helperId) {
+	public TaskEntity addHelper(Long id, Long helperId) {
 		
 		Utility.LOG.trace("TaskService.addHelper called.");
 		
@@ -199,7 +199,7 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	 * @param helperId - the helper user's identifier.
 	 * @return The task after the helper user was removed.
 	 */
-	public TaskEntity removeHelper(long id, long helperId) {
+	public TaskEntity removeHelper(Long id, Long helperId) {
 		
 		Utility.LOG.trace("TaskService.removeHelper called.");
 		

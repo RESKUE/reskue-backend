@@ -58,7 +58,7 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<UserEntity> getAllUsers(long id, EntitySpecification<UserEntity> specification, Pageable pageable) {
+	public Page<UserEntity> getAllUsers(Long id, EntitySpecification<UserEntity> specification, Pageable pageable) {
 
 		Utility.LOG.trace("UserGroupService.getAllUsers called.");
 
@@ -88,7 +88,7 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	public Page<NotificationEntity> getNotifications(long[] ids, EntitySpecification<NotificationEntity> specification,
+	public Page<NotificationEntity> getNotifications(Long[] ids, EntitySpecification<NotificationEntity> specification,
 			Pageable pageable) {
 
 		Utility.LOG.trace("UserGroupService.getNotifications called.");
@@ -128,7 +128,7 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	 * @param userId - the user's identifier.
 	 * @return The user group after the user was added.
 	 */
-	public UserGroupEntity addUser(long id, long userId) {
+	public UserGroupEntity addUser(Long id, Long userId) {
 
 		Utility.LOG.trace("UserGroupService.addUser called.");
 
@@ -161,7 +161,7 @@ public class UserGroupService extends BaseService<UserGroupEntity, UserGroupRepo
 	 * @param userId - the user's identifier.
 	 * @return The user group after the user was removed.
 	 */
-	public UserGroupEntity removeUser(long id, long userId) {
+	public UserGroupEntity removeUser(Long id, Long userId) {
 
 		Utility.LOG.trace("UserGroupService.removeUser called.");
 
