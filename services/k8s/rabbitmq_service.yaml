@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: reskue-rabbitmq
+  labels:
+    app: reskue-rabbitmq
+spec:
+  type: ClusterIP
+  ports:
+    - name: rabbitmq1
+      port: 5672
+      protocol: TCP
+      targetPort: rabbitmq1
+    - name: rabbitmq2
+      port: 15672
+      protocol: TCP
+      targetPort: rabbitmq2
+  selector:
+    app: reskue-rabbitmq

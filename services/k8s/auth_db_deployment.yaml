@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reskue-auth-db
+  labels:
+    app: reskue-auth-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reskue-auth-db
+  template:
+    metadata:
+      labels:
+        app: reskue-auth-db
+    spec:
+      containers:
+      - name: app
+        image: postgres:latest
+        imagePullPolicy: Always
+        ports:
+        - name: postgres
+          protocol: TCP
+          containerPort: 5432
+        env:
+          - name: POSTGRES_USER
+            value: reskue
+          - name: POSTGRES_PASSWORD
+            value: reskue-pw
+          - name: POSTGRES_INITDB_ARGS
+            value: --auth-local=password
+          - name: POSTGRES_HOST_AUTH_METHOD
+            value: password
+          - name: POSTGRES_DB
+            value: auth_db
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: auth-db-volume
+      volumes:
+        - name: auth-db-volume
+          persistentVolumeClaim:
+            claimName: auth-db-pv-claim

@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+bases:
+  - ../../templates/k8s/base/
+
+resources:
+  - auth_db_deployment.yaml
+  - auth_db_service.yaml
+  - content_db_deployment.yaml
+  - content_db_service.yaml
+  - rabbitmq_deployment.yaml
+  - rabbitmq_service.yaml
+  - keycloak_configmap.yaml
+  - keycloak_deployment.yaml
+  - keycloak_ingess.yaml
+  - keycloak_service.yaml
+
+patchesStrategicMerge:
+  - deployment_envs.yaml
