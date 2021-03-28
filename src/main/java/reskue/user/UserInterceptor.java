@@ -15,6 +15,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import kueres.base.BaseController;
 
+/**
+ * 
+ * The UserInterceptor ensures that there is always a UserEntity for the current user.
+ *
+ * @author Jan Strassburg, jan.strassburg@student.kit.edu
+ * @version 1.0
+ * @since Mar 25, 2021
+ *
+ */
+
 @Component
 public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 	
@@ -48,9 +58,12 @@ public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 		List<UserEntity> userEntities = this.repository.findAll();
 		
 		for (UserEntity userEntity : userEntities) {
+			
 			if (userEntity.getKeycloakId().equals(subject)) {
+				
 				exists = true;
 				break;
+				
 			}
 		}
 		
@@ -69,7 +82,9 @@ public class UserInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
+		
 	    registry.addInterceptor(this.userInterceptor);
+	    
 	}
 
 }

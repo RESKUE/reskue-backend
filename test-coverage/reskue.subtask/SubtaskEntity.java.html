@@ -5,10 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -30,15 +28,15 @@ import reskue.task.TaskEntity;
  */
 
 @Entity
-<span class="fc" id="L33">public class SubtaskEntity extends BaseEntity&lt;SubtaskEntity&gt;{</span>
+<span class="fc" id="L31">public class SubtaskEntity extends BaseEntity&lt;SubtaskEntity&gt;{</span>
 	
 	@Override
 	public String[] getUpdateableFields() {
-<span class="fc" id="L37">		return new String[] {</span>
-<span class="fc" id="L38">			SubtaskEntity.TASK,</span>
-<span class="fc" id="L39">			SubtaskEntity.STATE,</span>
-<span class="fc" id="L40">			SubtaskEntity.TEXT,</span>
-<span class="fc" id="L41">			SubtaskEntity.IS_REQUIRED</span>
+<span class="fc" id="L35">		return new String[] {</span>
+<span class="fc" id="L36">			SubtaskEntity.TASK,</span>
+<span class="fc" id="L37">			SubtaskEntity.STATE,</span>
+<span class="fc" id="L38">			SubtaskEntity.TEXT,</span>
+<span class="fc" id="L39">			SubtaskEntity.IS_REQUIRED</span>
 		};
 	}
 	
@@ -48,55 +46,55 @@ import reskue.task.TaskEntity;
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
-<span class="fc" id="L51">	private TaskEntity task = null;</span>
+<span class="fc" id="L49">	private TaskEntity task = null;</span>
 	public static final String TASK = &quot;task&quot;;
-<span class="fc" id="L53">	public TaskEntity getTask() { return this.task; }</span>
-<span class="fc" id="L54">	public void setTask(TaskEntity task) { this.task = task; }</span>
+<span class="fc" id="L51">	public TaskEntity getTask() { return this.task; }</span>
+<span class="fc" id="L52">	public void setTask(TaskEntity task) { this.task = task; }</span>
 	
 	/**
 	 * The state of the subtask.
 	 */
 	@Column(name = &quot;state&quot;, nullable = false)
-<span class="fc" id="L60">	private int state = 0;</span>
+<span class="fc" id="L58">	private int state = 0;</span>
 	public static final String STATE = &quot;state&quot;;
-<span class="fc" id="L62">	public int getState() { return this.state; }</span>
-<span class="fc" id="L63">	public void setState(int state) { this.state = state; }</span>
+<span class="fc" id="L60">	public int getState() { return this.state; }</span>
+<span class="fc" id="L61">	public void setState(int state) { this.state = state; }</span>
 	
 	/**
 	 * The text of the subtask.
 	 */
 	@Column(name = &quot;text&quot;, nullable = false, columnDefinition=&quot;TEXT&quot;)
-<span class="fc" id="L69">	private String text = &quot;&quot;;</span>
+<span class="fc" id="L67">	private String text = &quot;&quot;;</span>
 	public static final String TEXT = &quot;text&quot;;
-<span class="fc" id="L71">	public String getText() { return this.text; }</span>
-<span class="fc" id="L72">	public void setText(String text) { this.text = text; }</span>
+<span class="fc" id="L69">	public String getText() { return this.text; }</span>
+<span class="fc" id="L70">	public void setText(String text) { this.text = text; }</span>
 	
 	/**
 	 * If the subtask is required to complete the task.
 	 */
 	@Column(name = &quot;isRequired&quot;, nullable = false)
-<span class="fc" id="L78">	private boolean isRequired = false;</span>
+<span class="fc" id="L76">	private boolean isRequired = false;</span>
 	public static final String IS_REQUIRED = &quot;isRequired&quot;;
-<span class="fc" id="L80">	public boolean getIsRequired() { return this.isRequired; }</span>
-<span class="fc" id="L81">	public void setIsRequired(boolean isRequired) { this.isRequired = isRequired; }</span>
+<span class="fc" id="L78">	public boolean getIsRequired() { return this.isRequired; }</span>
+<span class="fc" id="L79">	public void setIsRequired(boolean isRequired) { this.isRequired = isRequired; }</span>
 
 	@Override
 	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		
-<span class="fc" id="L86">		SubtaskEntity details = SubtaskEntity.createEntityFromJSON(json, this.getUpdateableFields(), SubtaskEntity.class);</span>
+<span class="fc" id="L84">		SubtaskEntity details = SubtaskEntity.createEntityFromJSON(json, this.getUpdateableFields(), SubtaskEntity.class);</span>
 		
-<span class="pc bpc" id="L88" title="1 of 2 branches missed.">		if (this.containsFields(json, SubtaskEntity.TASK)) {</span>
-<span class="fc" id="L89">			this.setTask(details.getTask());</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">		if (this.containsFields(json, SubtaskEntity.TASK)) {</span>
+<span class="fc" id="L87">			this.setTask(details.getTask());</span>
 		}
-<span class="pc bpc" id="L91" title="1 of 2 branches missed.">		if (this.containsFields(json, SubtaskEntity.STATE)) {</span>
-<span class="fc" id="L92">			this.setState(details.getState());</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">		if (this.containsFields(json, SubtaskEntity.STATE)) {</span>
+<span class="fc" id="L90">			this.setState(details.getState());</span>
 		}
-<span class="pc bpc" id="L94" title="1 of 2 branches missed.">		if (this.containsFields(json, SubtaskEntity.TEXT)) {</span>
-<span class="fc" id="L95">			this.setText(details.getText());</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">		if (this.containsFields(json, SubtaskEntity.TEXT)) {</span>
+<span class="fc" id="L93">			this.setText(details.getText());</span>
 		}
-<span class="fc" id="L97">		this.setIsRequired(isRequired);</span>
+<span class="fc" id="L95">		this.setIsRequired(isRequired);</span>
 
-<span class="fc" id="L99">	}</span>
+<span class="fc" id="L97">	}</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

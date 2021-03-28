@@ -93,48 +93,46 @@ import reskue.user.UserEntity;
 	/**
 	 * The list of media associated with the comment.
 	 */
-	@OneToMany()
+	@OneToMany(cascade = CascadeType.REMOVE)
 	@JoinTable(
 			name = &quot;comment_media&quot;,
-			joinColumns = @JoinColumn(name = &quot;comment_id&quot;, referencedColumnName = &quot;id&quot;),
-			inverseJoinColumns = @JoinColumn(name = &quot;media_id&quot;, referencedColumnName = &quot;id&quot;)
+			joinColumns = @JoinColumn(name = &quot;comment_id&quot;, referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = &quot;media_id&quot;, referencedColumnName = BaseEntity.ID)
 	)
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
-	@JsonIdentityReference(alwaysAsId = true)
-<span class="fc" id="L104">	private List&lt;MediaEntity&gt; media = new ArrayList&lt;MediaEntity&gt;();</span>
+<span class="fc" id="L102">	private List&lt;MediaEntity&gt; media = new ArrayList&lt;MediaEntity&gt;();</span>
 	public static final String MEDIA = &quot;media&quot;;
-<span class="fc" id="L106">	public List&lt;MediaEntity&gt; getMedia() { return this.media; }</span>
-<span class="fc" id="L107">	public void setMedia(List&lt;MediaEntity&gt; media) { this.media = media; }</span>
+<span class="fc" id="L104">	public List&lt;MediaEntity&gt; getMedia() { return this.media; }</span>
+<span class="fc" id="L105">	public void setMedia(List&lt;MediaEntity&gt; media) { this.media = media; }</span>
 	
 	/**
 	 * The author of the comment.
 	 */
 	@ManyToOne()
-	@JoinColumn(name = &quot;comment_author_id&quot;, referencedColumnName = &quot;id&quot;)
+	@JoinColumn(name = &quot;comment_author_id&quot;, referencedColumnName = BaseEntity.ID)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
-<span class="fc" id="L116">	private UserEntity author = null;</span>
+<span class="fc" id="L114">	private UserEntity author = null;</span>
 	public static final String AUTHOR = &quot;author&quot;;
-<span class="fc" id="L118">	public UserEntity getAuthor() { return this.author; }</span>
-<span class="fc" id="L119">	public void setAuthor(UserEntity author) { this.author = author; }</span>
+<span class="fc" id="L116">	public UserEntity getAuthor() { return this.author; }</span>
+<span class="fc" id="L117">	public void setAuthor(UserEntity author) { this.author = author; }</span>
 	
 	/**
 	 * The time when the comment was created.
 	 */
 	@Column(name = &quot;createdAt&quot;, nullable = false)
-<span class="fc" id="L125">	private Date createdAt = new Date();</span>
+<span class="fc" id="L123">	private Date createdAt = new Date();</span>
 	public static final String CREATED_AT = &quot;createdAt&quot;;
-<span class="fc" id="L127">	public Date getCreatedAt() { return this.createdAt; }</span>
-<span class="nc" id="L128">	public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }</span>
+<span class="fc" id="L125">	public Date getCreatedAt() { return this.createdAt; }</span>
+<span class="nc" id="L126">	public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }</span>
 	
 	/**
 	 * The last time the comment was changed.
 	 */
 	@Column(name = &quot;updatedAt&quot;, nullable = false)
-<span class="fc" id="L134">	private Date updatedAt = new Date();</span>
+<span class="fc" id="L132">	private Date updatedAt = new Date();</span>
 	public static final String UPDATED_AT = &quot;updatedAt&quot;;
-<span class="fc" id="L136">	public Date getUpdatedAt() { return this.updatedAt; }</span>
-<span class="fc" id="L137">	public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }</span>
+<span class="fc" id="L134">	public Date getUpdatedAt() { return this.updatedAt; }</span>
+<span class="fc" id="L135">	public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }</span>
 
 	/**
 	 * Doesnt allow changes to:
@@ -142,43 +140,43 @@ import reskue.user.UserEntity;
 	 *  - createdAt
 	 *  - updatedAt
 	 *  If both a task and a cultural asset are given the related entity is not changed
-	 * @throws JsonProcessingException 
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws JsonMappingException 
+	 * @throws JsonProcessingException if the JSON string can not be processed
+	 * @throws SecurityException if the JSON string can not be processed
+	 * @throws NoSuchMethodException if the JSON string can not be processed
+	 * @throws InvocationTargetException if the JSON string can not be processed
+	 * @throws IllegalArgumentException if the JSON string can not be processed
+	 * @throws IllegalAccessException if the JSON string can not be processed
+	 * @throws InstantiationException if the JSON string can not be processed
+	 * @throws JsonMappingException if the JSON string can not be processed
 	 */
 	@Override
 	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		
-<span class="fc" id="L157">		CommentEntity details = CommentEntity.createEntityFromJSON(json, this.getUpdateableFields(), CommentEntity.class);</span>
+<span class="fc" id="L155">		CommentEntity details = CommentEntity.createEntityFromJSON(json, this.getUpdateableFields(), CommentEntity.class);</span>
 		
-<span class="pc bpc" id="L159" title="1 of 2 branches missed.">		if (this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &amp;&amp;</span>
-<span class="pc bpc" id="L160" title="1 of 2 branches missed.">				!this.containsFields(json, CommentEntity.COMMENT_TASK)) {</span>
-<span class="fc" id="L161">			this.setCommentCulturalAsset(details.getCommentCulturalAsset());</span>
-<span class="fc" id="L162">			this.setCommentTask(null);</span>
-<span class="pc bnc" id="L163" title="All 2 branches missed.">		} else if (this.containsFields(json, CommentEntity.COMMENT_TASK) &amp;&amp;</span>
-<span class="nc bnc" id="L164" title="All 2 branches missed.">				!this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET)) {</span>
-<span class="nc" id="L165">			this.setCommentTask(details.getCommentTask());</span>
-<span class="nc" id="L166">			this.setCommentCulturalAsset(null);</span>
-<span class="nc bnc" id="L167" title="All 2 branches missed.">		} else if (!this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &amp;&amp;</span>
-<span class="nc bnc" id="L168" title="All 2 branches missed.">				!this.containsFields(json, CommentEntity.COMMENT_TASK)) {</span>
-<span class="nc" id="L169">			this.setCommentCulturalAsset(null);</span>
-<span class="nc" id="L170">			this.setCommentTask(null);</span>
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">		if (this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &amp;&amp;</span>
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">				!this.containsFields(json, CommentEntity.COMMENT_TASK)) {</span>
+<span class="fc" id="L159">			this.setCommentCulturalAsset(details.getCommentCulturalAsset());</span>
+<span class="fc" id="L160">			this.setCommentTask(null);</span>
+<span class="pc bnc" id="L161" title="All 2 branches missed.">		} else if (this.containsFields(json, CommentEntity.COMMENT_TASK) &amp;&amp;</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">				!this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET)) {</span>
+<span class="nc" id="L163">			this.setCommentTask(details.getCommentTask());</span>
+<span class="nc" id="L164">			this.setCommentCulturalAsset(null);</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">		} else if (!this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &amp;&amp;</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">				!this.containsFields(json, CommentEntity.COMMENT_TASK)) {</span>
+<span class="nc" id="L167">			this.setCommentCulturalAsset(null);</span>
+<span class="nc" id="L168">			this.setCommentTask(null);</span>
 		}
 		
-<span class="pc bpc" id="L173" title="1 of 2 branches missed.">		if (this.containsFields(json, CommentEntity.TEXT)) {</span>
-<span class="fc" id="L174">			this.setText(details.getText());</span>
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">		if (this.containsFields(json, CommentEntity.TEXT)) {</span>
+<span class="fc" id="L172">			this.setText(details.getText());</span>
 		}
-<span class="pc bpc" id="L176" title="1 of 2 branches missed.">		if (this.containsFields(json, CommentEntity.MEDIA)) {</span>
-<span class="fc" id="L177">			this.setMedia(details.getMedia());</span>
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">		if (this.containsFields(json, CommentEntity.MEDIA)) {</span>
+<span class="fc" id="L175">			this.setMedia(details.getMedia());</span>
 		}
-<span class="fc" id="L179">		this.setUpdatedAt(new Date());</span>
+<span class="fc" id="L177">		this.setUpdatedAt(new Date());</span>
 		
-<span class="fc" id="L181">	}</span>
+<span class="fc" id="L179">	}</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

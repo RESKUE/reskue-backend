@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import kueres.base.BaseController;
+import kueres.eventbus.EventConsumer;
 import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
 import kueres.query.SortBuilder;
@@ -30,7 +31,7 @@ import kueres.utility.Utility;
  *
  */
 
-<span class="fc" id="L33">public abstract class ReskueController&lt;E extends ReskueEntity&lt;E&gt;, R extends ReskueRepository&lt;E&gt;, S extends ReskueService&lt;E, R&gt;&gt;</span>
+<span class="fc" id="L34">public abstract class ReskueController&lt;E extends ReskueEntity&lt;E&gt;, R extends ReskueRepository&lt;E&gt;, S extends ReskueService&lt;E, R&gt;&gt;</span>
 		extends BaseController&lt;E, R, S&gt; {
 	
 	/**
@@ -52,22 +53,25 @@ import kueres.utility.Utility;
 	@GetMapping(&quot;/{&quot; + ReskueEntity.ID + &quot;}/media&quot;)
 	@RolesAllowed({ &quot;administrator&quot;, &quot;helper&quot; })
 	public Page&lt;MediaEntity&gt; getAllMedia(
-			@PathVariable(value = ReskueEntity.ID) long id,
+			@PathVariable(value = ReskueEntity.ID) Long id,
 			@RequestParam Optional&lt;String[]&gt; filter, 
 			@RequestParam Optional&lt;String[]&gt; sort,
 			@RequestParam Optional&lt;Integer&gt; page, 
 			@RequestParam Optional&lt;Integer&gt; size) {
 
-<span class="fc" id="L61">		Utility.LOG.trace(&quot;ReskueController.getAllComments called.&quot;);</span>
+<span class="fc" id="L62">		Utility.LOG.trace(&quot;ReskueController.getAllComments called.&quot;);</span>
 		
-<span class="fc" id="L63">		EntitySpecification&lt;MediaEntity&gt; specification = null;</span>
-<span class="pc bpc" id="L64" title="1 of 2 branches missed.">		if (filter.isPresent()) {</span>
-<span class="nc" id="L65">			specification = new EntitySpecification&lt;MediaEntity&gt;(filter.get());</span>
+<span class="fc" id="L64">		Utility.LOG.info(&quot;id: {}&quot;, id);</span>
+		
+<span class="fc" id="L66">		EntitySpecification&lt;MediaEntity&gt; specification = null;</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">		if (filter.isPresent()) {</span>
+<span class="nc" id="L68">			Utility.LOG.info(&quot;filter: {}&quot;, EventConsumer.writeObjectAsJSON(filter.get()));</span>
+<span class="nc" id="L69">			specification = new EntitySpecification&lt;MediaEntity&gt;(filter.get());</span>
 		}
 		
-<span class="fc" id="L68">		Pageable pageable = SortBuilder.buildPageable(sort, page, size);</span>
+<span class="fc" id="L72">		Pageable pageable = SortBuilder.buildPageable(sort, page, size);</span>
 
-<span class="fc" id="L70">		return service.getAllMedia(id, specification, pageable);</span>
+<span class="fc" id="L74">		return service.getAllMedia(id, specification, pageable);</span>
 		
 	}
 	

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reskue-rabbitmq
+  labels:
+    app: reskue-rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reskue-rabbitmq
+  template:
+    metadata:
+      labels:
+        app: reskue-rabbitmq
+    spec:
+      containers:
+      - name: app
+        image: rabbitmq:3-management-alpine
+        imagePullPolicy: Always
+        ports:
+        - name: rabbitmq1
+          protocol: TCP
+          containerPort: 5672
+        - name: rabbitmq2
+          protocol: TCP
+          containerPort: 15672
+        env:
+          - name: RABBITMQ_DEFAULT_USER
+            value: reskue
+          - name: RABBITMQ_DEFAULT_PASS
+            value: reskue-pw
+        volumeMounts:
+          - mountPath: /var/lib/rabbitmq/
+            name: rabbit-mq-data-volume
+          - mountPath: /var/log/rabbitmq/
+            name: rabbit-mq-logs
+      volumes:
+        - name: rabbit-mq-data-volume
+          persistentVolumeClaim:
+            claimName: rabbit-mq-data-pv-claim
+        - name: rabbit-mq-logs
+          persistentVolumeClaim:
+           claimName: rabbit-mq-logs-pv-claim

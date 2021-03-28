@@ -16,7 +16,7 @@ import reskue.comment.CommentEntity;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -35,8 +35,8 @@ public abstract class ReskueEntity<E extends ReskueEntity<E>> extends BaseEntity
 	/**
 	 * The description of the entity.
 	 */
-	@Column(name = "description", nullable = false, columnDefinition="TEXT")
-	private String description = "";
+	@Column(name = "description", nullable = true, columnDefinition="TEXT")
+	private String description = null;
 	public static final String DESCRIPTION = "description";
 	public String getDescription() { return this.description; }
 	public void setDescription(String description) { this.description = description; }

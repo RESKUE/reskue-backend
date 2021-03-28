@@ -2,15 +2,9 @@
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,7 +32,7 @@ import reskue.user.UserService;
  */
 
 @Service
-<span class="fc" id="L41">public class UserGroupService extends BaseService&lt;UserGroupEntity, UserGroupRepository&gt; {</span>
+<span class="fc" id="L35">public class UserGroupService extends BaseService&lt;UserGroupEntity, UserGroupRepository&gt; {</span>
 	
 	/**
 	 * The UserService needed to add users as members of a group.
@@ -47,20 +41,14 @@ import reskue.user.UserService;
 	protected UserService userService;
 	
 	/**
-	 * The EntityManager needed to create a CriteriaBuilder.
-	 */
-	@PersistenceContext
-	private EntityManager em;
-	
-	/**
 	 * Set this EventSubscribers identifier and routing.
 	 */
 	@Override
 	@PostConstruct
 	public void init() {
-<span class="fc" id="L61">		this.identifier = UserGroupController.ROUTE;</span>
-<span class="fc" id="L62">		this.routingKey = UserGroupController.ROUTE;</span>
-<span class="fc" id="L63">	}</span>
+<span class="fc" id="L49">		this.identifier = UserGroupController.ROUTE;</span>
+<span class="fc" id="L50">		this.routingKey = UserGroupController.ROUTE;</span>
+<span class="fc" id="L51">	}</span>
 	
 	/**
 	 * Get all users that are members of the user group.
@@ -70,78 +58,66 @@ import reskue.user.UserService;
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings(&quot;unchecked&quot;)
-	public Page&lt;UserEntity&gt; getAllUsers(long id, EntitySpecification&lt;UserEntity&gt; specification, Pageable pageable) {
+	public Page&lt;UserEntity&gt; getAllUsers(Long id, EntitySpecification&lt;UserEntity&gt; specification, Pageable pageable) {
 
-<span class="fc" id="L76">		Utility.LOG.trace(&quot;UserGroupService.getAllUsers called.&quot;);</span>
+<span class="fc" id="L63">		Utility.LOG.trace(&quot;UserGroupService.getAllUsers called.&quot;);</span>
 
-<span class="fc" id="L78">		UserGroupEntity entity = this.findById(id);</span>
-<span class="fc" id="L79">		List&lt;UserEntity&gt; users = entity.getUsers();</span>
+<span class="fc" id="L65">		UserGroupEntity entity = this.findById(id);</span>
+<span class="fc" id="L66">		List&lt;UserEntity&gt; users = entity.getUsers();</span>
 
-<span class="pc bpc" id="L81" title="1 of 2 branches missed.">		if (specification != null) {</span>
-<span class="nc" id="L82">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
-<span class="nc" id="L83">			CriteriaQuery&lt;UserEntity&gt; criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);</span>
-<span class="nc" id="L84">			Root&lt;UserEntity&gt; root = criteriaQuery.from(UserEntity.class);</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">		if (specification != null) {</span>
 
-<span class="nc" id="L86">			users = users.stream().filter(</span>
-<span class="nc" id="L87">					(Predicate&lt;? super UserEntity&gt;) specification.toPredicate(root, criteriaQuery, criteriaBuilder))</span>
-<span class="nc" id="L88">					.collect(Collectors.toList());</span>
+<span class="nc" id="L70">			users = users.stream().filter(specification.toPredicate(UserEntity.class)).collect(Collectors.toList());</span>
+			
 		}
 
-<span class="fc" id="L91">		Page&lt;UserEntity&gt; page = new PageImpl&lt;UserEntity&gt;(users, pageable, users.size());</span>
+<span class="fc" id="L74">		Page&lt;UserEntity&gt; page = new PageImpl&lt;UserEntity&gt;(users, pageable, users.size());</span>
 
-<span class="fc" id="L93">		EventConsumer.sendEvent(&quot;UserGroupService.getAllUsers&quot;, EventType.READ.type, this.getIdentifier(),</span>
-<span class="fc" id="L94">				EventConsumer.writeObjectAsJSON(page));</span>
+<span class="fc" id="L76">		EventConsumer.sendEvent(&quot;UserGroupService.getAllUsers&quot;, EventType.READ.type, this.getIdentifier(),</span>
+<span class="fc" id="L77">				EventConsumer.writeObjectAsJSON(page));</span>
 
-<span class="fc" id="L96">		return page;</span>
+<span class="fc" id="L79">		return page;</span>
 
 	}
 	
 	/**
 	 * Get all notifications for the user group.
 	 * 
-	 * @param id - the user group's identifier.
+	 * @param ids - the user group's identifier.
 	 * @param specification - filter for the result.
 	 * @param pageable - sort and pagination for the result.
 	 * @return The result as a page.
 	 */
-	@SuppressWarnings(&quot;unchecked&quot;)
-	public Page&lt;NotificationEntity&gt; getNotifications(long[] ids, EntitySpecification&lt;NotificationEntity&gt; specification,
+	public Page&lt;NotificationEntity&gt; getNotifications(Long[] ids, EntitySpecification&lt;NotificationEntity&gt; specification,
 			Pageable pageable) {
 
-<span class="fc" id="L112">		Utility.LOG.trace(&quot;UserGroupService.getNotifications called.&quot;);</span>
+<span class="fc" id="L94">		Utility.LOG.trace(&quot;UserGroupService.getNotifications called.&quot;);</span>
 
-<span class="fc" id="L114">		List&lt;NotificationEntity&gt; receivedNotifications = new ArrayList&lt;NotificationEntity&gt;();</span>
+<span class="fc" id="L96">		List&lt;NotificationEntity&gt; receivedNotifications = new ArrayList&lt;NotificationEntity&gt;();</span>
 		
 		
-<span class="fc bfc" id="L117" title="All 2 branches covered.">		for (int i = 0; i &lt; ids.length; i++) {</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">		for (int i = 0; i &lt; ids.length; i++) {</span>
 
-<span class="fc" id="L119">			UserGroupEntity userGroup = this.findById(ids[i]);</span>
+<span class="fc" id="L101">			UserGroupEntity userGroup = this.findById(ids[i]);</span>
 
-<span class="fc" id="L121">			receivedNotifications.addAll(userGroup.getNotificationReceiver());</span>
+<span class="fc" id="L103">			receivedNotifications.addAll(userGroup.getNotificationReceiver());</span>
 
 		}
 		
-<span class="fc" id="L125">		receivedNotifications = receivedNotifications.stream().distinct().collect(Collectors.toList());</span>
+<span class="fc" id="L107">		receivedNotifications = receivedNotifications.stream().distinct().collect(Collectors.toList());</span>
 
-<span class="pc bpc" id="L127" title="1 of 2 branches missed.">		if (specification != null) {</span>
-<span class="nc" id="L128">			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();</span>
-<span class="nc" id="L129">			CriteriaQuery&lt;NotificationEntity&gt; criteriaQuery = criteriaBuilder.createQuery(NotificationEntity.class);</span>
-<span class="nc" id="L130">			Root&lt;NotificationEntity&gt; root = criteriaQuery.from(NotificationEntity.class);</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">		if (specification != null) {</span>
 
-<span class="nc" id="L132">			receivedNotifications = receivedNotifications.stream()</span>
-<span class="nc" id="L133">					.filter((Predicate&lt;? super NotificationEntity&gt;) specification.toPredicate(root, criteriaQuery,</span>
-<span class="nc" id="L134">							criteriaBuilder))</span>
-<span class="nc" id="L135">					.collect(Collectors.toList());</span>
+<span class="nc" id="L111">			receivedNotifications = receivedNotifications.stream().filter(specification.toPredicate(NotificationEntity.class)).collect(Collectors.toList());</span>
 		}
 
-<span class="fc" id="L138">		Page&lt;NotificationEntity&gt; page = new PageImpl&lt;NotificationEntity&gt;(receivedNotifications, pageable,</span>
-<span class="fc" id="L139">				receivedNotifications.size());</span>
+<span class="fc" id="L114">		Page&lt;NotificationEntity&gt; page = new PageImpl&lt;NotificationEntity&gt;(receivedNotifications, pageable,</span>
+<span class="fc" id="L115">				receivedNotifications.size());</span>
 
-<span class="fc" id="L141">		EventConsumer.sendEvent(&quot;UserGroupService.getNotifications&quot;, EventType.READ.type, this.getIdentifier(),</span>
-<span class="fc" id="L142">				EventConsumer.writeObjectAsJSON(page));</span>
+<span class="fc" id="L117">		EventConsumer.sendEvent(&quot;UserGroupService.getNotifications&quot;, EventType.READ.type, this.getIdentifier(),</span>
+<span class="fc" id="L118">				EventConsumer.writeObjectAsJSON(page));</span>
 
-<span class="fc" id="L144">		return page;</span>
+<span class="fc" id="L120">		return page;</span>
 
 	}
 	
@@ -152,29 +128,29 @@ import reskue.user.UserService;
 	 * @param userId - the user's identifier.
 	 * @return The user group after the user was added.
 	 */
-	public UserGroupEntity addUser(long id, long userId) {
+	public UserGroupEntity addUser(Long id, Long userId) {
 
-<span class="fc" id="L157">		Utility.LOG.trace(&quot;UserGroupService.addUser called.&quot;);</span>
+<span class="fc" id="L133">		Utility.LOG.trace(&quot;UserGroupService.addUser called.&quot;);</span>
 
-<span class="fc" id="L159">		UserGroupEntity entity = this.findById(id);</span>
-<span class="fc" id="L160">		UserEntity user = userService.findById(userId);</span>
+<span class="fc" id="L135">		UserGroupEntity entity = this.findById(id);</span>
+<span class="fc" id="L136">		UserEntity user = userService.findById(userId);</span>
 
-<span class="fc" id="L162">		List&lt;UserEntity&gt; newUsers = entity.getUsers();</span>
+<span class="fc" id="L138">		List&lt;UserEntity&gt; newUsers = entity.getUsers();</span>
 
 		// if the user is already a user
-<span class="pc bpc" id="L165" title="1 of 2 branches missed.">		if (newUsers.contains(user)) {</span>
-<span class="nc" id="L166">			return entity;</span>
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">		if (newUsers.contains(user)) {</span>
+<span class="nc" id="L142">			return entity;</span>
 		} else {
-<span class="fc" id="L168">			newUsers.add(user);</span>
-<span class="fc" id="L169">			entity.setUsers(newUsers);</span>
+<span class="fc" id="L144">			newUsers.add(user);</span>
+<span class="fc" id="L145">			entity.setUsers(newUsers);</span>
 		}
 
-<span class="fc" id="L172">		final UserGroupEntity updatedEntity = repository.save(entity);</span>
+<span class="fc" id="L148">		final UserGroupEntity updatedEntity = repository.save(entity);</span>
 
-<span class="fc" id="L174">		EventConsumer.sendEvent(&quot;UserGroupService.addUser&quot;, EventType.UPDATE.type, this.getIdentifier(),</span>
-<span class="fc" id="L175">				EventConsumer.writeObjectAsJSON(updatedEntity));</span>
+<span class="fc" id="L150">		EventConsumer.sendEvent(&quot;UserGroupService.addUser&quot;, EventType.UPDATE.type, this.getIdentifier(),</span>
+<span class="fc" id="L151">				EventConsumer.writeObjectAsJSON(updatedEntity));</span>
 
-<span class="fc" id="L177">		return updatedEntity;</span>
+<span class="fc" id="L153">		return updatedEntity;</span>
 
 	}
 	
@@ -185,29 +161,29 @@ import reskue.user.UserService;
 	 * @param userId - the user's identifier.
 	 * @return The user group after the user was removed.
 	 */
-	public UserGroupEntity removeUser(long id, long userId) {
+	public UserGroupEntity removeUser(Long id, Long userId) {
 
-<span class="fc" id="L190">		Utility.LOG.trace(&quot;UserGroupService.removeUser called.&quot;);</span>
+<span class="fc" id="L166">		Utility.LOG.trace(&quot;UserGroupService.removeUser called.&quot;);</span>
 
-<span class="fc" id="L192">		UserGroupEntity entity = this.findById(id);</span>
-<span class="fc" id="L193">		UserEntity user = userService.findById(userId);</span>
+<span class="fc" id="L168">		UserGroupEntity entity = this.findById(id);</span>
+<span class="fc" id="L169">		UserEntity user = userService.findById(userId);</span>
 
-<span class="fc" id="L195">		List&lt;UserEntity&gt; newUsers = entity.getUsers();</span>
+<span class="fc" id="L171">		List&lt;UserEntity&gt; newUsers = entity.getUsers();</span>
 
 		// if the user is actually a user
-<span class="pc bpc" id="L198" title="1 of 2 branches missed.">		if (newUsers.contains(user)) {</span>
-<span class="fc" id="L199">			newUsers.remove(user);</span>
-<span class="fc" id="L200">			entity.setUsers(newUsers);</span>
-<span class="fc" id="L201">		} else {</span>
-<span class="nc" id="L202">			return entity;</span>
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">		if (newUsers.contains(user)) {</span>
+<span class="fc" id="L175">			newUsers.remove(user);</span>
+<span class="fc" id="L176">			entity.setUsers(newUsers);</span>
+<span class="fc" id="L177">		} else {</span>
+<span class="nc" id="L178">			return entity;</span>
 		}
 
-<span class="fc" id="L205">		final UserGroupEntity updatedEntity = repository.save(entity);</span>
+<span class="fc" id="L181">		final UserGroupEntity updatedEntity = repository.save(entity);</span>
 
-<span class="fc" id="L207">		EventConsumer.sendEvent(&quot;UserGroupService.removeUser&quot;, EventType.UPDATE.type, this.getIdentifier(),</span>
-<span class="fc" id="L208">				EventConsumer.writeObjectAsJSON(updatedEntity));</span>
+<span class="fc" id="L183">		EventConsumer.sendEvent(&quot;UserGroupService.removeUser&quot;, EventType.UPDATE.type, this.getIdentifier(),</span>
+<span class="fc" id="L184">				EventConsumer.writeObjectAsJSON(updatedEntity));</span>
 
-<span class="fc" id="L210">		return updatedEntity;</span>
+<span class="fc" id="L186">		return updatedEntity;</span>
 
 	}
 

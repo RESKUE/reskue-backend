@@ -84,8 +84,8 @@ import reskue.usergroup.UserGroupEntity;
 	@ManyToMany()
 	@JoinTable(
 			name = &quot;task_helpers&quot;,
-			joinColumns = @JoinColumn(name = &quot;helper_id&quot;, referencedColumnName = &quot;id&quot;),
-			inverseJoinColumns = @JoinColumn(name = &quot;task_id&quot;, referencedColumnName = &quot;id&quot;)
+			joinColumns = @JoinColumn(name = &quot;helper_id&quot;, referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = &quot;task_id&quot;, referencedColumnName = BaseEntity.ID)
 	)
 	@JsonIgnoreProperties(TaskEntity.HELPER_USERS)
 <span class="fc" id="L91">	private List&lt;TaskEntity&gt; taskHelper = new ArrayList&lt;TaskEntity&gt;();</span>
@@ -96,7 +96,7 @@ import reskue.usergroup.UserGroupEntity;
 	/**
 	 * The list of comments that the user is an author of.
 	 */
-	@OneToMany(mappedBy = &quot;author&quot;)
+	@OneToMany(mappedBy = &quot;author&quot;, cascade = CascadeType.REMOVE)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 <span class="fc" id="L102">	private List&lt;CommentEntity&gt; commentAuthor = new ArrayList&lt;CommentEntity&gt;();</span>
@@ -110,8 +110,8 @@ import reskue.usergroup.UserGroupEntity;
 	@ManyToMany()
 	@JoinTable(
 			name = &quot;usergroup_users&quot;,
-			joinColumns = @JoinColumn(name = &quot;user_id&quot;, referencedColumnName = &quot;id&quot;),
-			inverseJoinColumns = @JoinColumn(name = &quot;usergroup_id&quot;, referencedColumnName = &quot;id&quot;)
+			joinColumns = @JoinColumn(name = &quot;user_id&quot;, referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = &quot;usergroup_id&quot;, referencedColumnName = BaseEntity.ID)
 	)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
@@ -123,7 +123,7 @@ import reskue.usergroup.UserGroupEntity;
 	/**
 	 * The list of notifications that the user has send.
 	 */
-	@OneToMany(mappedBy = &quot;sender&quot;, cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = &quot;sender&quot;, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 <span class="fc" id="L129">	private List&lt;NotificationEntity&gt; notificationSender = new ArrayList&lt;NotificationEntity&gt;();</span>

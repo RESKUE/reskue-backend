@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: reskue-auth-db
+  labels:
+    app: reskue-auth-db
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 5432
+      protocol: TCP
+      targetPort: postgres
+  selector:
+    app: reskue-auth-db

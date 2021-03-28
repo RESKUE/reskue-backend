@@ -41,7 +41,7 @@ import reskue.user.UserService;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -54,8 +54,52 @@ public class CommentController extends BaseController<CommentEntity, CommentRepo
 	 */
 	public static final String ROUTE = "/comment";
 	
+	/**
+	 * The UserService needed to get the user for the automatic comment author.
+	 */
 	@Autowired
 	private UserService userService;
+	
+	/**
+	 * Creates a comment and automatically sets the author to the user that send the create request.
+	 * 
+	 * @param request - the request send by the user.
+	 * @param response - the response.
+	 * @return - the created comment with the author.
+	 * 
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws IOException
+	 */
+	@PostMapping("/autoAuthor")
+	@RolesAllowed("administrator")
+	public ResponseEntity<CommentEntity> createAutoAuthor(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException {
+		
+		Utility.LOG.trace("NotificationController.create called.");
+		
+		KeycloakAuthenticationToken authToken = (KeycloakAuthenticationToken) request.getUserPrincipal();
+		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();
+		
+		String subject = token.getSubject();
+		UserEntity author = userService.me(subject);
+		
+		String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+		
+		Class<CommentEntity> entityClass = this.service.getEntityClass();
+		CommentEntity entity = entityClass.getDeclaredConstructor().newInstance();
+		entity = BaseEntity.createEntityFromJSON(body, entity.getUpdateableFields(), entityClass);
+		entity.setAuthor(author);
+		
+		CommentEntity created = this.service.create(entity);
+		return ResponseEntity.ok().body(created);
+		
+	}
 	
 	/**
 	 * Find all media of the comment.
@@ -87,38 +131,14 @@ public class CommentController extends BaseController<CommentEntity, CommentRepo
 		
 		EntitySpecification<MediaEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<MediaEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
 
 		return service.getAllMedia(id, specification, pageable);
-		
-	}
-	
-	@PostMapping("/autoAuthor")
-	@RolesAllowed("administrator")
-	public ResponseEntity<CommentEntity> createAutoAuthor(
-			HttpServletRequest request, 
-			HttpServletResponse response) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException {
-		
-		Utility.LOG.trace("NotificationController.create called.");
-		
-		KeycloakAuthenticationToken authToken = (KeycloakAuthenticationToken) request.getUserPrincipal();
-		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();
-		
-		String subject = token.getSubject();
-		UserEntity author = userService.me(subject);
-		
-		String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-		
-		Class<CommentEntity> entityClass = this.service.getEntityClass();
-		CommentEntity entity = entityClass.getDeclaredConstructor().newInstance();
-		entity = BaseEntity.createEntityFromJSON(body, entity.getUpdateableFields(), entityClass);
-		entity.setAuthor(author);
-		
-		CommentEntity created = this.service.create(entity);
-		return ResponseEntity.ok().body(created);
 		
 	}
 

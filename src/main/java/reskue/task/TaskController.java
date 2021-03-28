@@ -48,7 +48,7 @@ import reskue.user.UserService;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -61,8 +61,52 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	 */
 	public static final String ROUTE = "/task";
 	
+	/**
+	 * The UserService needed to get the user for the automatic task contact.
+	 */
 	@Autowired
 	private UserService userService;
+	
+	/**
+	 * Creates a task and automatically sets the contact to the user that send the create request.
+	 * 
+	 * @param request - the request send by the user.
+	 * @param response - the response.
+	 * @return - the created task with the contact.
+	 * 
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws IOException
+	 */
+	@PostMapping("/autoContact")
+	@RolesAllowed("administrator")
+	public ResponseEntity<TaskEntity> createAutoContact(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException {
+		
+		Utility.LOG.trace("NotificationController.create called.");
+		
+		KeycloakAuthenticationToken authToken = (KeycloakAuthenticationToken) request.getUserPrincipal();
+		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();
+		
+		String subject = token.getSubject();
+		UserEntity contact = userService.me(subject);
+		
+		String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+		
+		Class<TaskEntity> entityClass = this.service.getEntityClass();
+		TaskEntity entity = entityClass.getDeclaredConstructor().newInstance();
+		entity = BaseEntity.createEntityFromJSON(body, entity.getUpdateableFields(), entityClass);
+		entity.setContactUser(contact);
+		
+		TaskEntity created = this.service.create(entity);
+		return ResponseEntity.ok().body(created);
+		
+	}
 	
 	/**
 	 * Find all comments of the task.
@@ -93,7 +137,9 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 		
 		EntitySpecification<CommentEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<CommentEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -132,7 +178,9 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 		
 		EntitySpecification<SubtaskEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<SubtaskEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -171,7 +219,9 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 		
 		EntitySpecification<UserEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			specification = new EntitySpecification<UserEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
@@ -237,32 +287,6 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 		
 		TaskEntity updatedEntity = service.removeHelper(id, helperId);
 		return ResponseEntity.ok().body(updatedEntity);
-		
-	}
-	
-	@PostMapping("/autoContact")
-	@RolesAllowed("administrator")
-	public ResponseEntity<TaskEntity> createAutoContact(
-			HttpServletRequest request, 
-			HttpServletResponse response) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException {
-		
-		Utility.LOG.trace("NotificationController.create called.");
-		
-		KeycloakAuthenticationToken authToken = (KeycloakAuthenticationToken) request.getUserPrincipal();
-		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();
-		
-		String subject = token.getSubject();
-		UserEntity contact = userService.me(subject);
-		
-		String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-		
-		Class<TaskEntity> entityClass = this.service.getEntityClass();
-		TaskEntity entity = entityClass.getDeclaredConstructor().newInstance();
-		entity = BaseEntity.createEntityFromJSON(body, entity.getUpdateableFields(), entityClass);
-		entity.setContactUser(contact);
-		
-		TaskEntity created = this.service.create(entity);
-		return ResponseEntity.ok().body(created);
 		
 	}
 

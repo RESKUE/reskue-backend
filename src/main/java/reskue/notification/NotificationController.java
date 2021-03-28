@@ -30,7 +30,7 @@ import reskue.user.UserService;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -44,9 +44,27 @@ public class NotificationController
 	 */
 	public static final String ROUTE = "/notification";
 	
+	/**
+	 * The UserService needed to get the user for the automatic notification sender.
+	 */
 	@Autowired
 	private UserService userService;
 	
+	/**
+	 * Creates a notification and automatically sets the sender to the user that send the create request.
+	 * 
+	 * @param request - the request send by the user.
+	 * @param response - the response.
+	 * @return - the created notification with the sender.
+	 * 
+	 * @throws IOException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 */
 	@PostMapping("/autoSender")
 	@RolesAllowed("administrator")
 	public ResponseEntity<NotificationEntity> createAutoSender(

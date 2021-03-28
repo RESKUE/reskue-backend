@@ -88,7 +88,7 @@ import reskue.task.TaskEntity;
 	/**
 	 * The list of tasks associated with the cultural asset.
 	 */
-	@OneToMany()
+	@OneToMany(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = &quot;cultural_asset_id&quot;, referencedColumnName = &quot;id&quot;)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
@@ -100,7 +100,7 @@ import reskue.task.TaskEntity;
 	/**
 	 * The list of comments associated with the cultural asset.
 	 */
-	@OneToMany()
+	@OneToMany(cascade = CascadeType.REMOVE)
 	@JoinTable(
 			name = &quot;cultural_asset_comments&quot;,
 			joinColumns = { @JoinColumn(name = &quot;cultural_asset_id&quot;, referencedColumnName = BaseEntity.ID) },
@@ -148,7 +148,7 @@ import reskue.task.TaskEntity;
 	 * The parent of the cultural asset.
 	 */
 	@ManyToOne()
-	@JoinColumn(name = &quot;parent_id&quot;, referencedColumnName = &quot;id&quot;)
+	@JoinColumn(name = &quot;parent_id&quot;, referencedColumnName = BaseEntity.ID)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 	private CulturalAssetEntity culturalAssetParent;
@@ -160,7 +160,7 @@ import reskue.task.TaskEntity;
 	 * The list of children associated with the cultural asset.
 	 */
 	@OneToMany()
-	@JoinColumn(name = &quot;child_parent_id&quot;, referencedColumnName = &quot;id&quot;)
+	@JoinColumn(name = &quot;child_parent_id&quot;, referencedColumnName = BaseEntity.ID)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 <span class="fc" id="L166">	private List&lt;CulturalAssetEntity&gt; culturalAssetChildren = new ArrayList&lt;CulturalAssetEntity&gt;();</span>
@@ -171,8 +171,8 @@ import reskue.task.TaskEntity;
 	/**
 	 * The list of notifications associated with the cultural asset.
 	 */
-	@OneToMany()
-	@JoinColumn(name = &quot;notification_entity_id&quot;, referencedColumnName = &quot;id&quot;)
+	@OneToMany(cascade = CascadeType.REMOVE)
+	@JoinColumn(name = &quot;notification_entity_id&quot;, referencedColumnName = BaseEntity.ID)
 	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
 	@JsonIdentityReference(alwaysAsId = true)
 <span class="fc" id="L178">	private List&lt;NotificationEntity&gt; notifications = new ArrayList&lt;NotificationEntity&gt;();</span>
@@ -183,18 +183,16 @@ import reskue.task.TaskEntity;
 	/**
 	 * The list of media associated with the entity.
 	 */
-	@OneToMany()
+	@OneToMany(cascade = CascadeType.REMOVE)
 	@JoinTable(
 			name = &quot;cultural_asset_media&quot;,
-			joinColumns = @JoinColumn(name = &quot;cultural_asset_id&quot;, referencedColumnName = &quot;id&quot;),
-			inverseJoinColumns = @JoinColumn(name = &quot;media_id&quot;, referencedColumnName = &quot;id&quot;)
+			joinColumns = @JoinColumn(name = &quot;cultural_asset_id&quot;, referencedColumnName = BaseEntity.ID),
+			inverseJoinColumns = @JoinColumn(name = &quot;media_id&quot;, referencedColumnName = BaseEntity.ID)
 	)
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
-	@JsonIdentityReference(alwaysAsId = true)
-<span class="fc" id="L194">	private List&lt;MediaEntity&gt; media = new ArrayList&lt;MediaEntity&gt;();</span>
+<span class="fc" id="L192">	private List&lt;MediaEntity&gt; media = new ArrayList&lt;MediaEntity&gt;();</span>
 	public static final String MEDIA = &quot;media&quot;;
-<span class="fc" id="L196">	public List&lt;MediaEntity&gt; getMedia() { return this.media; }</span>
-<span class="fc" id="L197">	public void setMedia(List&lt;MediaEntity&gt; media) { this.media = media; }</span>
+<span class="fc" id="L194">	public List&lt;MediaEntity&gt; getMedia() { return this.media; }</span>
+<span class="fc" id="L195">	public void setMedia(List&lt;MediaEntity&gt; media) { this.media = media; }</span>
 	
 	/**
 	 * Does not allow changes to:
@@ -206,54 +204,54 @@ import reskue.task.TaskEntity;
 	@Override
 	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		
-<span class="fc" id="L209">		CulturalAssetEntity details = CulturalAssetEntity.createEntityFromJSON(json, this.getUpdateableFields(), CulturalAssetEntity.class);</span>
+<span class="fc" id="L207">		CulturalAssetEntity details = CulturalAssetEntity.createEntityFromJSON(json, this.getUpdateableFields(), CulturalAssetEntity.class);</span>
 		
-<span class="pc bpc" id="L211" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.NAME)) {</span>
-<span class="fc" id="L212">			this.setName(details.getName());</span>
+<span class="pc bpc" id="L209" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.NAME)) {</span>
+<span class="fc" id="L210">			this.setName(details.getName());</span>
 		}
-<span class="pc bpc" id="L214" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.DESCRIPTION)) {</span>
-<span class="fc" id="L215">			this.setDescription(details.getDescription());</span>
+<span class="pc bpc" id="L212" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.DESCRIPTION)) {</span>
+<span class="fc" id="L213">			this.setDescription(details.getDescription());</span>
 		}
-<span class="pc bpc" id="L217" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.PRIORITY)) {</span>
-<span class="fc" id="L218">			this.setPriority(details.getPriority());</span>
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.PRIORITY)) {</span>
+<span class="fc" id="L216">			this.setPriority(details.getPriority());</span>
 		}
-<span class="pc bpc" id="L220" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.IS_ENDANGERED)) {</span>
-<span class="fc" id="L221">			this.setIsEndangered(details.getIsEndangered());	</span>
+<span class="pc bpc" id="L218" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.IS_ENDANGERED)) {</span>
+<span class="fc" id="L219">			this.setIsEndangered(details.getIsEndangered());	</span>
 		}
-<span class="pc bpc" id="L223" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.COMMENTS)) {</span>
-<span class="fc" id="L224">			this.setComments(details.getComments());</span>
+<span class="pc bpc" id="L221" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.COMMENTS)) {</span>
+<span class="fc" id="L222">			this.setComments(details.getComments());</span>
 		}
-<span class="pc bpc" id="L226" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.MEDIA)) {</span>
-<span class="fc" id="L227">			this.setMedia(details.getMedia());</span>
+<span class="pc bpc" id="L224" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.MEDIA)) {</span>
+<span class="fc" id="L225">			this.setMedia(details.getMedia());</span>
 		}
 		
-<span class="pc bpc" id="L230" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.ADDRESS)) {</span>
-<span class="fc" id="L231">			this.setAddress(details.getAddress());</span>
+<span class="pc bpc" id="L228" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.ADDRESS)) {</span>
+<span class="fc" id="L229">			this.setAddress(details.getAddress());</span>
 		}
-<span class="pc bpc" id="L233" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.LABEL)) {</span>
-<span class="fc" id="L234">			this.setLabel(details.getLabel());</span>
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.LABEL)) {</span>
+<span class="fc" id="L232">			this.setLabel(details.getLabel());</span>
 		}
-<span class="pc bpc" id="L236" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.LONGITUDE)) {</span>
-<span class="fc" id="L237">			this.setLongitude(details.getLongitude());</span>
+<span class="pc bpc" id="L234" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.LONGITUDE)) {</span>
+<span class="fc" id="L235">			this.setLongitude(details.getLongitude());</span>
 		}
-<span class="pc bpc" id="L239" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.LATITUDE)) {</span>
-<span class="fc" id="L240">			this.setLatitude(details.getLatitude());</span>
+<span class="pc bpc" id="L237" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.LATITUDE)) {</span>
+<span class="fc" id="L238">			this.setLatitude(details.getLatitude());</span>
 		}
 
-<span class="pc bpc" id="L243" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.TASKS)) {</span>
-<span class="fc" id="L244">			this.setTasks(details.getTasks());</span>
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.TASKS)) {</span>
+<span class="fc" id="L242">			this.setTasks(details.getTasks());</span>
 		}
-<span class="pc bpc" id="L246" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.NOTIFICATIONS)) {</span>
-<span class="fc" id="L247">			this.setNotifications(details.getNotifications());</span>
+<span class="pc bpc" id="L244" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.NOTIFICATIONS)) {</span>
+<span class="fc" id="L245">			this.setNotifications(details.getNotifications());</span>
 		}
-<span class="pc bpc" id="L249" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.CULTURAL_ASSET_PARENT)) {</span>
-<span class="fc" id="L250">			this.setCulturalAssetParent(details.getCulturalAssetParent());</span>
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.CULTURAL_ASSET_PARENT)) {</span>
+<span class="fc" id="L248">			this.setCulturalAssetParent(details.getCulturalAssetParent());</span>
 		}
-<span class="pc bpc" id="L252" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.CULTURAL_ASSET_CHILDREN)) {</span>
-<span class="fc" id="L253">			this.setCulturalAssetChildren(details.getCulturalAssetChildren());</span>
+<span class="pc bpc" id="L250" title="1 of 2 branches missed.">		if (this.containsFields(json, CulturalAssetEntity.CULTURAL_ASSET_CHILDREN)) {</span>
+<span class="fc" id="L251">			this.setCulturalAssetChildren(details.getCulturalAssetChildren());</span>
 		}
 		
-<span class="fc" id="L256">	}</span>
+<span class="fc" id="L254">	}</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202103210711</span></div></body></html>

@@ -17,7 +17,7 @@ import reskue.culturalasset.CulturalAssetService;
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -59,6 +59,7 @@ public class NotificationService extends BaseService<NotificationEntity, Notific
 				culturalAssetService.updateIsEndangered(entity.getEntity(), 1);
 				
 			}
+			
 			if (entity.getType() == NotificationType.ALARM_OVER.type) {
 				
 				culturalAssetService.updateIsEndangered(entity.getEntity(), 0);	

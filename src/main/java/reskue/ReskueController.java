@@ -27,7 +27,7 @@ import kueres.utility.Utility;
  *  
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
  * @version 1.0
- * @since Feb 25, 2021
+ * @since Mar 25, 2021
  *
  */
 
@@ -65,8 +65,10 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 		
 		EntitySpecification<MediaEntity> specification = null;
 		if (filter.isPresent()) {
+			
 			Utility.LOG.info("filter: {}", EventConsumer.writeObjectAsJSON(filter.get()));
 			specification = new EntitySpecification<MediaEntity>(filter.get());
+			
 		}
 		
 		Pageable pageable = SortBuilder.buildPageable(sort, page, size);
