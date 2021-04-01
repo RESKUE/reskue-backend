@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reskue-content-db
+  labels:
+    app: reskue-content-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reskue-content-db
+  template:
+    metadata:
+      labels:
+        app: reskue-content-db
+    spec:
+      containers:
+      - name: app
+        image: postgres:latest
+        imagePullPolicy: Always
+        ports:
+        - name: postgres
+          protocol: TCP
+          containerPort: 5432
+        env:
+          - name: POSTGRES_USER
+            value: reskue
+          - name: POSTGRES_PASSWORD
+            value: reskue-pw
+          - name: POSTGRES_INITDB_ARGS
+            value: --auth-local=password
+          - name: POSTGRES_HOST_AUTH_METHOD
+            value: password
+          - name: POSTGRES_DB
+            value: content_db
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: content-db-volume
+      volumes:
+        - name: content-db-volume
+          persistentVolumeClaim:
+            claimName: content-db-pv-claim

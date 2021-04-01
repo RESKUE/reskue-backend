@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: reskue-keycloak
+  labels:
+    app: reskue-keycloak
+spec:
+  rules:
+  - host: keycloak-__CI_ENVIRONMENT_HOST__
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: reskue-keycloak
+          servicePort: 8080

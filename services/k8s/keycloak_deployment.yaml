@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reskue-keycloak
+  labels:
+    app: reskue-keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reskue-keycloak
+  template:
+    metadata:
+      labels:
+        app: reskue-keycloak
+    spec:
+      containers:
+      - name: app
+        image: jboss/keycloak:latest
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          protocol: TCP
+          containerPort: 8080
+        env:
+          - name: DB_VENDOR
+            value: POSTGRES
+          - name: DB_ADDR
+            value: reskue-auth-db
+          - name: DB_PORT
+            value: '5432'
+          - name: DB_DATABASE
+            value: auth_db
+          - name: DB_SCHEMA
+            value: public
+          - name: DB_USER
+            value: reskue
+          - name: DB_PASSWORD
+            value: reskue-pw
+          - name: KEYCLOAK_USER
+            value: reskue-administrator
+          - name: KEYCLOAK_PASSWORD
+            value: reskue-administrator
+          - name: KEYCLOAK_IMPORT
+            value: /tmp/realm-export.json
+          - name: PROXY_ADDRESS_FORWARDING
+            value: 'true'
+        volumeMounts:
+          - name: keycloak-config
+            mountPath: /tmp/realm-export.json
+            subPath: realm-export.json
+      volumes:
+        - name: keycloak-config
+          configMap:
+            name: keycloak-config
