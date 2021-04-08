@@ -71,4 +71,4 @@ get_logs:
     - .when_manual
   script:
     - kubectl get deployments
-    - kubectl logs deployment/reskue-backend-staging-server-de-dm0o65
+    - kubectl logs deployment/reskue-backend-staging-master-ke8rgq
