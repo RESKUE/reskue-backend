@@ -3,7 +3,7 @@
 echo "Waiting for services"
 
 keycloak_url="${KEYCLOAK_AUTH_SERVER_URL:-http://keycloak:8080/auth}/realms/reskue"
-rabbitmq_url="http://${SPRING_RABBITMQ_HOST:-rabbitmq}:${SPRING_RABBITMQ_PORT:-15672}"
+rabbitmq_url="http://${SPRING_RABBITMQ_HOST:-rabbitmq}:15672"
 frost_url="${KUERES_FROST_URL:-http://frost:8080/FROST-Server/}"
 
 
