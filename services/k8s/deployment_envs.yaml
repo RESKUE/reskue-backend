@@ -20,7 +20,7 @@ spec:
           - name: KEYCLOAK_BEARER_ONLY
             value: "true"
           - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK
-            value: WARN
+            value: DEBUG
           - name: SPRING_JPA_HIBERNATE_DDL_AUTO
             value: create
           - name: SPRING_DATASOURCE_INITIALIZATION_MODE
@@ -60,4 +60,4 @@ spec:
           - name: KUERES_NOMINATIM_URL
             value: https://nominatim.openstreetmap.org
           - name: LOGGING_LEVEL_ROOT
-            value: INFO
+            value: DEBUG
