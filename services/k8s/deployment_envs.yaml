@@ -58,7 +58,7 @@ spec:
           - name: KUERES_DEFAULT-QUEUE
             value: event-consumer
           - name: KUERES_FROST_URL
-            value: https://reskue-frost.k8s.ilt-dmz.iosb.fraunhofer.de/
+            value: https://reskue-frost.k8s.ilt-dmz.iosb.fraunhofer.de/v1.0/
           - name: KUERES_NOMINATIM_URL
             value: https://nominatim.openstreetmap.org
           - name: LOGGING_LEVEL_ROOT

@@ -4,7 +4,7 @@ echo "Waiting for services"
 
 keycloak_url="http://keycloak:8080/auth/realms/reskue"
 rabbitmq_url="http://rabbitmq:15672"
-frost_url="http://frost:8080/FROST-Server/"
+frost_url="http://frost:8080/FROST-Server/v1.0/"
 
 if [ "$K8S_DEPLOYMENT_MODE" = "true" ]; then
   keycloak_url="${KEYCLOAK_AUTH_SERVER_URL}/realms/reskue"

@@ -163,7 +163,7 @@ services:
       SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
       KUERES_MEDIA_DIR: ${KUERES_MEDIA_DIR}
       KUERES_NOMINATIM_URL: ${KUERES_NOMINATIM_URL}
-      KUERES_FROST_URL: http://localhost:${LOCATION_PORT}/FROST-Server
+      KUERES_FROST_URL: http://localhost:${LOCATION_PORT}/FROST-Server/v1.0/
     expose:
       - 8080
     ports:
