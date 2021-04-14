@@ -8,7 +8,7 @@
     "stop:prod": "docker-compose -f docker-compose.prod.yml --env-file prod.env down",
     "start:dev": "docker-compose -f docker-compose.dev.yml --env-file dev.env up --build",
     "stop:dev": "docker-compose -f docker-compose.dev.yml --env-file dev.env down",
-    "update": "git pull && docker pull gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend:latest",
+    "update": "git pull && docker pull gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend:master",
     "clean:all": "npm run clean:keycloak && npm run clean:content && npm run clean:rabbitmq && npm run clean:location",
     "clean:keycloak": "rm -rf ./services/auth-db/data/ && mkdir ./services/auth-db/data",
     "clean:content": "rm -rf ./services/content-db/data/ && mkdir ./services/content-db/data",
