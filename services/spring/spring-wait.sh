@@ -2,10 +2,15 @@
 
 echo "Waiting for services"
 
-keycloak_url="${KEYCLOAK_AUTH_SERVER_URL:-http://keycloak:8080/auth}/realms/reskue"
-rabbitmq_url="http://${SPRING_RABBITMQ_HOST:-rabbitmq}:15672"
+keycloak_url="http://keycloak:8080/auth/realms/reskue"
+rabbitmq_url="http://rabbitmq:15672"
 frost_url="http://frost:8080/FROST-Server/"
 
+if [ "$K8S_DEPLOYMENT_MODE" = "true" ]; then
+  keycloak_url="${KEYCLOAK_AUTH_SERVER_URL}/realms/reskue"
+  rabbitmq_url="http://${SPRING_RABBITMQ_HOST}:15672"
+  frost_url="${KUERES_FROST_URL}"
+fi
 
 responseKeycloak=$(curl --head --write-out '%{http_code}' --silent --output /dev/null "$keycloak_url")
 responseRabbitMQ=$(curl --head --write-out '%{http_code}' --silent --output /dev/null "$rabbitmq_url")

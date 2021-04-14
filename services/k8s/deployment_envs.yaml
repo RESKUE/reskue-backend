@@ -11,6 +11,8 @@ spec:
       - name: app
         image: gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend:__CI_COMMIT_REF_SLUG__
         env:
+          - name: K8S_DEPLOYMENT_MODE
+            value: "true"
           - name: SPRING_MAIN_BANNER_MODE
             value: "off"
           - name: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_LOB_NON_CONTEXTUAL_CREATION
