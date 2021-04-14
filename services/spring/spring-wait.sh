@@ -4,7 +4,7 @@ echo "Waiting for services"
 
 keycloak_url="${KEYCLOAK_AUTH_SERVER_URL:-http://keycloak:8080/auth}/realms/reskue"
 rabbitmq_url="http://${SPRING_RABBITMQ_HOST:-rabbitmq}:15672"
-frost_url="${KUERES_FROST_URL:-http://frost:8080/FROST-Server/}"
+frost_url="http://frost:8080/FROST-Server/"
 
 
 responseKeycloak=$(curl --head --write-out '%{http_code}' --silent --output /dev/null "$keycloak_url")
