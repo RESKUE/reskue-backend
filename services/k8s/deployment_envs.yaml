@@ -23,6 +23,12 @@ spec:
             value: "true"
           - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK
             value: DEBUG
+          - name: SPRING_INCLUDE_STACKTRACE
+            value: never
+          - name: SPRING_MAX_FILE_SIZE
+            value: 10Mb
+          - name: SPRING_MAX_REQUEST_SIZE
+            value: 10Mb
           - name: SPRING_JPA_HIBERNATE_DDL_AUTO
             value: create
           - name: SPRING_DATASOURCE_INITIALIZATION_MODE
