@@ -130,6 +130,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 			});
 
 		}
+		
+		// This is a quick fix attempt
+		this.updateIsEndangered(savedEntity, savedEntity.getIsEndangered());
 
 		EventConsumer.sendEvent("CulturalAssetService.create", EventType.CREATE.type, this.getIdentifier(),
 				EventConsumer.writeObjectAsJSON(savedEntity));
@@ -248,6 +251,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 			});
 			
 		}
+		
+		// This is a quick fix attempt
+		this.updateIsEndangered(savedEntity, savedEntity.getIsEndangered());
 
 		EventConsumer.sendEvent("CulturalAssetService.update", EventType.UPDATE.type, this.getIdentifier(),
 				EventConsumer.writeObjectAsJSON(savedEntity));
