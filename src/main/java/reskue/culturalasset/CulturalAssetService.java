@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -597,10 +598,10 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 */
 	private void addConnection(CulturalAssetEntity child, CulturalAssetEntity parent) {
 
-		Utility.LOG.trace("CulturalAssetService.addConnection called.");
-
+		Utility.LOG.trace("CulturalAssetService.addConnection called.");		
+		
 		List<CulturalAssetEntity> newChildren = parent.getCulturalAssetChildren();
-
+		
 		// if the new child is already a child
 		if (!newChildren.contains(child)) {
 			
@@ -625,7 +626,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		Utility.LOG.trace("CulturalAssetService.removeConnection called.");
 
 		List<CulturalAssetEntity> newChildren = parent.getCulturalAssetChildren();
-
+		
 		// if the child is actually a child
 		if (newChildren.contains(child)) {
 			
