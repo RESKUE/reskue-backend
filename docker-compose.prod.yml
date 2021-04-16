@@ -133,7 +133,7 @@ services:
     networks:
       - reskue-network
   spring:
-    image: gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend:latest
+    image: gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend:master
     container_name: spring
     restart: always
     depends_on:
@@ -144,6 +144,9 @@ services:
     environment: 
       SPRING_MAIN_BANNER_MODE: "off"
       LOGGING_LEVEL_ORG_SPRINGFRAMEWORK: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK}
+      SPRING_INCLUDE_STACKTRACE: ${SPRING_INCLUDE_STACKTRACE}
+      SPRING_MAX_FILE_SIZE: ${SPRING_MAX_FILE_SIZE}
+      SPRING_MAX_REQUEST_SIZE: ${SPRING_MAX_REQUEST_SIZE}
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
       SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_LOB_NON_CONTEXTUAL_CREATION: "true"
       SPRING_DATASOURCE_INITIALIZATION_MODE: ${SPRING_DATASOURCE_INITIALIZATION_MODE}
@@ -163,7 +166,7 @@ services:
       SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
       KUERES_MEDIA_DIR: ${KUERES_MEDIA_DIR}
       KUERES_NOMINATIM_URL: ${KUERES_NOMINATIM_URL}
-      KUERES_FROST_URL: http://localhost:${LOCATION_PORT}/FROST-Server
+      KUERES_FROST_URL: http://localhost:${LOCATION_PORT}/FROST-Server/v1.0/
     expose:
       - 8080
     ports:

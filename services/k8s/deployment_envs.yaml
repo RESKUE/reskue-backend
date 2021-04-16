@@ -11,6 +11,8 @@ spec:
       - name: app
         image: gitlab-ext.iosb.fraunhofer.de:4567/ilt-pse/ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/reskue-backend:__CI_COMMIT_REF_SLUG__
         env:
+          - name: K8S_DEPLOYMENT_MODE
+            value: "true"
           - name: SPRING_MAIN_BANNER_MODE
             value: "off"
           - name: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_LOB_NON_CONTEXTUAL_CREATION
@@ -20,7 +22,13 @@ spec:
           - name: KEYCLOAK_BEARER_ONLY
             value: "true"
           - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK
-            value: WARN
+            value: DEBUG
+          - name: SPRING_INCLUDE_STACKTRACE
+            value: never
+          - name: SPRING_MAX_FILE_SIZE
+            value: 10Mb
+          - name: SPRING_MAX_REQUEST_SIZE
+            value: 10Mb
           - name: SPRING_JPA_HIBERNATE_DDL_AUTO
             value: create
           - name: SPRING_DATASOURCE_INITIALIZATION_MODE
@@ -56,8 +64,8 @@ spec:
           - name: KUERES_DEFAULT-QUEUE
             value: event-consumer
           - name: KUERES_FROST_URL
-            value: https://reskue-frost.k8s.ilt-dmz.iosb.fraunhofer.de/
+            value: https://reskue-frost.k8s.ilt-dmz.iosb.fraunhofer.de/v1.0/
           - name: KUERES_NOMINATIM_URL
             value: https://nominatim.openstreetmap.org
           - name: LOGGING_LEVEL_ROOT
-            value: INFO
+            value: DEBUG

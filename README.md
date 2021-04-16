@@ -173,7 +173,11 @@ LOCATION_MQTT_PORT=5439           #mqtt port of the frost server
 # Spring
 SPRING_PORT=8080                                #port of the spring service
 #log levels: ERROR, WARN, INFO, DEBUG or TRACE
-LOGGING_LEVEL_ORG_SPRINGFRAMEWORK=WARN          
+LOGGING_LEVEL_ORG_SPRINGFRAMEWORK=WARN
+#always or never
+SPRING_INCLUDE_STACKTRACE=always
+SPRING_MAX_FILE_SIZE=10Mb
+SPRING_MAX_REQUEST_SIZE=10Mb        
 SPRING_JPA_HIBERNATE_DDL_AUTO=none              #hibernate auto ddl: validate, update, create, create-drop or none
 SPRING_DATASOURCE_INITIALIZATION_MODE=always    #spring data intilization mode
 SPRING_DATASOURCE_PLATFORM=postgres             #database vendor

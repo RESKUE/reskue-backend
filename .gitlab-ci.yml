@@ -63,3 +63,12 @@ deploy_staging:
 undeploy_staging:
   extends: 
     - .undeploy_staging
+
+get_logs:
+  stage: build
+  extends:
+    - .deploy-before
+    - .when_manual
+  script:
+    - kubectl get deployments
+    - kubectl logs deployment/reskue-backend-staging-master-ke8rgq

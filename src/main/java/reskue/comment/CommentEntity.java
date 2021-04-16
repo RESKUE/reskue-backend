@@ -113,8 +113,6 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 	 */
 	@ManyToOne()
 	@JoinColumn(name = "comment_author_id", referencedColumnName = BaseEntity.ID)
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = BaseEntity.ID)
-	@JsonIdentityReference(alwaysAsId = true)
 	private UserEntity author = null;
 	public static final String AUTHOR = "author";
 	public UserEntity getAuthor() { return this.author; }

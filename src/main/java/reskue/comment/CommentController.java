@@ -76,7 +76,7 @@ public class CommentController extends BaseController<CommentEntity, CommentRepo
 	 * @throws IOException
 	 */
 	@PostMapping("/autoAuthor")
-	@RolesAllowed("administrator")
+	@RolesAllowed({"administrator", "helper"})
 	public ResponseEntity<CommentEntity> createAutoAuthor(
 			HttpServletRequest request, 
 			HttpServletResponse response) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException {
