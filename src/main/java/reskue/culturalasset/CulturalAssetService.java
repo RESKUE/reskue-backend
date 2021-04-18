@@ -1,6 +1,7 @@
 package reskue.culturalasset;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,10 +20,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import kueres.base.BaseEntity;
-import kueres.media.MediaEntity;
 import kueres.event.EventType;
 import kueres.eventbus.EventConsumer;
 import kueres.location.LocationService;
+import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
 import kueres.utility.Utility;
 import reskue.ReskueService;
@@ -231,9 +232,12 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		
 		this.removeCulturalAssetParent(id);
-		entity.getCulturalAssetChildren().forEach((CulturalAssetEntity child) -> {
+		
+		for (Iterator<CulturalAssetEntity> iterator = entity.getCulturalAssetChildren().iterator(); iterator.hasNext();) {
+			CulturalAssetEntity child = iterator.next();
+			iterator.remove();
 			this.removeCulturalAssetChild(id, child.getId());
-		});
+		}
 
 		if (entity.getLocationId() != null) {
 			
@@ -241,9 +245,11 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 			
 		}
 		
-		entity.getMedia().forEach((MediaEntity media) -> {
+		for (Iterator<MediaEntity> iterator = entity.getMedia().iterator(); iterator.hasNext();) {
+			MediaEntity media = iterator.next();
+			iterator.remove();
 			mediaService.delete(media.getId());
-		});
+		}
 		
 		this.repository.delete(entity);
 

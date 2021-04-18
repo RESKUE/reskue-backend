@@ -1,5 +1,6 @@
 package reskue.comment;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,9 +65,11 @@ public class CommentService extends BaseService<CommentEntity, CommentRepository
 		CommentEntity entity = this.repository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		
-		entity.getMedia().forEach((MediaEntity media) -> {
+		for (Iterator<MediaEntity> iterator = entity.getMedia().iterator(); iterator.hasNext();) {
+			MediaEntity media = iterator.next();
+			iterator.remove();
 			mediaService.delete(media.getId());
-		});
+		}
 		
 		this.repository.delete(entity);
 

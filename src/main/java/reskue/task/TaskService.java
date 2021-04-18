@@ -1,5 +1,6 @@
 package reskue.task;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,9 +71,11 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 		TaskEntity entity = this.repository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		
-		entity.getMedia().forEach((MediaEntity media) -> {
+		for (Iterator<MediaEntity> iterator = entity.getMedia().iterator(); iterator.hasNext();) {
+			MediaEntity media = iterator.next();
+			iterator.remove();
 			mediaService.delete(media.getId());
-		});
+		}
 		
 		this.repository.delete(entity);
 
