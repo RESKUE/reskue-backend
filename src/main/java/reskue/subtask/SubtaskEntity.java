@@ -83,19 +83,19 @@ public class SubtaskEntity extends BaseEntity<SubtaskEntity>{
 		
 		SubtaskEntity details = SubtaskEntity.createEntityFromJSON(json, this.getUpdateableFields(), SubtaskEntity.class);
 		
-		if (this.containsFields(json, SubtaskEntity.TEXT)) {
+		if (BaseEntity.containsFields(json, SubtaskEntity.TEXT)) {
 			this.setText(details.getText());
 		}
 		
-		if (this.containsFields(json, SubtaskEntity.IS_REQUIRED)) {
+		if (BaseEntity.containsFields(json, SubtaskEntity.IS_REQUIRED)) {
 			this.setIsRequired(isRequired);
 		}
 		
-		if (this.containsFields(json, SubtaskEntity.STATE)) {
+		if (BaseEntity.containsFields(json, SubtaskEntity.STATE)) {
 			this.setState(details.getState());
 		}
 		
-		if (this.containsFields(json, SubtaskEntity.TASK)) {
+		if (BaseEntity.containsFields(json, SubtaskEntity.TASK)) {
 			this.setTask(details.getTask());
 		}
 

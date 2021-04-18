@@ -3,6 +3,7 @@ package reskue;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import kueres.base.BaseService;
 import kueres.event.EventType;
 import kueres.eventbus.EventConsumer;
 import kueres.media.MediaEntity;
+import kueres.media.MediaService;
 import kueres.query.EntitySpecification;
 import kueres.utility.Utility;
 
@@ -26,6 +28,9 @@ import kueres.utility.Utility;
 
 public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueRepository<E>>
 		extends BaseService<E, R> {
+	
+	@Autowired
+	protected MediaService mediaService;
 	
 	/**
 	 * Get all media of the services ReskueEntity-type.

@@ -5,15 +5,20 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import kueres.base.BaseService;
 import kueres.event.EventType;
 import kueres.eventbus.EventConsumer;
 import kueres.media.MediaEntity;
+import kueres.media.MediaService;
 import kueres.query.EntitySpecification;
 import kueres.utility.Utility;
 
@@ -30,6 +35,9 @@ import kueres.utility.Utility;
 @Service
 public class CommentService extends BaseService<CommentEntity, CommentRepository>{
 	
+	@Autowired
+	private MediaService mediaService;
+	
 	/**
 	 * Set this EventSubscribers identifier and routing.
 	 */
@@ -38,6 +46,35 @@ public class CommentService extends BaseService<CommentEntity, CommentRepository
 	public void init() {
 		this.identifier = CommentController.ROUTE;
 		this.routingKey = CommentController.ROUTE;
+	}
+	
+	/**
+	 * Delete a comment.
+	 * 
+	 * @param id - the comments identifier.
+	 * @return The comment that was deleted.
+	 * @throws ResourceNotFoundException if there is no comment with the
+	 *                                   specified identifier.
+	 */
+	@Override
+	public CommentEntity delete(Long id) throws ResourceNotFoundException {
+
+		Utility.LOG.trace("CommentService.delete called.");
+
+		CommentEntity entity = this.repository.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		
+		entity.getMedia().forEach((MediaEntity media) -> {
+			mediaService.delete(media.getId());
+		});
+		
+		this.repository.delete(entity);
+
+		EventConsumer.sendEvent("CommentService.delete", EventType.DELETE.type, this.getIdentifier(),
+				EventConsumer.writeObjectAsJSON(entity));
+
+		return entity;
+
 	}
 	
 	/**

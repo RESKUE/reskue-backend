@@ -87,11 +87,11 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 		
 		UserGroupEntity details = UserGroupEntity.createEntityFromJSON(json, this.getUpdateableFields(), UserGroupEntity.class);
 		
-		if (this.containsFields(json, UserGroupEntity.NAME)) {
+		if (BaseEntity.containsFields(json, UserGroupEntity.NAME)) {
 			this.setName(details.getName());
 		}
 		
-		if (this.containsFields(json, UserGroupEntity.USERS)) {
+		if (BaseEntity.containsFields(json, UserGroupEntity.USERS)) {
 			this.setUsers(details.getUsers());
 		}
 		

@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,6 +18,8 @@ import org.springframework.web.server.ResponseStatusException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import kueres.base.BaseEntity;
+import kueres.media.MediaEntity;
 import kueres.event.EventType;
 import kueres.eventbus.EventConsumer;
 import kueres.location.LocationService;
@@ -88,6 +89,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 						.coordinatesToAddress(new double[] { entity.getLongitude(), entity.getLatitude() }));
 				
 			}
+			
 		} else if (entity.getAddress() != null) {
 			
 			if (entity.getLongitude() == null && entity.getLatitude() == null) {
@@ -97,6 +99,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 				entity.setLatitude(updatedCoordinates[1]);
 				
 			}
+			
 		}
 
 		if (entity.getLongitude() != null && entity.getLatitude() != null) {
@@ -108,30 +111,20 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 		CulturalAssetEntity savedEntity = this.repository.save(entity);
 
-		if (entity.getCulturalAssetParent() != null) {
+		if (savedEntity.getCulturalAssetParent() != null) {
 			
-			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());
-			this.addConnection(savedEntity, parent);
-			this.repository.save(parent);
+			this.setCulturalAssetParent(savedEntity.getId(), savedEntity.getCulturalAssetParent().getId());
 			
 		}
 
-		if (entity.getCulturalAssetChildren() != null || !entity.getCulturalAssetChildren().isEmpty()) {
+		if (savedEntity.getCulturalAssetChildren() != null || !entity.getCulturalAssetChildren().isEmpty()) {
 			
-			List<CulturalAssetEntity> children = entity.getCulturalAssetChildren().stream()
-					.map((CulturalAssetEntity child) -> {
-						return this.findById(child.getId());					
-					}).collect(Collectors.toList());			
-			children.stream().forEach((CulturalAssetEntity child) -> {
-				
-				this.addConnection(child, savedEntity);
-				this.repository.save(child);
-				
+			savedEntity.getCulturalAssetChildren().forEach((CulturalAssetEntity child) -> {
+				this.addCulturalAssetChild(savedEntity.getId(), child.getId());
 			});
 
 		}
 		
-		// This is a quick fix attempt
 		this.updateIsEndangered(savedEntity, savedEntity.getIsEndangered());
 
 		EventConsumer.sendEvent("CulturalAssetService.create", EventType.CREATE.type, this.getIdentifier(),
@@ -170,89 +163,48 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 		entity.applyPatch(detailsJSON);
 		
-		if (entity.getCulturalAssetParent() != null) {
+		if (BaseEntity.containsFields(detailsJSON, CulturalAssetEntity.CULTURAL_ASSET_PARENT)) {
 			
-			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());
-			this.removeConnection(entity, parent);
-			this.repository.save(parent);
+			this.removeCulturalAssetParent(entity.getId());
 			
 		}
 
-		if (entity.getCulturalAssetChildren() != null) {
+		if (BaseEntity.containsFields(detailsJSON, CulturalAssetEntity.CULTURAL_ASSET_CHILDREN)) {
 			
-			List<CulturalAssetEntity> children = entity.getCulturalAssetChildren().stream().map((CulturalAssetEntity child) -> {
-				return this.findById(child.getId());
-			}).collect(Collectors.toList());
-			
-			children.stream().forEach((CulturalAssetEntity child) -> {
-				this.removeConnection(child, entity);
-				this.repository.save(child);
+			entity.getCulturalAssetChildren().forEach((CulturalAssetEntity child) -> {
+				this.removeCulturalAssetChild(entity.getId(), child.getId());
 			});
 			
 		}
 
-		if (details.getAddress() != null || details.getLongitude() != null || details.getLatitude() != null) {
-
-			if (entity.getLongitude() != null && entity.getLatitude() != null) {
-				
-				if (entity.getAddress() == null) {
-					
-					entity.setAddress(locationService
-							.coordinatesToAddress(new double[] { entity.getLongitude(), entity.getLatitude() }));
-					
-				}
-				
-			} else if (entity.getAddress() != null) {
-				
-				if (entity.getLongitude() == null && entity.getLatitude() == null) {
-					
-					double[] updatedCoordinates = locationService.addressToCoordinates(entity.getAddress());
-					entity.setLongitude(updatedCoordinates[0]);
-					entity.setLatitude(updatedCoordinates[1]);
-					
-				}
-			}
-
-			if (entity.getLongitude() != null && entity.getLatitude() != null) {
-				
-				if (entity.getLocationId() != null) {
-					
-					locationService.removePOI(entity.getLocationId());
-					
-				}
-				
-				entity.setLocationId(locationService.addPOI(entity.getName(),
-						new double[] { entity.getLongitude(), entity.getLatitude() }));
-				
-			}
-
+		if (BaseEntity.containsFields(detailsJSON, CulturalAssetEntity.LONGITUDE) || BaseEntity.containsFields(detailsJSON, CulturalAssetEntity.LATITUDE)) {
+			
+			entity.setAddress(locationService.coordinatesToAddress(new double[] { details.getLongitude(), details.getLatitude()}));
+			
+		} else if (BaseEntity.containsFields(detailsJSON, CulturalAssetEntity.ADDRESS)) {
+			
+			double[] coordinates = locationService.addressToCoordinates(details.getAddress());
+			entity.setLongitude(coordinates[0]);
+			entity.setLatitude(coordinates[1]);
+			
 		}
 
 		final CulturalAssetEntity savedEntity = this.repository.save(entity);
 		
-		if (entity.getCulturalAssetParent() != null) {
+		if (BaseEntity.containsFields(detailsJSON, CulturalAssetEntity.CULTURAL_ASSET_PARENT)) {
 			
-			CulturalAssetEntity parent = this.findById(entity.getCulturalAssetParent().getId());
-			this.addConnection(savedEntity, parent);
-			this.repository.save(parent);
+			this.setCulturalAssetParent(savedEntity.getId(), savedEntity.getCulturalAssetParent().getId());
 			
 		}
 
-		if (entity.getCulturalAssetChildren() != null || !entity.getCulturalAssetChildren().isEmpty()) {
+		if (BaseEntity.containsFields(detailsJSON, CulturalAssetEntity.CULTURAL_ASSET_CHILDREN) || !savedEntity.getCulturalAssetChildren().isEmpty()) {
 			
-			List<CulturalAssetEntity> children = entity.getCulturalAssetChildren().stream()
-					.map((CulturalAssetEntity child) -> {
-						return this.findById(child.getId());					
-					}).collect(Collectors.toList());
-			
-			children.stream().forEach((CulturalAssetEntity child) -> {				
-				this.addConnection(child, savedEntity);
-				this.repository.save(child);
+			savedEntity.getCulturalAssetChildren().forEach((CulturalAssetEntity child) -> {
+				this.addCulturalAssetChild(savedEntity.getId(), child.getId());
 			});
 			
 		}
 		
-		// This is a quick fix attempt
 		this.updateIsEndangered(savedEntity, savedEntity.getIsEndangered());
 
 		EventConsumer.sendEvent("CulturalAssetService.update", EventType.UPDATE.type, this.getIdentifier(),
@@ -277,13 +229,23 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 		CulturalAssetEntity entity = this.repository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-		this.repository.delete(entity);
+		
+		this.removeCulturalAssetParent(id);
+		entity.getCulturalAssetChildren().forEach((CulturalAssetEntity child) -> {
+			this.removeCulturalAssetChild(id, child.getId());
+		});
 
 		if (entity.getLocationId() != null) {
 			
 			locationService.removePOI(entity.getLocationId());
 			
 		}
+		
+		entity.getMedia().forEach((MediaEntity media) -> {
+			mediaService.delete(media.getId());
+		});
+		
+		this.repository.delete(entity);
 
 		EventConsumer.sendEvent("CulturalAssetService.delete", EventType.DELETE.type, this.getIdentifier(),
 				EventConsumer.writeObjectAsJSON(entity));

@@ -208,59 +208,59 @@ public class CulturalAssetEntity extends ReskueEntity<CulturalAssetEntity>{
 		
 		CulturalAssetEntity details = CulturalAssetEntity.createEntityFromJSON(json, this.getUpdateableFields(), CulturalAssetEntity.class);
 		
-		if (this.containsFields(json, CulturalAssetEntity.NAME)) {			
+		if (BaseEntity.containsFields(json, CulturalAssetEntity.NAME)) {			
 			this.setName(details.getName());			
 		}
 		
-		if (this.containsFields(json, CulturalAssetEntity.DESCRIPTION)) {			
+		if (BaseEntity.containsFields(json, CulturalAssetEntity.DESCRIPTION)) {			
 			this.setDescription(details.getDescription());			
 		}
 		
-		if (this.containsFields(json, CulturalAssetEntity.PRIORITY)) {		
+		if (BaseEntity.containsFields(json, CulturalAssetEntity.PRIORITY)) {		
 			this.setPriority(details.getPriority());			
 		}
 		
-		if (this.containsFields(json, CulturalAssetEntity.IS_ENDANGERED)) {			
+		if (BaseEntity.containsFields(json, CulturalAssetEntity.IS_ENDANGERED)) {			
 			this.setIsEndangered(details.getIsEndangered());				
 		}
 		
-		if (this.containsFields(json, CulturalAssetEntity.ADDRESS)) {
-			this.setAddress(details.getAddress());
-		}
-		
-		if (this.containsFields(json, CulturalAssetEntity.LABEL)) {
+		if (BaseEntity.containsFields(json, CulturalAssetEntity.LABEL)) {
 			this.setLabel(details.getLabel());
 		}
 		
-		if (this.containsFields(json, CulturalAssetEntity.LONGITUDE)) {
+		if (BaseEntity.containsFields(json, CulturalAssetEntity.ADDRESS)) {
+			this.setAddress(details.getAddress());
+		}
+		
+		if (BaseEntity.containsFields(json, CulturalAssetEntity.LONGITUDE)) {
 			this.setLongitude(details.getLongitude());
 		}
 		
-		if (this.containsFields(json, CulturalAssetEntity.LATITUDE)) {
+		if (BaseEntity.containsFields(json, CulturalAssetEntity.LATITUDE)) {
 			this.setLatitude(details.getLatitude());
 		}
 		
-		if (this.containsFields(json, CulturalAssetEntity.MEDIA)) {			
+		if (BaseEntity.containsFields(json, CulturalAssetEntity.MEDIA)) {			
 			this.setMedia(details.getMedia());			
 		}
 		
-		if (this.containsFields(json, CulturalAssetEntity.TASKS)) {
+		if (BaseEntity.containsFields(json, CulturalAssetEntity.TASKS)) {
 			this.setTasks(details.getTasks());
 		}
 		
-		if (this.containsFields(json, CulturalAssetEntity.COMMENTS)) {			
+		if (BaseEntity.containsFields(json, CulturalAssetEntity.COMMENTS)) {			
 			this.setComments(details.getComments());			
 		}
 		
-		if (this.containsFields(json, CulturalAssetEntity.NOTIFICATIONS)) {
+		if (BaseEntity.containsFields(json, CulturalAssetEntity.NOTIFICATIONS)) {
 			this.setNotifications(details.getNotifications());
 		}
 		
-		if (this.containsFields(json, CulturalAssetEntity.CULTURAL_ASSET_CHILDREN)) {
+		if (BaseEntity.containsFields(json, CulturalAssetEntity.CULTURAL_ASSET_CHILDREN)) {
 			this.setCulturalAssetChildren(details.getCulturalAssetChildren());
 		}
 		
-		if (this.containsFields(json, CulturalAssetEntity.CULTURAL_ASSET_PARENT)) {
+		if (BaseEntity.containsFields(json, CulturalAssetEntity.CULTURAL_ASSET_PARENT)) {
 			this.setCulturalAssetParent(details.getCulturalAssetParent());
 		}
 		

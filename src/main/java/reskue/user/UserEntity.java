@@ -136,11 +136,11 @@ public class UserEntity extends BaseEntity<UserEntity>{
 		
 		UserEntity details = UserEntity.createEntityFromJSON(json, this.getUpdateableFields(), UserEntity.class);
 		
-		if (this.containsFields(json, UserEntity.NAME)) {
+		if (BaseEntity.containsFields(json, UserEntity.NAME)) {
 			this.setName(details.getName());
 		}
 		
-		if (this.containsFields(json, UserEntity.USER_GROUPS)) {
+		if (BaseEntity.containsFields(json, UserEntity.USER_GROUPS)) {
 			this.setUserGroups(details.getUserGroups());
 		}
 		

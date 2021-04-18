@@ -154,33 +154,33 @@ public class CommentEntity extends BaseEntity<CommentEntity>{
 		
 		CommentEntity details = CommentEntity.createEntityFromJSON(json, this.getUpdateableFields(), CommentEntity.class);
 		
-		if (this.containsFields(json, CommentEntity.TEXT)) {			
+		if (BaseEntity.containsFields(json, CommentEntity.TEXT)) {			
 			this.setText(details.getText());			
 		}
 		
 		this.setUpdatedAt(new Date());
 		
-		if (this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &&
-				!this.containsFields(json, CommentEntity.COMMENT_TASK)) {
+		if (BaseEntity.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &&
+				!BaseEntity.containsFields(json, CommentEntity.COMMENT_TASK)) {
 			
 			this.setCommentCulturalAsset(details.getCommentCulturalAsset());
 			this.setCommentTask(null);
 			
-		} else if (this.containsFields(json, CommentEntity.COMMENT_TASK) &&
-				!this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET)) {
+		} else if (BaseEntity.containsFields(json, CommentEntity.COMMENT_TASK) &&
+				!BaseEntity.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET)) {
 			
 			this.setCommentTask(details.getCommentTask());
 			this.setCommentCulturalAsset(null);
 			
-		} else if (!this.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &&
-				!this.containsFields(json, CommentEntity.COMMENT_TASK)) {
+		} else if (!BaseEntity.containsFields(json, CommentEntity.COMMENT_CULTURAL_ASSET) &&
+				!BaseEntity.containsFields(json, CommentEntity.COMMENT_TASK)) {
 			
 			this.setCommentCulturalAsset(null);
 			this.setCommentTask(null);
 			
 		}
 		
-		if (this.containsFields(json, CommentEntity.MEDIA)) {			
+		if (BaseEntity.containsFields(json, CommentEntity.MEDIA)) {			
 			this.setMedia(details.getMedia());			
 		}
 		

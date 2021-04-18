@@ -160,51 +160,51 @@ public class TaskEntity extends ReskueEntity<TaskEntity>{
 		
 		TaskEntity details = TaskEntity.createEntityFromJSON(json, this.getUpdateableFields(), TaskEntity.class);
 		
-		if (this.containsFields(json, TaskEntity.NAME)) {
+		if (BaseEntity.containsFields(json, TaskEntity.NAME)) {
 			this.setName(details.getName());
 		}
 		
-		if (this.containsFields(json, TaskEntity.DESCRIPTION)) {
+		if (BaseEntity.containsFields(json, TaskEntity.DESCRIPTION)) {
 			this.setDescription(details.getDescription());
 		}
 		
-		if (this.containsFields(json, TaskEntity.PRIORITY)) {
+		if (BaseEntity.containsFields(json, TaskEntity.PRIORITY)) {
 			this.setPriority(details.getPriority());
 		}
 		
-		if (this.containsFields(json, TaskEntity.IS_ENDANGERED)) {
+		if (BaseEntity.containsFields(json, TaskEntity.IS_ENDANGERED)) {
 			this.setIsEndangered(details.getIsEndangered());	
 		}
 		
-		if (this.containsFields(json, TaskEntity.STATE)) {
+		if (BaseEntity.containsFields(json, TaskEntity.STATE)) {
 			this.setState(details.getState());
 		}
 		
-		if (this.containsFields(json, TaskEntity.RECOMMENDED_HELPER_USERS)) {
+		if (BaseEntity.containsFields(json, TaskEntity.RECOMMENDED_HELPER_USERS)) {
 			this.setRecommendedHelperUsers(details.getRecommendedHelperUsers());
 		}
 		
-		if (this.containsFields(json, TaskEntity.MEDIA)) {
+		if (BaseEntity.containsFields(json, TaskEntity.MEDIA)) {
 			this.setMedia(details.getMedia());
 		}
 		
-		if (this.containsFields(json, TaskEntity.COMMENTS)) {
+		if (BaseEntity.containsFields(json, TaskEntity.COMMENTS)) {
 			this.setComments(details.getComments());
 		}
 		
-		if (this.containsFields(json, TaskEntity.SUBTASKS)) {
+		if (BaseEntity.containsFields(json, TaskEntity.SUBTASKS)) {
 			this.setSubtasks(details.getSubtasks());
 		}
 		
-		if (this.containsFields(json, TaskEntity.CULTURAL_ASSET)) {
+		if (BaseEntity.containsFields(json, TaskEntity.CULTURAL_ASSET)) {
 			this.setCulturalAsset(details.getCulturalAsset());
 		}
 		
-		if (this.containsFields(json, TaskEntity.CONTACT_USER)) {
+		if (BaseEntity.containsFields(json, TaskEntity.CONTACT_USER)) {
 			this.setContactUser(details.getContactUser());
 		}
 		
-		if (this.containsFields(json, TaskEntity.HELPER_USERS)) {
+		if (BaseEntity.containsFields(json, TaskEntity.HELPER_USERS)) {
 			this.setHelperUsers(details.getHelperUsers());
 		}
 		

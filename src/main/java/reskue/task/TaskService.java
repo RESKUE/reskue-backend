@@ -9,10 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import kueres.event.EventType;
 import kueres.eventbus.EventConsumer;
+import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
 import kueres.utility.Utility;
 import reskue.ReskueService;
@@ -48,6 +52,35 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	public void init() {
 		this.identifier = TaskController.ROUTE;
 		this.routingKey = TaskController.ROUTE;
+	}
+	
+	/**
+	 * Delete a task.
+	 * 
+	 * @param id - the tasks identifier.
+	 * @return The task that was deleted.
+	 * @throws ResourceNotFoundException if there is no task with the
+	 *                                   specified identifier.
+	 */
+	@Override
+	public TaskEntity delete(Long id) throws ResourceNotFoundException {
+
+		Utility.LOG.trace("TaskService.delete called.");
+
+		TaskEntity entity = this.repository.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		
+		entity.getMedia().forEach((MediaEntity media) -> {
+			mediaService.delete(media.getId());
+		});
+		
+		this.repository.delete(entity);
+
+		EventConsumer.sendEvent("TaskService.delete", EventType.DELETE.type, this.getIdentifier(),
+				EventConsumer.writeObjectAsJSON(entity));
+
+		return entity;
+
 	}
 	
 	/**
