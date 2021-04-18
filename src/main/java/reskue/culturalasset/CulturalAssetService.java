@@ -172,9 +172,11 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 		if (BaseEntity.containsFields(detailsJSON, CulturalAssetEntity.CULTURAL_ASSET_CHILDREN)) {
 			
-			entity.getCulturalAssetChildren().forEach((CulturalAssetEntity child) -> {
-				this.removeCulturalAssetChild(entity.getId(), child.getId());
-			});
+			for (Iterator<CulturalAssetEntity> iterator = entity.getCulturalAssetChildren().iterator(); iterator.hasNext();) {
+				CulturalAssetEntity child = iterator.next();
+				iterator.remove();
+				this.removeCulturalAssetChild(id, child.getId());
+			}
 			
 		}
 
@@ -512,11 +514,11 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	public CulturalAssetEntity setCulturalAssetParent(Long id, Long parentId) {
 
 		Utility.LOG.trace("CulturalAssetService.setCulturalAssetParent called.");
-
+		
 		CulturalAssetEntity child = this.findById(id);
 		CulturalAssetEntity parent = this.findById(parentId);
 		CulturalAssetEntity updatedEntity = child;
-
+		
 		this.addConnection(child, parent);
 
 		if (this.testLoopError(child) || this.testHeightError(child)) {
@@ -546,10 +548,10 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	public CulturalAssetEntity removeCulturalAssetParent(Long id) {
 
 		Utility.LOG.trace("CulturalAssetService.removeCulturalAssetParent called.");
-
+		
 		CulturalAssetEntity child = this.findById(id);
-		CulturalAssetEntity parent = child.getCulturalAssetParent();
-
+		CulturalAssetEntity parent = this.findById(child.getCulturalAssetParent().getId());
+		
 		this.removeConnection(child, parent);
 
 		final CulturalAssetEntity updatedEntity = this.repository.save(child);
