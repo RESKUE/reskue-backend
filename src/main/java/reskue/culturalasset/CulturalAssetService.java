@@ -231,7 +231,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		CulturalAssetEntity entity = this.repository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		
-		this.removeCulturalAssetParent(id);
+		if (entity.getCulturalAssetParent() != null) this.removeCulturalAssetParent(id);
 		
 		for (Iterator<CulturalAssetEntity> iterator = entity.getCulturalAssetChildren().iterator(); iterator.hasNext();) {
 			CulturalAssetEntity child = iterator.next();
