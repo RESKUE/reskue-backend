@@ -9,6 +9,7 @@ import kueres.base.BaseService;
 import kueres.event.EventType;
 import kueres.eventbus.EventConsumer;
 import kueres.utility.Utility;
+import reskue.culturalasset.CulturalAssetEntity;
 import reskue.culturalasset.CulturalAssetService;
 
 /**
@@ -54,15 +55,17 @@ public class NotificationService extends BaseService<NotificationEntity, Notific
 		
 		if (entity.getEntity() != null) {
 			
+			CulturalAssetEntity culturalAsset = this.culturalAssetService.findById(entity.getEntity().getId());
+			
 			if (entity.getType() == NotificationType.ALARM.type) {
 				
-				culturalAssetService.updateIsEndangered(entity.getEntity(), 1);
+				culturalAssetService.updateIsEndangered(culturalAsset, 1);
 				
 			}
 			
 			if (entity.getType() == NotificationType.ALARM_OVER.type) {
 				
-				culturalAssetService.updateIsEndangered(entity.getEntity(), 0);	
+				culturalAssetService.updateIsEndangered(culturalAsset, 0);	
 				
 			}
 			
