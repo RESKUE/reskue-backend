@@ -20,8 +20,8 @@ import kueres.base.BaseController;
  * The UserInterceptor ensures that there is always a UserEntity for the current user.
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 

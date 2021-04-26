@@ -15,8 +15,8 @@ import reskue.comment.CommentEntity;
  * The ReskueEntity is used as a generic superclass for the CulturalAssetEntity and TaskEntity.
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 

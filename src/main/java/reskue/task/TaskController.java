@@ -40,6 +40,7 @@ import reskue.user.UserService;
  * These functions are:
  *  - all functions of the BaseController in kueres.base
  *  - all functions of the ReskueController in reskue
+ *  - creating a task and automatically setting the contact user
  *  - finding all subtasks of a task
  *  - finding all users that are helping on a task
  *  - changing the state of a task
@@ -47,8 +48,8 @@ import reskue.user.UserService;
  *  - removing a user from the helpers of a task
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 

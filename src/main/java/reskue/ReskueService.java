@@ -21,14 +21,17 @@ import kueres.utility.Utility;
  * The ReskueService provides services needed by the ReskueController.
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 
 public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueRepository<E>>
 		extends BaseService<E, R> {
 	
+	/**
+	 * The MediaService needed to perform operations on related media entities.
+	 */
 	@Autowired
 	protected MediaService mediaService;
 	
@@ -41,11 +44,13 @@ public abstract class ReskueService<E extends ReskueEntity<E>, R extends ReskueR
 	 * @return The result as a page.
 	 */
 	public Page<MediaEntity> getAllMedia(Long id, EntitySpecification<MediaEntity> specification, Pageable pageable) {
+		
+		Utility.LOG.trace("ReskueService.getAllMedia called.");
 
 		E entity = this.findById(id);
 		
 		List<MediaEntity> media = entity.getMedia();
-		Utility.LOG.info("media: {}", EventConsumer.writeObjectAsJSON(media));
+		
 		if (specification != null) {
 			
 			media = media.stream().filter(specification.toPredicate(MediaEntity.class)).collect(Collectors.toList());

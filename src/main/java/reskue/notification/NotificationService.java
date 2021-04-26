@@ -17,8 +17,8 @@ import reskue.culturalasset.CulturalAssetService;
  * The NotificationService provides services needed by the NotificationController.
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 
@@ -57,12 +57,14 @@ public class NotificationService extends BaseService<NotificationEntity, Notific
 			
 			CulturalAssetEntity culturalAsset = this.culturalAssetService.findById(entity.getEntity().getId());
 			
+			// if there is a cultural asset specified and the notification is an alarm this marks the cultural asset as endangered
 			if (entity.getType() == NotificationType.ALARM.type) {
 				
 				culturalAssetService.updateIsEndangered(culturalAsset, 1);
 				
 			}
 			
+			// if there is a cultural asset specified and the notification is an alarm over this marks the cultural asset as endangered
 			if (entity.getType() == NotificationType.ALARM_OVER.type) {
 				
 				culturalAssetService.updateIsEndangered(culturalAsset, 0);	

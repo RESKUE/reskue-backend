@@ -14,8 +14,8 @@ import kueres.utility.Utility;
  * The SubtaskService provides services needed by the SubtaskController.
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 

@@ -31,6 +31,7 @@ import reskue.usergroup.UserGroupEntity;
  * The UserController provides API functions for UserEntities.
  * These functions are:
  *  - all functions of the BaseController in kueres.base
+ *  - a function to get the current user
  *  - finding all tasks a user is a contact of
  *  - finding all tasks a user is a helper of
  *  - finding all comments a user is an author of
@@ -39,8 +40,8 @@ import reskue.usergroup.UserGroupEntity;
  *  - finding all notifications a user should receive
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 
@@ -63,6 +64,8 @@ public class UserController extends BaseController<UserEntity, UserRepository, U
 	@GetMapping("/me")
 	@RolesAllowed({"administrator", "helper"})
 	public ResponseEntity<UserEntity> me(HttpServletRequest request, HttpServletResponse response) {
+		
+		Utility.LOG.trace("UserController.me called.");
 		
 		KeycloakAuthenticationToken authToken = (KeycloakAuthenticationToken) request.getUserPrincipal();
 		AccessToken token = authToken.getAccount().getKeycloakSecurityContext().getToken();
