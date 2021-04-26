@@ -4,9 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>reskue</groupId>
 	<artifactId>backend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>RESKUE backend</name>
-	<description>RESKUE backend server</description>
+	<description>RESKUE backend</description>
 
 	<properties>
 		<java.version>11</java.version>
@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>kueres</groupId>
 			<artifactId>backend</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 
 		<dependency>
