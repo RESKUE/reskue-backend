@@ -32,8 +32,8 @@ import reskue.usergroup.UserGroupEntity;
  * The UserEntity is a representation of a user.
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 
@@ -131,6 +131,21 @@ public class UserEntity extends BaseEntity<UserEntity>{
 	public List<UserGroupEntity> getUserGroups() { return this.userGroups; }
 	public void setUserGroups(List<UserGroupEntity> userGroups) { this.userGroups = userGroups; }
 	
+	/**
+	 * Only allows changes to:
+	 *  - name
+	 *  - user groups
+
+	 *  
+	 * @throws JsonProcessingException if the JSON string can not be processed
+	 * @throws SecurityException if the JSON string can not be processed
+	 * @throws NoSuchMethodException if the JSON string can not be processed
+	 * @throws InvocationTargetException if the JSON string can not be processed
+	 * @throws IllegalArgumentException if the JSON string can not be processed
+	 * @throws IllegalAccessException if the JSON string can not be processed
+	 * @throws InstantiationException if the JSON string can not be processed
+	 * @throws JsonMappingException if the JSON string can not be processed
+	 */
 	@Override
 	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		

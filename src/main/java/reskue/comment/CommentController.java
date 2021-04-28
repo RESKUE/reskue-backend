@@ -37,11 +37,12 @@ import reskue.user.UserService;
  * The CommentController provides API functions for CommentEntities.
  * These functions are:
  *  - all functions of the BaseController in kueres.base
+ *  - creating a comment and automatically setting the author
  *  - finding all media of a comment
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 
@@ -97,6 +98,7 @@ public class CommentController extends BaseController<CommentEntity, CommentRepo
 		entity.setAuthor(author);
 		
 		CommentEntity created = this.service.create(entity);
+		
 		return ResponseEntity.ok().body(created);
 		
 	}

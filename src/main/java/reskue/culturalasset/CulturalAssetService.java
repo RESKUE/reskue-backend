@@ -38,8 +38,8 @@ import reskue.task.TaskRepository;
  * CulturalAssetController.
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 
@@ -81,7 +81,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	public CulturalAssetEntity create(CulturalAssetEntity entity) {
 
 		Utility.LOG.trace("CulturalAssetService.create called.");
-
+		
+		// calculates an address if only coordinates are given
 		if (entity.getLongitude() != null && entity.getLatitude() != null) {
 			
 			if (entity.getAddress() == null) {
@@ -91,6 +92,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 				
 			}
 			
+		// calculates coordinates if only an address is given
 		} else if (entity.getAddress() != null) {
 			
 			if (entity.getLongitude() == null && entity.getLatitude() == null) {
@@ -102,7 +104,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 			}
 			
 		}
-
+		
+		// if coordinates exist adds the cultural asset to the location database
 		if (entity.getLongitude() != null && entity.getLatitude() != null) {
 			
 			entity.setLocationId(locationService.addPOI(entity.getName(),
@@ -111,13 +114,15 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		}
 
 		CulturalAssetEntity savedEntity = this.repository.save(entity);
-
+		
+		// if after saving a parent exists adds the relation
 		if (savedEntity.getCulturalAssetParent() != null) {
 			
 			this.setCulturalAssetParent(savedEntity.getId(), savedEntity.getCulturalAssetParent().getId());
 			
 		}
-
+		
+		// if after saving children exist add the relations
 		if (savedEntity.getCulturalAssetChildren() != null || !entity.getCulturalAssetChildren().isEmpty()) {
 			
 			savedEntity.getCulturalAssetChildren().forEach((CulturalAssetEntity child) -> {
@@ -126,6 +131,7 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 		}
 		
+		// ensures that the endangered state is set correctly
 		this.updateIsEndangered(savedEntity, savedEntity.getIsEndangered());
 
 		EventConsumer.sendEvent("CulturalAssetService.create", EventType.CREATE.type, this.getIdentifier(),
@@ -164,12 +170,14 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 		entity.applyPatch(detailsJSON);
 		
+		// removes the parent and sets it again after saving to ensure that there is no bad interaction between the old and the new parent if they are different
 		if (BaseEntity.containsFields(detailsJSON, CulturalAssetEntity.CULTURAL_ASSET_PARENT)) {
 			
 			this.removeCulturalAssetParent(entity.getId());
 			
 		}
-
+		
+		// removes the children and sets them again after saving to ensure that there is no bad interaction between the old and the new children if they are different
 		if (BaseEntity.containsFields(detailsJSON, CulturalAssetEntity.CULTURAL_ASSET_CHILDREN)) {
 			
 			for (Iterator<CulturalAssetEntity> iterator = entity.getCulturalAssetChildren().iterator(); iterator.hasNext();) {
@@ -179,11 +187,13 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 			}
 			
 		}
-
+		
+		// if coordinates exist this calculates a new address even if an adress already existed because the coordinates take priority due to their importance in calculations
 		if (BaseEntity.containsFields(detailsJSON, CulturalAssetEntity.LONGITUDE) || BaseEntity.containsFields(detailsJSON, CulturalAssetEntity.LATITUDE)) {
 			
 			entity.setAddress(locationService.coordinatesToAddress(new double[] { details.getLongitude(), details.getLatitude()}));
 			
+		// if only an address exists this calculates new coordinates
 		} else if (BaseEntity.containsFields(detailsJSON, CulturalAssetEntity.ADDRESS)) {
 			
 			double[] coordinates = locationService.addressToCoordinates(details.getAddress());
@@ -194,12 +204,14 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 
 		final CulturalAssetEntity savedEntity = this.repository.save(entity);
 		
+		// sets the updated parent if it exists
 		if (BaseEntity.containsFields(detailsJSON, CulturalAssetEntity.CULTURAL_ASSET_PARENT)) {
 			
 			this.setCulturalAssetParent(savedEntity.getId(), savedEntity.getCulturalAssetParent().getId());
 			
 		}
-
+		
+		// adds the updated children if they exist 
 		if (BaseEntity.containsFields(detailsJSON, CulturalAssetEntity.CULTURAL_ASSET_CHILDREN) || !savedEntity.getCulturalAssetChildren().isEmpty()) {
 			
 			savedEntity.getCulturalAssetChildren().forEach((CulturalAssetEntity child) -> {
@@ -233,20 +245,26 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 		CulturalAssetEntity entity = this.repository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		
+		// ensures that the parent relation gets removed
 		if (entity.getCulturalAssetParent() != null) this.removeCulturalAssetParent(id);
 		
+		// ensures that the children relations get removed
 		for (Iterator<CulturalAssetEntity> iterator = entity.getCulturalAssetChildren().iterator(); iterator.hasNext();) {
+			
 			CulturalAssetEntity child = iterator.next();
 			iterator.remove();
 			this.removeCulturalAssetChild(id, child.getId());
+			
 		}
-
+		
+		// ensures that the cultural asset is removed from the location database
 		if (entity.getLocationId() != null) {
 			
 			locationService.removePOI(entity.getLocationId());
 			
 		}
 		
+		// ensures that all related media is deleted properly
 		for (Iterator<MediaEntity> iterator = entity.getMedia().iterator(); iterator.hasNext();) {
 			MediaEntity media = iterator.next();
 			iterator.remove();
@@ -361,7 +379,9 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 */
 	public Page<CommentEntity> getAllComments(Long id, EntitySpecification<CommentEntity> specification,
 			Pageable pageable) {
-
+		
+		Utility.LOG.trace("CulturalAssetService.getAllComments called.");
+		
 		CulturalAssetEntity entity = this.findById(id);
 
 		List<CommentEntity> comments = entity.getComments();
@@ -443,7 +463,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	}
 
 	/**
-	 * Adds a child to the cultural asset.
+	 * Adds a child to the cultural asset. If the child violates either the hierarchy height or creates a loop it is simply not added and doesn't throw an error.
+	 * This is to ensure that operations with many relations don't fail based on one wrong connection.
 	 * 
 	 * @param id      - the cultural asset's identifier.
 	 * @param childId - the child's identifier.
@@ -505,7 +526,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	}
 
 	/**
-	 * Sets the parent of the cultural asset.
+	 * Sets the parent of the cultural asset. If the parent violates either the hierarchy height or creates a loop it is simply not added and doesn't throw an error.
+	 * This is to ensure that operations with many relations don't fail based on one wrong connection.
 	 * 
 	 * @param id       - the cultural asset's identifier.
 	 * @param parentId - the parent's identifier.
@@ -708,12 +730,14 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 	 * @param state  - the new endangered state of the cultural asset.
 	 */
 	public void updateIsEndangered(CulturalAssetEntity entity, int state) {
-
+		
+		// marks this cultural asset as endangered
 		entity.setIsEndangered(state);
 		this.repository.save(entity);
 		List<CulturalAssetEntity> children = entity.getCulturalAssetChildren();
 		List<TaskEntity> tasks = entity.getTasks();
-
+		
+		// marks all related tasks as endangered
 		if (!tasks.isEmpty()) {
 			
 			tasks.stream().forEach((TaskEntity task) -> {
@@ -722,7 +746,8 @@ public class CulturalAssetService extends ReskueService<CulturalAssetEntity, Cul
 			});
 
 		}
-
+		
+		// calls this method recursively for all children
 		if (!children.isEmpty()) {
 			
 			children.stream().forEach((CulturalAssetEntity nextEntity) -> {

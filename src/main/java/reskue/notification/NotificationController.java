@@ -27,10 +27,11 @@ import reskue.user.UserService;
  * The NotificationController provides API functions for NotificationEntities.
  * These functions are:
  *  - all functions of the BaseController in kueres.base
+ *  - creating a notification and automatically setting the sender
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 

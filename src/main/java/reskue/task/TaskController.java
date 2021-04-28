@@ -40,6 +40,7 @@ import reskue.user.UserService;
  * These functions are:
  *  - all functions of the BaseController in kueres.base
  *  - all functions of the ReskueController in reskue
+ *  - creating a task and automatically setting the contact user
  *  - finding all subtasks of a task
  *  - finding all users that are helping on a task
  *  - changing the state of a task
@@ -47,8 +48,8 @@ import reskue.user.UserService;
  *  - removing a user from the helpers of a task
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 
@@ -258,7 +259,7 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	 * @return The task after the user was added.
 	 */
 	@PutMapping("/{" + TaskEntity.ID + "}/assignHelper/{" + TaskEntity.HELPER_USERS + "}")
-	@RolesAllowed({ "administrator" })
+	@RolesAllowed({ "administrator", "helper" })
 	public ResponseEntity<TaskEntity> addHelper(
 			@PathVariable(value = TaskEntity.ID) Long id,
 			@PathVariable(value = TaskEntity.HELPER_USERS) Long helperId) {
@@ -278,7 +279,7 @@ public class TaskController extends ReskueController<TaskEntity, TaskRepository,
 	 * @return The task after the user was removed.
 	 */
 	@PutMapping("/{" + TaskEntity.ID + "}/removeHelper/{" + TaskEntity.HELPER_USERS + "}")
-	@RolesAllowed({ "administrator" })
+	@RolesAllowed({ "administrator", "helper" })
 	public ResponseEntity<TaskEntity> removeHelper(
 			@PathVariable(value = TaskEntity.ID) Long id,
 			@PathVariable(value = TaskEntity.HELPER_USERS) Long helperId) {

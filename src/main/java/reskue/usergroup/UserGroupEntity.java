@@ -25,8 +25,8 @@ import reskue.user.UserEntity;
  * The UserGroupEntity is a representation of a group of users.
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 
@@ -81,7 +81,21 @@ public class UserGroupEntity extends BaseEntity<UserGroupEntity>{
 	public static final String NOTIFICATION_RECEIVER = "notificationReceiver";
 	public List<NotificationEntity> getNotificationReceiver() { return this.notificationReceiver; }
 	public void setNotificationReceiver(List<NotificationEntity> notificationReceiver) { this.notificationReceiver = notificationReceiver; }
-
+	
+	/**
+	 * Only allows changes to:
+	 *  - name
+	 *  - users
+	 *  
+	 * @throws JsonProcessingException if the JSON string can not be processed
+	 * @throws SecurityException if the JSON string can not be processed
+	 * @throws NoSuchMethodException if the JSON string can not be processed
+	 * @throws InvocationTargetException if the JSON string can not be processed
+	 * @throws IllegalArgumentException if the JSON string can not be processed
+	 * @throws IllegalAccessException if the JSON string can not be processed
+	 * @throws InstantiationException if the JSON string can not be processed
+	 * @throws JsonMappingException if the JSON string can not be processed
+	 */
 	@Override
 	public void applyPatch(String json) throws JsonMappingException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
 		

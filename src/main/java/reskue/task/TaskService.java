@@ -31,8 +31,8 @@ import reskue.user.UserService;
  * The TaskService provides services needed by the TaskController.
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 
@@ -97,6 +97,8 @@ public class TaskService extends ReskueService<TaskEntity, TaskRepository>{
 	public Page<CommentEntity> getAllComments(Long id, EntitySpecification<CommentEntity> specification,
 			Pageable pageable) {
 
+		Utility.LOG.trace("TaskService.getAllComments called.");
+		
 		TaskEntity entity = this.findById(id);
 
 		List<CommentEntity> comments = entity.getComments();

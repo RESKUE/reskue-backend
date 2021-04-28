@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import kueres.base.BaseController;
-import kueres.eventbus.EventConsumer;
 import kueres.media.MediaEntity;
 import kueres.query.EntitySpecification;
 import kueres.query.SortBuilder;
@@ -22,12 +21,11 @@ import kueres.utility.Utility;
  * The ReskueController provides functionality for the fields of a ReskueEntity.
  * These functions are:
  *  - all functions of the BaseController in kueres.base
- *  - finding all comments of an entity
  *  - finding all media of an entity
  *  
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 
@@ -61,12 +59,9 @@ public abstract class ReskueController<E extends ReskueEntity<E>, R extends Resk
 
 		Utility.LOG.trace("ReskueController.getAllComments called.");
 		
-		Utility.LOG.info("id: {}", id);
-		
 		EntitySpecification<MediaEntity> specification = null;
 		if (filter.isPresent()) {
 			
-			Utility.LOG.info("filter: {}", EventConsumer.writeObjectAsJSON(filter.get()));
 			specification = new EntitySpecification<MediaEntity>(filter.get());
 			
 		}

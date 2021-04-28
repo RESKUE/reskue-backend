@@ -25,8 +25,8 @@ import reskue.usergroup.UserGroupEntity;
  * The UserService provides services needed by the UserController.
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 
@@ -50,6 +50,8 @@ public class UserService extends BaseService<UserEntity, UserRepository>{
 	 * @return The user based on the given keycloakId.
 	 */
 	public UserEntity me(String keycloakId) {
+		
+		Utility.LOG.trace("UserService.me called.");
 		
 		List<UserEntity> userEntities = this.repository.findAll();
 		

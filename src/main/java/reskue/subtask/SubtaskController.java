@@ -19,8 +19,8 @@ import kueres.utility.Utility;
  *  - changing the state of a subtask
  *
  * @author Jan Strassburg, jan.strassburg@student.kit.edu
- * @version 1.0
- * @since Mar 25, 2021
+ * @version 1.0.0
+ * @since Apr 26, 2021
  *
  */
 
@@ -49,6 +49,7 @@ public class SubtaskController extends BaseController<SubtaskEntity, SubtaskRepo
 		Utility.LOG.trace("SubtaskController.changeState called.");
 		
 		SubtaskEntity updatedEntity = service.changeState(id, state);
+		
 		return ResponseEntity.ok().body(updatedEntity);
 		
 	}
