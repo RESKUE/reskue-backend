@@ -1,7 +1,7 @@
 FROM openjdk:11-jdk-slim
 
 ENV ARTIFACT_ID=backend
-ENV VERSION=0.0.1-SNAPSHOT
+ENV VERSION=1.0.0
 
 VOLUME /tmp
 
